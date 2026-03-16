@@ -1,0 +1,347 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  /* Original Colors - Keep for legacy */
+  --navy-original: #1B2430;
+  --gold-original: #C5A373;
+  --gold-dark-original: #8B6E4E;
+  --bg-warm: #FCFAF2;
+
+  /* Enhanced Color Palette - Brighter & More Vibrant */
+  --navy-dark: #1B2430;        /* Headers, footers - keep dark */
+  --navy-primary: #232F3F;      /* Cards, sections */
+  --navy-light: #2C3A4E;        /* Hover states, borders */
+  
+  --gold-primary: #D4A373;       /* Primary buttons, accents */
+  --gold-vibrant: #E6B17E;       /* CTAs, important elements */
+  --gold-light: #F0D5B0;         /* Backgrounds, highlights */
+  --gold-dark: #8B6E4E;          /* Text on light backgrounds */
+  
+  --bg-cream: #FFF9F0;           /* Cards, elevated surfaces */
+  --bg-warm-original: #FCFAF2;   /* Page background */
+  
+  /* Text colors */
+  --text-primary: #1B2430;
+  --text-secondary: #4A5568;
+  --text-muted: #718096;
+  
+  /* Status colors */
+  --success: #10B981;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+  
+  /* Functional colors - Improved contrast */
+  --gold-readable: #DEAD7A;      /* For text on dark backgrounds */
+  
+  /* Font settings */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-warm-original);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Sharpness fixes for transforms */
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* Hide scrollbars but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom gradient backgrounds */
+.bg-gradient-gold {
+  background: linear-gradient(135deg, var(--gold-primary), var(--gold-vibrant));
+}
+
+.bg-gradient-navy {
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy-primary));
+}
+
+.bg-gradient-warm {
+  background: linear-gradient(135deg, var(--bg-warm-original), var(--bg-cream));
+}
+
+/* Button styles */
+.btn-gold {
+  background-color: var(--gold-primary);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.btn-gold:hover {
+  background-color: var(--gold-vibrant);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(212, 163, 115, 0.3);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+.btn-outline-gold {
+  border: 2px solid var(--gold-primary);
+  color: var(--gold-primary);
+  background: transparent;
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--gold-primary);
+  color: white;
+}
+
+/* Card styles */
+.card-cream {
+  background-color: var(--bg-cream);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Alert/Notification styles */
+.alert-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+.alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  color: var(--error);
+}
+
+.alert-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid var(--warning);
+  color: var(--warning);
+}
+
+.alert-info {
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 1px solid var(--info);
+  color: var(--info);
+}
+
+/* Text colors */
+.text-gold-primary {
+  color: var(--gold-primary);
+}
+
+.text-gold-vibrant {
+  color: var(--gold-vibrant);
+}
+
+.text-gold-readable {
+  color: var(--gold-readable);
+}
+
+.text-navy-primary {
+  color: var(--navy-primary);
+}
+
+/* Background colors */
+.bg-gold-light {
+  background-color: var(--gold-light);
+}
+
+.bg-cream {
+  background-color: var(--bg-cream);
+}
+
+.bg-navy-light {
+  background-color: var(--navy-light);
+}
+
+/* Border colors */
+.border-gold {
+  border-color: var(--gold-primary);
+}
+
+.border-gold-light {
+  border-color: var(--gold-light);
+}
+
+/* Focus states */
+.focus-ring-gold:focus {
+  outline: none;
+  ring: 2px solid var(--gold-primary);
+  ring-offset: 2px;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+/* Progress bar animation */
+@keyframes shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-shrink {
+  animation: shrink 5s linear forwards;
+}
+
+/* Responsive container padding */
+.container-padding {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Glassmorphism effects */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-gold {
+  background: linear-gradient(135deg, rgba(212, 163, 115, 0.1), rgba(230, 177, 126, 0.1));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 163, 115, 0.2);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--gold-primary);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--gold-primary);
+  color: white;
+}
+
+/* Focus outline for accessibility */
+:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Add to your existing index.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Category hover effects */
+.category-icon {
+  transition: all 0.2s ease;
+}
+
+.category-icon:hover {
+  transform: translateY(-2px);
+}
+
+/* Property card animations */
+.property-card {
+  transition: transform 0.2s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-4px);
+}

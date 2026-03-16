@@ -1,0 +1,12 @@
+
+> getkejafrontend@0.0.0 build C:\Users\Administrator\THE-HouseHunting\The new system\Getkejafrontend
+> tsc -b && vite build
+
+src/pages/Auth/Profile.tsx(6,1): error TS6133: 'motion' is declared but its value is never read.
+src/pages/Auth/Profile.tsx(28,43): error TS2339: Property 'avatar_url' does not exist on type 'User'.
+src/pages/Auth/Profile.tsx(29,56): error TS2339: Property 'avatar_url' does not exist on type 'User'.
+src/pages/Auth/Profile.tsx(29,78): error TS2551: Property 'full_name' does not exist on type 'User'. Did you mean 'fullName'?
+src/pages/Auth/Profile.tsx(40,85): error TS2551: Property 'full_name' does not exist on type 'User'. Did you mean 'fullName'?
+src/pages/Auth/Profile.tsx(97,51): error TS2551: Property 'full_name' does not exist on type 'User'. Did you mean 'fullName'?
+src/pages/Auth/Profile.tsx(111,51): error TS2339: Property 'phone' does not exist on type 'User'.
+ΓÇëELIFECYCLEΓÇë Command failed with exit code 2.

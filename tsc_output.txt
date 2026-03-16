@@ -1,0 +1,3 @@
+src/components/layout/DashboardSidebar.tsx(12,5): error TS6133: 'PlusCircle' is declared but its value is never read.
+src/components/layout/DashboardSidebar.tsx(13,5): error TS6133: 'UserCircle' is declared but its value is never read.
+src/components/layout/DashboardSidebar.tsx(14,5): error TS6133: 'FolderKanban' is declared but its value is never read.
