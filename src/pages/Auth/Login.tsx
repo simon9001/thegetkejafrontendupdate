@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Twitter, Facebook } from 'lucide-react';
+import { Twitter, Facebook, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoginMutation } from '../../features/Api/AuthApi';
 import { useDispatch } from 'react-redux';
@@ -16,6 +16,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const [login, { isLoading }] = useLoginMutation();
     const dispatch = useDispatch();
@@ -128,22 +129,31 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
                         <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider">
                             Password
                         </label>
-                        <Link 
+                        <Link
                             to="/forgot-password"
                             className="text-[10px] font-bold text-[#C5A373] hover:text-[#8B6E4E] transition-colors uppercase tracking-wider"
                         >
                             Forgot?
                         </Link>
                     </div>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        required
-                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430] placeholder:text-gray-400"
-                        disabled={isLoading}
-                    />
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            required
+                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-sm text-[#1B2430] placeholder:text-gray-400"
+                            disabled={isLoading}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C5A373] transition-colors"
+                        >
+                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Messages */}

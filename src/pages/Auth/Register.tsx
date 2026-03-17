@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Twitter, Facebook, ArrowLeft } from 'lucide-react';
+import { Twitter, Facebook, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '../../features/Api/AuthApi';
@@ -21,6 +21,8 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [register, { isLoading }] = useRegisterMutation();
 
@@ -203,33 +205,51 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
                         <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
                             Password
                         </label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            placeholder="••••••"
-                            required
-                            className={`w-full px-3 py-2 bg-gray-50 border ${fieldErrors.password ? 'border-red-300' : 'border-gray-200'
-                                } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430]`}
-                            disabled={isLoading}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                placeholder="••••••"
+                                required
+                                className={`w-full px-3 py-2 bg-gray-50 border ${fieldErrors.password ? 'border-red-300' : 'border-gray-200'
+                                    } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-sm text-[#1B2430]`}
+                                disabled={isLoading}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C5A373] transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
                             Confirm
                         </label>
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            placeholder="••••••"
-                            required
-                            className={`w-full px-3 py-2 bg-gray-50 border ${fieldErrors.confirmPassword ? 'border-red-300' : 'border-gray-200'
-                                } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430]`}
-                            disabled={isLoading}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleInputChange}
+                                placeholder="••••••"
+                                required
+                                className={`w-full px-3 py-2 bg-gray-50 border ${fieldErrors.confirmPassword ? 'border-red-300' : 'border-gray-200'
+                                    } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-sm text-[#1B2430]`}
+                                disabled={isLoading}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C5A373] transition-colors"
+                            >
+                                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
