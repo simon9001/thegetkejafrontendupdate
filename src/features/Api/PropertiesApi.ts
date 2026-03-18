@@ -19,23 +19,57 @@ export interface Property {
         address?: string;
         town?: string;
         county?: string;
-        location: { coordinates: [number, number] };
+        location: {
+            type: 'Point';
+            coordinates: [number, number];
+        };
     };
-    amenities?: Array<{ name: string; icon_name: string }>;
-    neighborhood?: any;
+    amenities?: Array<{ name: string; icon_name: string; details?: string }>;
+    neighborhood?: {
+        community_vibe?: string;
+        light_exposure?: string;
+        crime_rating?: string;
+        noise_level?: string;
+    };
     avatar_url?: string;
     is_verified?: boolean;
     is_boosted?: boolean;
     is_struck?: boolean;
     category?: string;
     created_at?: string;
-    owner?: any;
+    owner?: {
+        id: string;
+        full_name: string;
+        email: string;
+        phone: string;
+        avatar_url?: string;
+    };
     price?: number;
     capacity?: number;
     views_count?: number;
     type?: string;
     size?: number;
     price_per_day?: number;
+
+    // New fields
+    furnished_status?: string;
+    lease_duration?: string;
+    notice_period?: string;
+    is_pet_friendly?: boolean;
+    is_smoking_allowed?: boolean;
+    has_parking?: boolean;
+    parking_spots?: number;
+    floor_level?: string;
+    year_built?: number;
+    water_included?: boolean;
+    electricity_included?: boolean;
+    internet_included?: boolean;
+    garbage_included?: boolean;
+    contact_number?: string;
+    security_deposit?: number;
+    cleaning_fee?: number;
+    service_fee?: number;
+    tax_amount?: number;
 }
 
 export const PropertiesApi = createApi({

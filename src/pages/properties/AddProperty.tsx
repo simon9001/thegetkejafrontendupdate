@@ -83,6 +83,21 @@ const AddProperty: React.FC = () => {
         latitude: '',
         longitude: '',
         amenity_ids: [] as string[],
+        // New detailed fields
+        furnishing_status: 'unfurnished',
+        lease_duration: '12 months',
+        notice_period: '1 month',
+        is_pet_friendly: false,
+        is_smoking_allowed: false,
+        has_parking: true,
+        parking_spots: '1',
+        floor_number: '',
+        year_built: '',
+        water_included: false,
+        electricity_included: false,
+        internet_included: false,
+        garbage_included: true,
+        contact_number: '',
     });
 
     const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
@@ -185,7 +200,7 @@ const AddProperty: React.FC = () => {
 
         const valid = fileArray.filter(f => {
             if (!allowed.includes(f.type)) {
-                toast.error(`${f.name}: unsupported type (jpg/png/webp only)`);
+                toast.error(`${f.name}: unsupported type(jpg / png / webp only)`);
                 return false;
             }
             if (f.size > MAX_MB * 1024 * 1024) {
@@ -250,6 +265,8 @@ const AddProperty: React.FC = () => {
                 bedrooms: Number(formData.bedrooms),
                 bathrooms: Number(formData.bathrooms),
                 size_sqm: Number(formData.size_sqm),
+                year_built: formData.year_built ? Number(formData.year_built) : undefined,
+                parking_spots: formData.parking_spots ? Number(formData.parking_spots) : 0,
                 latitude: Number(formData.latitude) || -1.286389,
                 longitude: Number(formData.longitude) || 36.817223,
                 images: uploadedImages.map((img, index) => ({
@@ -286,7 +303,7 @@ const AddProperty: React.FC = () => {
         }
     };
 
-    const nextStep = () => setStep(s => Math.min(s + 1, 4));
+    const nextStep = () => setStep(s => Math.min(s + 1, 5));
     const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
     const isLoading = isCreating || isUploading;
@@ -294,16 +311,16 @@ const AddProperty: React.FC = () => {
     // ─── Step Indicator ───────────────────────────────────────────────────────
     const renderStepIndicator = () => (
         <div className="flex items-center justify-between mb-12 max-w-2xl mx-auto">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex items-center">
                     <div className={`
-                        w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300
+w - 10 h - 10 rounded - full flex items - center justify - center font - bold transition - all duration - 300
                         ${step >= i ? 'bg-[#D4A373] text-[#1B2430]' : 'bg-[#1e293b] text-gray-500 border border-[#2c3a4e]'}
-                    `}>
+`}>
                         {step > i ? <CheckCircle2 size={20} /> : i}
                     </div>
-                    {i < 4 && (
-                        <div className={`w-12 h-0.5 mx-2 ${step > i ? 'bg-[#D4A373]' : 'bg-[#1e293b]'}`} />
+                    {i < 5 && (
+                        <div className={`w - 12 h - 0.5 mx - 2 ${step > i ? 'bg-[#D4A373]' : 'bg-[#1e293b]'} `} />
                     )}
                 </div>
             ))}
@@ -373,11 +390,12 @@ const AddProperty: React.FC = () => {
                                                     type="button"
                                                     onClick={() => setFormData(prev => ({ ...prev, property_type: type.id }))}
                                                     className={`
-                                                        p-4 rounded-2xl border font-bold transition-all text-sm
+p - 4 rounded - 2xl border font - bold transition - all text - sm
                                                         ${formData.property_type === type.id
                                                             ? 'bg-[#D4A373] text-[#1B2430] border-[#D4A373]'
-                                                            : 'bg-[#131C26] border-[#2C3A4E] text-gray-400 hover:border-[#D4A373]/50'}
-                                                    `}
+                                                            : 'bg-[#131C26] border-[#2C3A4E] text-gray-400 hover:border-[#D4A373]/50'
+                                                        }
+`}
                                                 >
                                                     {type.label}
                                                 </button>
@@ -454,6 +472,32 @@ const AddProperty: React.FC = () => {
                                         />
                                     </div>
 
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Furnishing Status</label>
+                                        <select
+                                            name="furnishing_status"
+                                            value={formData.furnishing_status}
+                                            onChange={handleChange}
+                                            className="w-full bg-[#131C26] border border-[#2C3A4E] rounded-2xl p-4 text-white focus:outline-none focus:border-[#D4A373] transition-colors"
+                                        >
+                                            <option value="unfurnished">Unfurnished</option>
+                                            <option value="semi-furnished">Semi-Furnished</option>
+                                            <option value="furnished">Fully Furnished</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Year Built (Optional)</label>
+                                        <input
+                                            type="number"
+                                            name="year_built"
+                                            value={formData.year_built}
+                                            onChange={handleChange}
+                                            placeholder="e.g. 2022"
+                                            className="w-full bg-[#131C26] border border-[#2C3A4E] rounded-2xl p-4 text-white focus:outline-none focus:border-[#D4A373] transition-colors"
+                                        />
+                                    </div>
+
                                     <div className="space-y-2 col-span-full">
                                         <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Total Size (sqm)</label>
                                         <input
@@ -486,11 +530,12 @@ const AddProperty: React.FC = () => {
                                         onClick={handleGetLocation}
                                         disabled={geoLoading}
                                         className={`
-                                            flex items-center gap-3 px-6 py-4 rounded-2xl font-bold text-sm transition-all border
+                                            flex items - center gap - 3 px - 6 py - 4 rounded - 2xl font - bold text - sm transition - all border
                                             ${geoLoading
                                                 ? 'bg-[#D4A373]/20 border-[#D4A373]/30 text-[#D4A373] cursor-not-allowed'
-                                                : 'bg-[#D4A373]/10 border-[#D4A373]/40 text-[#D4A373] hover:bg-[#D4A373]/20 hover:border-[#D4A373] active:scale-95'}
-                                        `}
+                                                : 'bg-[#D4A373]/10 border-[#D4A373]/40 text-[#D4A373] hover:bg-[#D4A373]/20 hover:border-[#D4A373] active:scale-95'
+                                            }
+`}
                                     >
                                         {geoLoading
                                             ? <Loader2 size={20} className="animate-spin" />
@@ -646,7 +691,7 @@ const AddProperty: React.FC = () => {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => removeLandmark(landmark.name)}
-                                                                className="p-2 text-red-400 opacity-0 group-hover:opacity-100 hover:bg-red-400/10 rounded-xl transition-all"
+                                                                className="p-2 text-red-100 opacity-0 group-hover:opacity-100 hover:bg-red-400/10 rounded-xl transition-all"
                                                             >
                                                                 <X size={16} />
                                                             </button>
@@ -728,8 +773,129 @@ const AddProperty: React.FC = () => {
                             </div>
                         )}
 
-                        {/* ── Step 4: Amenities & Images ── */}
+                        {/* ── Step 4: Rules & Utilities ── */}
                         {step === 4 && (
+                            <div className="space-y-10 animate-in slide-in-from-right duration-500">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="p-3 bg-[#D4A373]/10 rounded-2xl text-[#D4A373]">
+                                        <LayoutIcon size={24} />
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-white">Lease, Rules & Utilities</h2>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Lease Duration</label>
+                                        <input
+                                            type="text"
+                                            name="lease_duration"
+                                            value={formData.lease_duration}
+                                            onChange={handleChange}
+                                            placeholder="e.g. 12 months"
+                                            className="w-full bg-[#131C26] border border-[#2C3A4E] rounded-2xl p-4 text-white focus:outline-none focus:border-[#D4A373] transition-colors"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Notice Period</label>
+                                        <input
+                                            type="text"
+                                            name="notice_period"
+                                            value={formData.notice_period}
+                                            onChange={handleChange}
+                                            placeholder="e.g. 1 month"
+                                            className="w-full bg-[#131C26] border border-[#2C3A4E] rounded-2xl p-4 text-white focus:outline-none focus:border-[#D4A373] transition-colors"
+                                        />
+                                    </div>
+
+                                    {/* Toggles for Rules */}
+                                    <div className="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div className="bg-[#131C26] border border-[#2C3A4E] p-4 rounded-2xl flex items-center justify-between">
+                                            <span className="text-sm font-bold text-gray-300">Pet Friendly</span>
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.is_pet_friendly}
+                                                onChange={(e) => setFormData(prev => ({ ...prev, is_pet_friendly: e.target.checked }))}
+                                                className="w-5 h-5 accent-[#D4A373]"
+                                            />
+                                        </div>
+                                        <div className="bg-[#131C26] border border-[#2C3A4E] p-4 rounded-2xl flex items-center justify-between">
+                                            <span className="text-sm font-bold text-gray-300">Smoking Allowed</span>
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.is_smoking_allowed}
+                                                onChange={(e) => setFormData(prev => ({ ...prev, is_smoking_allowed: e.target.checked }))}
+                                                className="w-5 h-5 accent-[#D4A373]"
+                                            />
+                                        </div>
+                                        <div className="bg-[#131C26] border border-[#2C3A4E] p-4 rounded-2xl flex items-center justify-between">
+                                            <span className="text-sm font-bold text-gray-300">Parking Incl.</span>
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.has_parking}
+                                                onChange={(e) => setFormData(prev => ({ ...prev, has_parking: e.target.checked }))}
+                                                className="w-5 h-5 accent-[#D4A373]"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Utilities Included */}
+                                    <div className="col-span-full pt-4">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-4">Included in Rent</label>
+                                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                            {[
+                                                { label: 'Water', key: 'water_included' },
+                                                { label: 'Electricity', key: 'electricity_included' },
+                                                { label: 'Internet', key: 'internet_included' },
+                                                { label: 'Garbage', key: 'garbage_included' }
+                                            ].map((item) => (
+                                                <button
+                                                    key={item.key}
+                                                    type="button"
+                                                    onClick={() => setFormData(prev => ({ ...prev, [item.key]: !prev[item.key as keyof typeof prev] }))}
+                                                    className={`
+p - 4 rounded - 2xl border flex items - center gap - 3 transition - all
+                                                        ${formData[item.key as keyof typeof formData]
+                                                            ? 'bg-[#D4A373]/10 border-[#D4A373] text-[#D4A373]'
+                                                            : 'bg-[#131C26] border-[#2C3A4E] text-gray-500'
+                                                        }
+`}
+                                                >
+                                                    <div className={`w - 3 h - 3 rounded - full ${formData[item.key as keyof typeof formData] ? 'bg-[#D4A373]' : 'bg-gray-700'} `} />
+                                                    <span className="text-xs font-bold uppercase">{item.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2 col-span-full">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Floor Number (if any)</label>
+                                        <input
+                                            type="text"
+                                            name="floor_number"
+                                            value={formData.floor_number}
+                                            onChange={handleChange}
+                                            placeholder="e.g. 5th Floor"
+                                            className="w-full bg-[#131C26] border border-[#2C3A4E] rounded-2xl p-4 text-white focus:outline-none focus:border-[#D4A373] transition-colors"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2 col-span-full">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Owner/Agent Contact (Public)</label>
+                                        <input
+                                            type="text"
+                                            name="contact_number"
+                                            value={formData.contact_number}
+                                            onChange={handleChange}
+                                            placeholder="e.g. +254 7XX XXX XXX"
+                                            className="w-full bg-[#131C26] border border-[#2C3A4E] rounded-2xl p-4 text-white focus:outline-none focus:border-[#D4A373] transition-colors"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ── Step 5: Amenities & Images ── */}
+                        {step === 5 && (
                             <div className="space-y-12 animate-in slide-in-from-right duration-500">
                                 {/* Amenities */}
                                 <div className="space-y-8">
@@ -747,13 +913,14 @@ const AddProperty: React.FC = () => {
                                                 type="button"
                                                 onClick={() => handleAmenityToggle(amenity.id)}
                                                 className={`
-                                                    p-4 rounded-2xl border flex flex-col items-center gap-3 transition-all
+p - 4 rounded - 2xl border flex flex - col items - center gap - 3 transition - all
                                                     ${formData.amenity_ids.includes(amenity.id)
                                                         ? 'bg-[#D4A373]/10 border-[#D4A373] text-[#D4A373]'
-                                                        : 'bg-[#131C26] border-[#2C3A4E] text-gray-500 hover:border-[#D4A373]/30'}
-                                                `}
+                                                        : 'bg-[#131C26] border-[#2C3A4E] text-gray-500 hover:border-[#D4A373]/30'
+                                                    }
+`}
                                             >
-                                                <div className={`p-2 rounded-xl ${formData.amenity_ids.includes(amenity.id) ? 'bg-[#D4A373] text-[#1B2430]' : 'bg-[#1e293b]'}`}>
+                                                <div className={`p - 2 rounded - xl ${formData.amenity_ids.includes(amenity.id) ? 'bg-[#D4A373] text-[#1B2430]' : 'bg-[#1e293b]'} `}>
                                                     <Plus size={16} />
                                                 </div>
                                                 <span className="font-bold text-xs uppercase tracking-wider">{amenity.label}</span>
@@ -786,13 +953,14 @@ const AddProperty: React.FC = () => {
                                         onDragLeave={() => setDragOver(false)}
                                         onClick={() => fileInputRef.current?.click()}
                                         className={`
-                                            relative border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center gap-4
-                                            cursor-pointer transition-all duration-300 group
+                                            relative border - 2 border - dashed rounded - 3xl p - 10 flex flex - col items - center justify - center gap - 4
+cursor - pointer transition - all duration - 300 group
                                             ${dragOver
                                                 ? 'border-[#D4A373] bg-[#D4A373]/10 scale-[1.01]'
-                                                : 'border-[#2C3A4E] bg-[#131C26] hover:border-[#D4A373]/50 hover:bg-[#D4A373]/5'}
+                                                : 'border-[#2C3A4E] bg-[#131C26] hover:border-[#D4A373]/50 hover:bg-[#D4A373]/5'
+                                            }
                                             ${isUploading ? 'pointer-events-none opacity-70' : ''}
-                                        `}
+`}
                                     >
                                         <input
                                             ref={fileInputRef}
@@ -855,7 +1023,7 @@ const AddProperty: React.FC = () => {
                         {/* ── Navigation ── */}
                         <div className="mt-12 pt-8 border-t border-[#2C3A4E] flex flex-col md:flex-row gap-4 items-center justify-between">
                             <div className="text-gray-500 text-xs font-medium">
-                                {step < 4 ? `Step ${step} of 4: Next is ${step === 1 ? 'Details' : step === 2 ? 'Location' : 'Visuals'}` : 'Final Step: Review and List'}
+                                {step < 5 ? `Step ${step} of 5: Next is ${step === 1 ? 'Details' : step === 2 ? 'Location' : step === 3 ? 'Rules' : 'Amenities'} ` : 'Final Step: Review and List'}
                             </div>
 
                             <div className="flex gap-4 w-full md:w-auto">
@@ -869,7 +1037,7 @@ const AddProperty: React.FC = () => {
                                     </button>
                                 )}
 
-                                {step < 4 ? (
+                                {step < 5 ? (
                                     <button
                                         type="button"
                                         onClick={nextStep}

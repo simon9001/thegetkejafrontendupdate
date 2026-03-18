@@ -42,7 +42,8 @@ import {
     Key,
     Ban,
     MessageCircle,
-    User
+    User,
+    Navigation2
 } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 
@@ -123,7 +124,7 @@ const CommercialPropertyDetails: React.FC = () => {
     const [activeImageIndex, setActiveImageIndex] = useState(0);
 
     // Comprehensive commercial property data - Merge real with mock for UI completeness
-    const property = {
+    const property = useMemo(() => ({
         ...realProperty,
         id: realProperty.id,
         name: realProperty.title,
@@ -138,18 +139,20 @@ const CommercialPropertyDetails: React.FC = () => {
         reviews: 87,
 
         // Gallery
-        gallery: realProperty.images?.map((img: any) => img.image_url) || [
-            'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop'
-        ],
+        gallery: realProperty.images && realProperty.images.length > 0
+            ? realProperty.images.map((img: any) => img.image_url)
+            : [
+                'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop'
+            ],
 
         // Mocking the complex fields for UI richness if not in backend
-        totalArea: realProperty.size || 2500,
+        totalArea: realProperty.size_sqm || realProperty.size || 2500,
         indoorCapacity: Math.floor((realProperty.capacity || 500) * 0.6),
         outdoorCapacity: Math.floor((realProperty.capacity || 500) * 0.4),
-        numberOfRooms: realProperty.bedrooms || 6,
-        numberOfBathrooms: realProperty.bathrooms || 8,
-        parkingCapacity: 50,
-        property_type: realProperty.property_type || 'Convention Center',
+        numberOfRooms: realProperty.bedrooms || 0,
+        numberOfBathrooms: realProperty.bathrooms || 0,
+        parkingCapacity: realProperty.parking_spots || 50,
+        property_type: realProperty.property_type || realProperty.type || 'Convention Center',
         availabilityCalendar: 'Available for 2024/2025 bookings',
 
         pricing: {
@@ -157,16 +160,16 @@ const CommercialPropertyDetails: React.FC = () => {
             halfDay: (realProperty.price_per_day || 50000) * 0.7,
             fullDay: realProperty.price_per_day || 50000,
             weekend: (realProperty.price_per_day || 50000) * 1.5,
-            securityDeposit: 50000,
-            cleaningFee: 10000,
+            securityDeposit: realProperty.security_deposit || 50000,
+            cleaningFee: realProperty.cleaning_fee || 10000,
         },
 
         rules: {
-            allowedEventTypes: ['Weddings', 'Corporate events', 'Product launches', 'Film shoots', 'Private parties'],
+            allowedEventTypes: realProperty.category === 'recreational' ? ['Vacation', 'Short term'] : ['Corporate events', 'Product launches'],
             maxSoundLevel: '85 dB after 10 PM',
             musicCutoffTime: '1 AM',
-            alcoholPolicy: 'Permitted with catering license',
-            requiredPermits: ['Event permit', 'Catering license', 'Alcohol permit'],
+            alcoholPolicy: realProperty.is_smoking_allowed ? 'Smoking allowed' : 'No smoking',
+            requiredPermits: ['Event permit', 'Catering license'],
             ageRestrictions: '21+ for alcohol service',
         },
 
@@ -181,41 +184,37 @@ const CommercialPropertyDetails: React.FC = () => {
             eventsHosted: 156,
             rating: 4.9,
             reviews: 87,
-            pastBrands: ['Vogue', 'Netflix', 'Safaricom', 'BMW', 'Heineken'],
-            cancellationPolicy: 'Moderate - Full refund 7 days prior to event',
+            pastBrands: ['Vogue', 'Netflix', 'Safaricom'],
+            cancellationPolicy: 'Moderate - Full refund 7 days prior',
         },
 
         // Carry over other mock fields for the WOW factor
-        architecturalStyle: 'Contemporary Glass & Steel',
-        interiorTheme: 'Minimalist with warm wood accents',
-        naturalLighting: 'Floor-to-ceiling windows on three sides, skylights',
-        uniqueFeatures: [
+        uniqueFeatures: realProperty.amenities?.map(a => a.name) || [
             '12 ft glass walls',
             'Grand staircase',
-            'Rooftop deck with city views',
-            'Private lake access',
+            'Rooftop deck',
         ],
         ceilingHeight: '8-12 meters',
-        powerCapacity: '200 amps, 3-phase available',
-        generatorBackup: '125 kVA diesel generator',
-        wifiSpeed: '250 Mbps fiber',
-        soundSystem: 'Built-in surround sound with zone control',
-        lightingSystem: 'Programmable RGB LED throughout',
+        powerCapacity: '200 amps',
+        generatorBackup: '125 kVA generator',
+        wifiSpeed: realProperty.internet_speed || '250 Mbps',
+        soundSystem: 'Built-in surround sound',
+        lightingSystem: 'Programmable LED',
         djBoothAvailable: true,
         stageAvailable: true,
-        airConditioning: '200 ton centralized AC',
-        equipmentLoading: 'Ground-level roll-in access, freight elevator',
+        airConditioning: 'Centralized AC',
+        equipmentLoading: 'Ground-level access',
         safety: {
             fireExits: 6,
             cctv: true,
         },
         locationInfo: {
-            accessibility: 'Paved road, 2km from highway',
-            neighborhoodType: 'Private hillside estate',
-            privacyRating: 'High - gated community',
-            nearbyLandmarks: ['Local Landmark 1', 'Local Landmark 2'],
+            accessibility: 'Paved road',
+            neighborhoodType: realProperty.neighborhood?.community_vibe || 'Private hillside estate',
+            privacyRating: 'High',
+            nearbyLandmarks: proximityData?.landmarks?.map(l => l.name).slice(0, 3) || ['City Center', 'Main Station'],
         }
-    };
+    }), [realProperty, proximityData]);
 
 
 
@@ -309,6 +308,16 @@ const CommercialPropertyDetails: React.FC = () => {
                             <Users className="w-4 h-4 text-gray-400" />
                             <span className="text-sm text-gray-600">Up to {property.maxCapacity} guests</span>
                         </div>
+                        <div className="w-px h-4 bg-gray-300"></div>
+                        <a
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 text-sm font-bold text-[#D4A373] hover:underline"
+                        >
+                            <Navigation2 className="w-4 h-4" />
+                            <span>Get Directions</span>
+                        </a>
                     </div>
 
                     {/* Price and Quick Actions */}

@@ -1,8 +1,0 @@
-
-> getkejafrontend@0.0.0 build C:\Users\Administrator\THE-HouseHunting\The new system\Getkejafrontend
-> tsc -b && vite build
-
-src/pages/properties/PropertyDetails.tsx(22,5): error TS6133: 'TrendingUp' is declared but its value is never read.
-src/pages/properties/PropertyDetails.tsx(26,5): error TS6133: 'ShoppingBag' is declared but its value is never read.
-src/pages/properties/PropertyDetails.tsx(27,5): error TS6133: 'Volume2' is declared but its value is never read.
-ΓÇëELIFECYCLEΓÇë Command failed with exit code 2.

@@ -107,6 +107,16 @@ const PropertyDetails: React.FC = () => {
 
     const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.authSlice);
 
+    // Helper function to resolve icon from name
+    const getIconByName = (name: string) => {
+        const icons: { [key: string]: any } = {
+            Wifi, Car, Droplets, Monitor, Wind, Utensils, UserCircle, Mountain, Sparkles,
+            Home, Ruler, Bed, Bath, Building2, CalendarDays, Shield, Eye, Clock,
+            School, Hospital, Bus, Sun, Navigation2
+        };
+        return icons[name] || Sparkles;
+    };
+
     // Helper function to render section headers
     const SectionHeader = ({ title, icon: Icon }: { title: string; icon: any }) => (
         <div className="flex items-center gap-2 mb-4">
@@ -144,33 +154,31 @@ const PropertyDetails: React.FC = () => {
     }
 
     // Standard mapping for residential properties
-    const propertyData = { // Renamed to propertyData to avoid conflict with `property` from useGetPropertyQuery
+    const propertyData = useMemo(() => ({
         id: realProperty.id,
         title: realProperty.title,
         description: realProperty.description,
-        price: realProperty.price,
-        currency: 'KSh',
-        location: realProperty.location?.address || 'Nairobi, Kenya',
-        type: realProperty.type || 'Apartment',
-        rating: 4.8,
-        reviews: 24,
-        sizes: realProperty.size,
-        bedrooms: realProperty.bedrooms,
-        bathrooms: realProperty.bathrooms,
-        floorLevel: '4th Floor',
-        furnished: 'Fully Furnished',
-        yearBuilt: 2022,
-        internetSpeed: '50 Mbps',
+        price: realProperty.price_per_month || realProperty.price_per_night || realProperty.price || 0,
+        currency: realProperty.currency || 'KSh',
+        location: realProperty.location?.address || realProperty.location?.town || 'Kenya',
+        type: realProperty.property_type || realProperty.type || 'Apartment',
+        rating: 4.8, // Default for now
+        reviews: 24, // Default for now
+        sizes: realProperty.size_sqm || realProperty.size || 0,
+        bedrooms: realProperty.bedrooms || 0,
+        bathrooms: realProperty.bathrooms || 0,
+        floorLevel: realProperty.floor_level || 'N/A',
+        furnished: realProperty.furnished_status || 'Unfurnished',
+        yearBuilt: realProperty.year_built || 'N/A',
+        internetSpeed: realProperty.internet_speed || 'N/A',
         images: realProperty.images && realProperty.images.length > 0
             ? realProperty.images.map((img: any) => img.image_url)
             : [
                 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop',
-                'https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070&auto=format&fit=crop'
             ],
         host: {
             id: realProperty.owner?.id,
-            name: realProperty.owner?.full_name || 'Admin Host',
+            name: realProperty.owner?.full_name || 'Host',
             avatar: realProperty.owner?.avatar_url || 'https://img.daisyui.com/images/profile/demo/anon@192.webp',
             joined: 'Oct 2021',
             responseRate: 98,
@@ -178,40 +186,39 @@ const PropertyDetails: React.FC = () => {
             verified: true,
             properties: 12
         },
-        amenities: [
-            { name: 'High-speed WiFi', icon: Wifi },
-            { name: 'Smart TV', icon: Monitor },
-            { name: 'Air Conditioning', icon: Wind },
-            { name: 'Full Kitchen', icon: Utensils },
-            { name: 'Washer', icon: UserCircle },
-            { name: 'Free Parking', icon: Car },
-            { name: 'Swimming Pool', icon: Droplets },
-            { name: 'Mountain View', icon: Mountain },
-            { name: 'Cleaning Service', icon: Sparkles }
-        ],
+        amenities: realProperty.amenities && realProperty.amenities.length > 0
+            ? realProperty.amenities.map(a => ({
+                name: a.name,
+                icon: (a as any).icon_name || 'Sparkles', // We'll handle icon resolution in the UI
+                details: (a as any).details
+            }))
+            : [
+                { name: 'High-speed WiFi', icon: 'Wifi' },
+                { name: 'Free Parking', icon: 'Car' },
+                { name: 'Water Included', icon: 'Droplets' }
+            ],
         status: {
-            verifiedProperty: true,
+            verifiedProperty: realProperty.is_verified || false,
             instantBook: true,
-            views: 1240,
-            dateListed: '2024-01-15'
+            views: realProperty.views_count || 0,
+            dateListed: realProperty.created_at || new Date().toISOString()
         },
         pricing: {
-            cleaningFee: 1500,
-            serviceCharge: 800,
-            tax: 500,
-            securityDeposit: 5000
+            cleaningFee: realProperty.cleaning_fee || 0,
+            serviceCharge: realProperty.service_fee || 0,
+            tax: realProperty.tax_amount || 0,
+            securityDeposit: realProperty.security_deposit || 0
         },
         idealFor: ['Nature Lovers', 'Remote Workers', 'Small Families'],
         houseRules: [
-            'Check-in: After 2:00 PM',
-            'Check-out: 11:00 AM',
-            'No smoking',
-            'No pets',
-            'No parties or events'
+            realProperty.is_pet_friendly ? 'Pets allowed' : 'No pets',
+            realProperty.is_smoking_allowed ? 'Smoking allowed' : 'No smoking',
+            `Notice period: ${realProperty.notice_period || '1 month'}`,
+            `Lease duration: ${realProperty.lease_duration || '12 months'}`
         ],
-        communityVibe: 'Quiet, upscale residential community with a mix of professionals and families. Very safe for evening walks.',
-        lightExposure: 'Excellent natural light with south-facing windows in the living room.'
-    };
+        communityVibe: realProperty.neighborhood?.community_vibe || 'Quiet, upscale residential community.',
+        lightExposure: realProperty.neighborhood?.light_exposure || 'Excellent natural light.'
+    }), [realProperty]);
 
     // Section removed from inside component as it's now defined outside
 
@@ -262,6 +269,16 @@ const PropertyDetails: React.FC = () => {
                         <Clock className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-600">Listed {new Date(propertyData.status.dateListed).toLocaleDateString()}</span>
                     </div>
+                    <div className="w-px h-4 bg-gray-300"></div>
+                    <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-sm font-bold text-[#D4A373] hover:underline"
+                    >
+                        <Navigation2 className="w-4 h-4" />
+                        <span>Get Directions</span>
+                    </a>
                 </div>
 
                 {/* Visual Proof Section - Image Gallery */}
@@ -413,7 +430,7 @@ const PropertyDetails: React.FC = () => {
                             <SectionHeader title="What this place offers" icon={Layers} />
                             <div className="grid grid-cols-2 gap-4">
                                 {(showAllAmenities ? propertyData.amenities : propertyData.amenities.slice(0, 6)).map((amenity, index) => {
-                                    const Icon = amenity.icon;
+                                    const Icon = typeof amenity.icon === 'string' ? getIconByName(amenity.icon) : amenity.icon;
                                     const details = (amenity as any).details;
                                     return (
                                         <div key={index} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition">
