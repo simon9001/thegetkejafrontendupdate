@@ -85,8 +85,9 @@ const VacationHub: React.FC = () => {
         if (!props) return [];
         let filtered = props;
 
-        // Ensure only verified properties are shown and hide struck ones
-        filtered = filtered.filter(p => p.is_verified === true && !p.is_struck);
+        // Ensure only active properties are shown and hide struck ones
+        // Removed `is_verified === true` to allow unverified properties to appear (e.g., newly added ones)
+        filtered = filtered.filter(p => !p.is_struck);
 
         const categorized = selectedCategories.length === 0
             ? filtered
@@ -165,7 +166,7 @@ const VacationHub: React.FC = () => {
 
         const displayPrice = property.price_per_month || property.price_per_night || property.price || 0;
         const priceLabel = property.price_per_month ? 'month' : 'night';
-        const primaryImage = property.images?.find((img: any) => img.is_primary)?.image_url || property.images?.[0]?.image_url || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400';
+        const primaryImage = property.image || property.images?.find((img: any) => img.is_primary)?.image_url || property.images?.[0]?.image_url || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400';
 
         return (
             <div

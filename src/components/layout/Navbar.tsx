@@ -102,9 +102,9 @@ const Navbar: React.FC<NavbarProps> = ({
                         className="flex items-center gap-1 text-xl lg:text-2xl font-bold"
                     >
                         <span className={transparent && !isScrolled ? 'text-white' : 'text-[#1B2430]'}>
-                            vacation
+                            Get
                         </span>
-                        <span className="text-[#D4A373]">hub</span>
+                        <span className="text-[#D4A373]">kaja</span>
                     </Link>
 
                     {/* Search Bar - Desktop */}

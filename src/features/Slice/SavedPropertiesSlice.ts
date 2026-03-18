@@ -8,7 +8,8 @@ export interface SavedProperty {
     category: string;
     price: number;
     rating: number;
-    image: string;
+    image?: string;
+    images?: Array<{ image_url: string; is_primary: boolean }>;
     badge?: string;
     bedrooms?: number;
     bathrooms?: number;
@@ -47,8 +48,13 @@ export const savedPropertiesSlice = createSlice({
             // Check if already saved
             const exists = state.items.some(item => item.id === action.payload.id);
             if (!exists) {
+                const primaryImage = action.payload.image ||
+                    action.payload.images?.find((img: any) => img.is_primary)?.image_url ||
+                    action.payload.images?.[0]?.image_url;
+
                 const newItem = {
                     ...action.payload,
+                    image: primaryImage,
                     savedAt: new Date().toISOString(),
                 };
                 state.items.push(newItem);
@@ -65,8 +71,13 @@ export const savedPropertiesSlice = createSlice({
             const index = state.items.findIndex(item => item.id === action.payload.id);
             if (index === -1) {
                 // Add if not exists
+                const primaryImage = action.payload.image ||
+                    action.payload.images?.find((img: any) => img.is_primary)?.image_url ||
+                    action.payload.images?.[0]?.image_url;
+
                 const newItem = {
                     ...action.payload,
+                    image: primaryImage,
                     savedAt: new Date().toISOString(),
                 };
                 state.items.push(newItem);
@@ -89,12 +100,12 @@ export const savedPropertiesSlice = createSlice({
     },
 });
 
-export const { 
-    addToSaved, 
-    removeFromSaved, 
-    toggleSaved, 
+export const {
+    addToSaved,
+    removeFromSaved,
+    toggleSaved,
     clearSaved,
-    syncWithUser 
+    syncWithUser
 } = savedPropertiesSlice.actions;
 
 export default savedPropertiesSlice.reducer;
