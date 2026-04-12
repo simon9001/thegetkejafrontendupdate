@@ -1,39 +1,105 @@
+// frontend/src/features/Api/DashboardApi.ts
+// Maps to actual backend routes:
+//   GET /api/landlord/dashboard  → landlord KPI cards
+//   GET /api/users               → admin user list
+//   PATCH /api/users/:id/roles   → update roles
+//   PATCH /api/users/:id/status  → update account status
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './baseQuery';
 
+// ─── Landlord dashboard KPIs ────────────────────────────────────────────────
+export interface LandlordKpi {
+  properties:  { total: number; active: number; vacant: number };
+  tenancies:   { active: number; pending: number };
+  visits:      { pending_confirmation: number; upcoming: number };
+  revenue:     { this_month_kes: number; escrow_kes: number };
+  short_stay:  { active_bookings: number; pending_payment: number };
+  team:        { caretakers: number; agents: number };
+  code?: string;
+}
+
+// Unified stats shape (backend returns role-specific subset)
+export interface DashboardStats {
+  // Landlord / Agent
+  ownedProperties?:   number;
+  activeBookings?:    number;
+  totalRent?:         number;
+  activeCaretakers?:  number;
+  // Caretaker
+  managedUnits?:      number;
+  openTickets?:       number;
+  completedJobs?:     number;
+  // Verifier
+  pendingProperties?:         number;
+  pendingUserVerifications?:  number;
+  activeDisputes?:            number;
+  // Admin
+  totalUsers?:                number;
+  totalProperties?:           number;
+  pendingVerifications?:      number;
+  monthlyRevenue?:            number;
+}
+
 export const DashboardApi = createApi({
-    reducerPath: 'dashboardApi',
-    baseQuery: baseQueryWithReauth,
-    endpoints: (builder) => ({
-        getDashboardStats: builder.query<any, void>({
-            query: () => '/dashboard/stats',
-        }),
-        getUsers: builder.query<any, { page?: number; limit?: number; search?: string }>({
-            query: ({ page = 1, limit = 10, search = '' }) => ({
-                url: '/users',
-                params: { page, limit, search },
-            }),
-        }),
-        updateUserRole: builder.mutation<any, { id: string; roles: string[] }>({
-            query: ({ id, roles }) => ({
-                url: `/users/${id}/role`,
-                method: 'PATCH',
-                body: { roles },
-            }),
-        }),
-        updateUserStatus: builder.mutation<any, { id: string; status: string }>({
-            query: ({ id, status }) => ({
-                url: `/users/${id}/status`,
-                method: 'PATCH',
-                body: { status },
-            }),
-        }),
+  reducerPath: 'dashboardApi',
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ['Dashboard', 'Users'],
+  endpoints: (builder) => ({
+
+    // ── Unified role-aware dashboard stats ──────────────────────────────────
+    getDashboardStats: builder.query<DashboardStats, void>({
+      query: () => 'dashboard/stats',
+      providesTags: ['Dashboard'],
     }),
+
+    // ── Landlord dashboard (legacy alias — kept for backward compat) ─────────
+    getLandlordDashboard: builder.query<LandlordKpi, void>({
+      query: () => 'dashboard/stats',
+      providesTags: ['Dashboard'],
+    }),
+
+    // ── Admin user list ─────────────────────────────────────────────────────
+    // Backend: GET /api/users  (super_admin / staff only)
+    getUsers: builder.query<any, { page?: number; limit?: number; search?: string; status?: string; role?: string }>({
+      query: ({ page = 1, limit = 10, search = '', status, role } = {}) => {
+        const q = new URLSearchParams({ page: String(page), limit: String(limit) });
+        if (search) q.set('search', search);
+        if (status) q.set('status', status);
+        if (role)   q.set('role', role);
+        return `users?${q}`;
+      },
+      providesTags: ['Users'],
+    }),
+
+    // ── Role management ─────────────────────────────────────────────────────
+    // Backend: PATCH /api/users/:id/roles
+    updateUserRole: builder.mutation<any, { id: string; roles: string[] }>({
+      query: ({ id, roles }) => ({
+        url: `users/${id}/roles`,
+        method: 'PATCH',
+        body: { roles },
+      }),
+      invalidatesTags: ['Users'],
+    }),
+
+    // ── Account status ──────────────────────────────────────────────────────
+    // Backend: PATCH /api/users/:id/status
+    // status: 'active' | 'suspended' | 'banned' | 'pending_verify'
+    updateUserStatus: builder.mutation<any, { id: string; status: string }>({
+      query: ({ id, status }) => ({
+        url: `users/${id}/status`,
+        method: 'PATCH',
+        body: { status },
+      }),
+      invalidatesTags: ['Users'],
+    }),
+  }),
 });
 
 export const {
-    useGetDashboardStatsQuery,
-    useGetUsersQuery,
-    useUpdateUserRoleMutation,
-    useUpdateUserStatusMutation
+  useGetDashboardStatsQuery,
+  useGetLandlordDashboardQuery,
+  useGetUsersQuery,
+  useUpdateUserRoleMutation,
+  useUpdateUserStatusMutation,
 } = DashboardApi;

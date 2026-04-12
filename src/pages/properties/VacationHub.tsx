@@ -8,7 +8,7 @@ import StatusPreview from '../../components/property/StatusPreview.js';
 import FilterButton from '../../components/ui/FilterButton.js';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSearchByRadiusQuery } from '../../features/Api/SpatialApi.js';
-import { useGetPropertiesQuery, useSearchNaturalQuery } from '../../features/Api/PropertiesApi.js';
+import { useGetPublicPropertiesQuery, useSearchNaturalQuery } from '../../features/Api/PropertiesApi.js';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.js';
 import { statusData } from '../../data/statusData.js';
@@ -41,7 +41,7 @@ const VacationHub: React.FC = () => {
         { skip: !isSearchActive }
     );
 
-    const { data: catProperties, isFetching: isCatLoading } = useGetPropertiesQuery(
+    const { data: catProperties, isFetching: isCatLoading } = useGetPublicPropertiesQuery(
         { category: activeCategory === 'featured' ? undefined : activeCategory },
         { skip: !!heroSearchResults }
     );
@@ -142,7 +142,7 @@ const VacationHub: React.FC = () => {
     const handleClearAllFilters = () => {
         setSelectedCategories([]);
     };
-    const { isAuthenticated } = useSelector((state: RootState) => state.authSlice);
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
     const handleStatusClick = (index: number) => {
         setStatusInitialIndex(index);
@@ -164,9 +164,18 @@ const VacationHub: React.FC = () => {
             }
         };
 
-        const displayPrice = property.price_per_month || property.price_per_night || property.price || 0;
-        const priceLabel = property.price_per_month ? 'month' : 'night';
-        const primaryImage = property.image || property.images?.find((img: any) => img.is_primary)?.image_url || property.images?.[0]?.image_url || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400';
+        // Support both flat fields (old) and nested backend shape (new)
+        const monthlyRent  = property.pricing?.monthly_rent  ?? property.price_per_month  ?? 0;
+        const askingPrice  = property.pricing?.asking_price   ?? property.price_per_night  ?? property.price ?? 0;
+        const displayPrice = monthlyRent || askingPrice;
+        const priceLabel   = monthlyRent ? 'month' : 'night';
+        const primaryImage =
+          property.media?.find((m: any) => m.is_cover)?.url ??
+          property.media?.[0]?.url ??
+          property.image ??
+          property.images?.find((img: any) => img.is_primary)?.image_url ??
+          property.images?.[0]?.image_url ??
+          'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400';
 
         return (
             <div
@@ -211,7 +220,7 @@ const VacationHub: React.FC = () => {
                     </div>
 
                     <p className="text-xs text-gray-500">
-                        {property.location?.town || property.neighborhood?.name || 'International'}
+                        {property.location?.area ?? property.location?.town ?? property.neighborhood?.name ?? 'Kenya'}
                     </p>
 
                     <p className="mt-1.5 flex items-baseline gap-1">

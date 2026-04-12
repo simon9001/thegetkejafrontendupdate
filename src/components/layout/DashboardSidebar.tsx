@@ -28,8 +28,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) 
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user } = useSelector((state: RootState) => state.authSlice);
-    const role = user?.role || '';
+    const { user } = useSelector((state: RootState) => state.auth);
+    const role = user?.roles?.[0] || '';
     const [logout] = useLogoutMutation();
 
     const handleLogout = async () => {

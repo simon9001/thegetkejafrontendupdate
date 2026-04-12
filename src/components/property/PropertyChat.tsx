@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Send, Clock } from 'lucide-react';
 import {
@@ -89,9 +90,10 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
 
         if (!isChatOpen && !activeConversationId) {
             try {
-                const hostId = host.id;
+                const hostId = host.id || (host as any).owner_id || (host as any).ownerId;
                 if (!hostId) {
-                    console.error('Host ID is missing');
+                    console.error('Host ID is missing for property:', propertyId, 'Host object:', host);
+                    toast.error('Unable to start chat: Host information is unavailable.');
                     return;
                 }
 
@@ -115,7 +117,7 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
         try {
             await sendMsg({
                 conversationId: activeConversationId,
-                message: currentMsg
+                content: currentMsg,
             }).unwrap();
         } catch (error) {
             console.error('Failed to send message:', error);

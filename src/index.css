@@ -1,347 +1,457 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-:root {
-  /* Original Colors - Keep for legacy */
-  --navy-original: #1B2430;
-  --gold-original: #C5A373;
-  --gold-dark-original: #8B6E4E;
-  --bg-warm: #FCFAF2;
+/* ─── Airbnb Design System ──────────────────────────────────────────────────
+   Font:    Plus Jakarta Sans (loaded in index.html) ≈ Airbnb Cereal VF
+   Fallback stack matches Airbnb spec exactly.
+   Weights used: 500 (medium), 600 (semibold), 700 (bold) — warm weight range.
+────────────────────────────────────────────────────────────────────────────── */
 
-  /* Enhanced Color Palette - Brighter & More Vibrant */
-  --navy-dark: #1B2430;        /* Headers, footers - keep dark */
-  --navy-primary: #232F3F;      /* Cards, sections */
-  --navy-light: #2C3A4E;        /* Hover states, borders */
-  
-  --gold-primary: #D4A373;       /* Primary buttons, accents */
-  --gold-vibrant: #E6B17E;       /* CTAs, important elements */
-  --gold-light: #F0D5B0;         /* Backgrounds, highlights */
-  --gold-dark: #8B6E4E;          /* Text on light backgrounds */
-  
-  --bg-cream: #FFF9F0;           /* Cards, elevated surfaces */
-  --bg-warm-original: #FCFAF2;   /* Page background */
-  
-  /* Text colors */
-  --text-primary: #1B2430;
-  --text-secondary: #4A5568;
-  --text-muted: #718096;
-  
-  /* Status colors */
-  --success: #10B981;
-  --error: #EF4444;
-  --warning: #F59E0B;
-  --info: #3B82F6;
-  
-  /* Functional colors - Improved contrast */
-  --gold-readable: #DEAD7A;      /* For text on dark backgrounds */
-  
-  /* Font settings */
+:root {
+  /* ── Brand ─────────────────────────────────── */
+  --color-rausch:       #ff385c;   /* primary CTA / brand accent               */
+  --color-rausch-dark:  #e00b41;   /* pressed / hover state                    */
+  --color-luxe:         #460479;   /* premium tier                             */
+  --color-plus:         #92174d;   /* plus tier                                */
+
+  /* ── Text scale ────────────────────────────── */
+  --color-text-primary:    #222222; /* near-black — warm, not cold              */
+  --color-text-secondary:  #6a6a6a; /* descriptions, meta                      */
+  --color-text-disabled:   rgba(0, 0, 0, 0.24);
+  --color-text-link:       #428bff; /* legal / informational links              */
+
+  /* ── Surface ───────────────────────────────── */
+  --color-surface:         #ffffff;
+  --color-surface-raised:  #f2f2f2; /* nav buttons, secondary surfaces          */
+  --color-border:          #c1c1c1;
+
+  /* ── Status ────────────────────────────────── */
+  --color-success:  #008a05;
+  --color-error:    #c13515;
+  --color-warning:  #f59e0b;
+  --color-info:     #428bff;
+
+  /* ── Shadows (Airbnb three-layer system) ───── */
+  --shadow-card:
+    rgba(0, 0, 0, 0.02) 0px 0px 0px 1px,
+    rgba(0, 0, 0, 0.04) 0px 2px 6px,
+    rgba(0, 0, 0, 0.10) 0px 4px 8px;
+  --shadow-hover:  rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  --shadow-focus:  rgb(255, 255, 255) 0px 0px 0px 4px, rgba(0, 0, 0, 0.18) 0px 0px 0px 6px;
+
+  /* ── Border radius scale ────────────────────── */
+  --radius-subtle:  4px;   /* small links                                      */
+  --radius-btn:     8px;   /* buttons, tabs, search elements                   */
+  --radius-badge:   14px;  /* status badges, labels                            */
+  --radius-card:    20px;  /* feature cards, large buttons                     */
+  --radius-large:   32px;  /* large containers, hero elements                  */
+  --radius-circle:  50%;   /* nav controls, avatars                            */
+
+  /* ── Spacing base unit: 8px ─────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* ── Font smoothing ─────────────────────────── */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
+/* ─── Base ──────────────────────────────────────────────────────────────── */
 body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-warm-original);
-  color: var(--text-primary);
-  line-height: 1.5;
-  min-height: 100vh;
+  margin:           0;
+  padding:          0;
+  box-sizing:       border-box;
+  /* Airbnb Cereal VF fallback stack */
+  font-family:
+    "Plus Jakarta Sans",
+    "Circular",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-weight:      500;     /* Airbnb body weight minimum is 500 (medium) */
+  background-color: var(--color-surface);
+  color:            var(--color-text-primary);
+  line-height:      1.5;
+  min-height:       100vh;
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Sharpness fixes for transforms */
-.transform-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-  -webkit-font-smoothing: subpixel-antialiased;
+/* ─── Heading typography ─────────────────────────────────────────────────── */
+h1, h2, h3 {
+  font-weight:    700;
+  letter-spacing: -0.44px;  /* Airbnb negative tracking for intimacy */
+  line-height:    1.18;
+  color:          var(--color-text-primary);
 }
 
-/* Hide scrollbars but keep functionality */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+h4, h5, h6 {
+  font-weight:    600;
+  letter-spacing: -0.18px;
+  line-height:    1.20;
+  color:          var(--color-text-primary);
 }
 
+/* ─── Utility: scrollbar hide ────────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar {
   -ms-overflow-style: none;
-  scrollbar-width: none;
+  scrollbar-width:    none;
 }
 
-/* Custom gradient backgrounds */
-.bg-gradient-gold {
-  background: linear-gradient(135deg, var(--gold-primary), var(--gold-vibrant));
+/* ─── Airbnb card shadow ─────────────────────────────────────────────────── */
+.card-airbnb {
+  background:    var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow:    var(--shadow-card);
+  transition:    box-shadow 200ms ease;
+}
+.card-airbnb:hover {
+  box-shadow: var(--shadow-hover);
 }
 
-.bg-gradient-navy {
-  background: linear-gradient(135deg, var(--navy-dark), var(--navy-primary));
+/* ─── Listing card (photography-first) ──────────────────────────────────── */
+.listing-card {
+  background:    var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow:    var(--shadow-card);
+  overflow:      hidden;
+  transition:    box-shadow 200ms ease, transform 200ms ease;
+}
+.listing-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform:  translateY(-2px);
 }
 
-.bg-gradient-warm {
-  background: linear-gradient(135deg, var(--bg-warm-original), var(--bg-cream));
+.listing-card__image {
+  width:            100%;
+  aspect-ratio:     16 / 10;
+  object-fit:       cover;
+  border-radius:    var(--radius-card) var(--radius-card) 0 0;
+  display:          block;
 }
 
-/* Button styles */
-.btn-gold {
-  background-color: var(--gold-primary);
-  color: white;
-  transition: all 0.2s ease;
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+
+/* Primary dark button  (#222222 bg, white text) */
+.btn-primary {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  background-color: var(--color-text-primary);
+  color:           #ffffff;
+  font-family:     inherit;
+  font-weight:     500;
+  font-size:       1rem;        /* 16px */
+  line-height:     1.25;
+  padding:         0 24px;
+  height:          48px;
+  border:          none;
+  border-radius:   var(--radius-btn);
+  cursor:          pointer;
+  transition:      background-color 150ms ease, box-shadow 150ms ease, transform 100ms ease;
+}
+.btn-primary:hover  { background-color: var(--color-rausch); box-shadow: var(--shadow-hover); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
+
+/* Brand red CTA button */
+.btn-brand {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  background-color: var(--color-rausch);
+  color:           #ffffff;
+  font-family:     inherit;
+  font-weight:     500;
+  font-size:       1rem;
+  line-height:     1.25;
+  padding:         0 24px;
+  height:          48px;
+  border:          none;
+  border-radius:   var(--radius-btn);
+  cursor:          pointer;
+  transition:      background-color 150ms ease, box-shadow 150ms ease, transform 100ms ease;
+}
+.btn-brand:hover  { background-color: var(--color-rausch-dark); box-shadow: var(--shadow-hover); }
+.btn-brand:active { transform: scale(0.97); }
+.btn-brand:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
+
+/* Circular nav control button */
+.btn-circle-nav {
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  width:            32px;
+  height:           32px;
+  background-color: var(--color-surface-raised);
+  color:            var(--color-text-primary);
+  border:           1px solid var(--color-border);
+  border-radius:    var(--radius-circle);
+  cursor:           pointer;
+  transition:       box-shadow 150ms ease, transform 100ms ease;
+}
+.btn-circle-nav:hover  { box-shadow: var(--shadow-hover); }
+.btn-circle-nav:active { transform: scale(0.92); }
+.btn-circle-nav:focus-visible { box-shadow: var(--shadow-focus); outline: none; }
+
+/* Ghost / outline button */
+.btn-ghost {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             8px;
+  background-color: transparent;
+  color:           var(--color-text-primary);
+  font-family:     inherit;
+  font-weight:     500;
+  font-size:       1rem;
+  padding:         0 16px;
+  height:          40px;
+  border:          1px solid var(--color-border);
+  border-radius:   var(--radius-btn);
+  cursor:          pointer;
+  transition:      background-color 150ms ease, box-shadow 150ms ease;
+}
+.btn-ghost:hover { background-color: var(--color-surface-raised); }
+
+/* ─── Search bar ─────────────────────────────────────────────────────────── */
+.search-bar {
+  display:          flex;
+  align-items:      center;
+  background-color: var(--color-surface);
+  border-radius:    var(--radius-large);
+  box-shadow:       var(--shadow-card);
+  overflow:         hidden;
+  transition:       box-shadow 200ms ease;
+}
+.search-bar:hover, .search-bar:focus-within {
+  box-shadow: var(--shadow-hover);
 }
 
-.btn-gold:hover {
-  background-color: var(--gold-vibrant);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(212, 163, 115, 0.3);
-}
-
-.btn-gold:active {
-  transform: translateY(0);
-}
-
-.btn-outline-gold {
-  border: 2px solid var(--gold-primary);
-  color: var(--gold-primary);
+.search-bar__segment {
+  flex:       1;
+  padding:    12px 16px;
+  border:     none;
   background: transparent;
+  font-family: inherit;
+  font-size:  0.875rem;   /* 14px */
+  font-weight: 400;
+  color:      var(--color-text-primary);
+  outline:    none;
+  cursor:     pointer;
+  transition: background-color 150ms ease;
+}
+.search-bar__segment:hover { background-color: rgba(0, 0, 0, 0.04); }
+
+.search-bar__divider {
+  width:      1px;
+  height:     24px;
+  background: var(--color-border);
+  flex-shrink: 0;
 }
 
-.btn-outline-gold:hover {
-  background-color: var(--gold-primary);
-  color: white;
+.search-bar__button {
+  display:         flex;
+  align-items:     center;
+  gap:             8px;
+  background-color: var(--color-rausch);
+  color:           #ffffff;
+  border:          none;
+  border-radius:   var(--radius-circle);
+  padding:         12px;
+  margin:          6px;
+  cursor:          pointer;
+  transition:      background-color 150ms ease, transform 100ms ease;
+}
+.search-bar__button:hover  { background-color: var(--color-rausch-dark); }
+.search-bar__button:active { transform: scale(0.94); }
+
+/* ─── Category pill bar ──────────────────────────────────────────────────── */
+.category-bar {
+  display:     flex;
+  gap:         32px;
+  overflow-x:  auto;
+  padding:     12px 0;
+}
+.category-bar::-webkit-scrollbar { display: none; }
+
+.category-pill {
+  display:       flex;
+  flex-direction: column;
+  align-items:   center;
+  gap:           6px;
+  padding:       8px 4px 12px;
+  border-bottom: 2px solid transparent;
+  cursor:        pointer;
+  white-space:   nowrap;
+  color:         var(--color-text-secondary);
+  font-size:     0.75rem;   /* 12px */
+  font-weight:   600;
+  transition:    color 150ms ease, border-color 150ms ease;
+  flex-shrink:   0;
+}
+.category-pill:hover, .category-pill--active {
+  color:         var(--color-text-primary);
+  border-color:  var(--color-text-primary);
 }
 
-/* Card styles */
-.card-cream {
-  background-color: var(--bg-cream);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+/* ─── Badge ──────────────────────────────────────────────────────────────── */
+.badge {
+  display:         inline-flex;
+  align-items:     center;
+  padding:         2px 8px;
+  border-radius:   var(--radius-badge);
+  font-size:       0.6875rem;   /* 11px */
+  font-weight:     600;
+  line-height:     1.18;
+}
+.badge--brand  { background: var(--color-rausch);    color: #fff; }
+.badge--muted  { background: var(--color-surface-raised); color: var(--color-text-secondary); }
+.badge--success { background: #d1fae5; color: #065f46; }
+.badge--warning { background: #fef3c7; color: #92400e; }
+.badge--error   { background: #fee2e2; color: #991b1b; }
+
+/* ─── Heart / wishlist overlay ───────────────────────────────────────────── */
+.heart-btn {
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  width:            32px;
+  height:           32px;
+  background:       transparent;
+  border:           none;
+  border-radius:    var(--radius-circle);
+  cursor:           pointer;
+  filter:           drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+  transition:       transform 150ms ease;
+}
+.heart-btn:hover  { transform: scale(1.1); }
+.heart-btn:active { transform: scale(0.95); }
+
+/* ─── Input / form fields ────────────────────────────────────────────────── */
+.input-airbnb {
+  width:         100%;
+  background:    var(--color-surface);
+  color:         var(--color-text-primary);
+  font-family:   inherit;
+  font-weight:   400;
+  font-size:     1rem;
+  padding:       12px 16px;
+  border:        1px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  outline:       none;
+  transition:    border-color 150ms ease, box-shadow 150ms ease;
+}
+.input-airbnb:focus {
+  border-color: var(--color-text-primary);
+  box-shadow:   0 0 0 2px var(--color-text-primary);
+}
+.input-airbnb::placeholder { color: var(--color-text-secondary); }
+
+/* ─── Status/alert strips ────────────────────────────────────────────────── */
+.alert-success { background: rgba(0,138,5,0.08);   border: 1px solid var(--color-success); color: var(--color-success); padding: 12px 16px; border-radius: var(--radius-btn); }
+.alert-error   { background: rgba(193,53,21,0.08); border: 1px solid var(--color-error);   color: var(--color-error);   padding: 12px 16px; border-radius: var(--radius-btn); }
+.alert-warning { background: rgba(245,158,11,0.08);border: 1px solid var(--color-warning); color: var(--color-warning); padding: 12px 16px; border-radius: var(--radius-btn); }
+.alert-info    { background: rgba(66,139,255,0.08);border: 1px solid var(--color-info);    color: var(--color-info);    padding: 12px 16px; border-radius: var(--radius-btn); }
+
+/* ─── GPU transform fix ──────────────────────────────────────────────────── */
+.transform-gpu {
+  transform:               translateZ(0);
+  backface-visibility:     hidden;
+  perspective:             1000px;
+  -webkit-font-smoothing:  subpixel-antialiased;
 }
 
-/* Alert/Notification styles */
-.alert-success {
-  background-color: rgba(16, 185, 129, 0.1);
-  border: 1px solid var(--success);
-  color: var(--success);
-}
-
-.alert-error {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--error);
-  color: var(--error);
-}
-
-.alert-warning {
-  background-color: rgba(245, 158, 11, 0.1);
-  border: 1px solid var(--warning);
-  color: var(--warning);
-}
-
-.alert-info {
-  background-color: rgba(59, 130, 246, 0.1);
-  border: 1px solid var(--info);
-  color: var(--info);
-}
-
-/* Text colors */
-.text-gold-primary {
-  color: var(--gold-primary);
-}
-
-.text-gold-vibrant {
-  color: var(--gold-vibrant);
-}
-
-.text-gold-readable {
-  color: var(--gold-readable);
-}
-
-.text-navy-primary {
-  color: var(--navy-primary);
-}
-
-/* Background colors */
-.bg-gold-light {
-  background-color: var(--gold-light);
-}
-
-.bg-cream {
-  background-color: var(--bg-cream);
-}
-
-.bg-navy-light {
-  background-color: var(--navy-light);
-}
-
-/* Border colors */
-.border-gold {
-  border-color: var(--gold-primary);
-}
-
-.border-gold-light {
-  border-color: var(--gold-light);
-}
-
-/* Focus states */
-.focus-ring-gold:focus {
-  outline: none;
-  ring: 2px solid var(--gold-primary);
-  ring-offset: 2px;
-}
-
-/* Loading spinner animation */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-}
-
-/* Fade animations */
+/* ─── Animations ─────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
-
-.fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
+.fade-in { animation: fadeIn 250ms ease-out; }
 
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
+  from { opacity: 1; transform: translateY(0);    }
+  to   { opacity: 0; transform: translateY(-8px); }
 }
+.fade-out { animation: fadeOut 250ms ease-out; }
 
-.fade-out {
-  animation: fadeOut 0.3s ease-out;
+@keyframes spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
 }
+.spinner { animation: spin 1s linear infinite; }
 
-/* Progress bar animation */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.6; }
+}
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
 @keyframes shrink {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0%;
-  }
+  from { width: 100%; }
+  to   { width: 0%;   }
+}
+.animate-shrink { animation: shrink 5s linear forwards; }
+
+/* ─── Smooth global transitions ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.animate-shrink {
-  animation: shrink 5s linear forwards;
+/* Only apply transition to interactive elements, not everything */
+a, button, input, select, textarea,
+[role="button"], [tabindex] {
+  transition-property:         color, background-color, border-color, box-shadow, opacity, transform;
+  transition-timing-function:  cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration:         150ms;
 }
 
-/* Responsive container padding */
-.container-padding {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .container-padding {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container-padding {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-}
-
-/* Glassmorphism effects */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-gold {
-  background: linear-gradient(135deg, rgba(212, 163, 115, 0.1), rgba(230, 177, 126, 0.1));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 163, 115, 0.2);
-}
-
-/* Selection color */
-::selection {
-  background-color: var(--gold-primary);
-  color: white;
-}
-
-::-moz-selection {
-  background-color: var(--gold-primary);
-  color: white;
-}
-
-/* Focus outline for accessibility */
+/* ─── Focus accessibility ────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--gold-primary);
+  outline:        2px solid var(--color-rausch);
   outline-offset: 2px;
 }
 
-/* Smooth transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+::selection       { background-color: var(--color-rausch); color: #fff; }
+::-moz-selection  { background-color: var(--color-rausch); color: #fff; }
+
+/* ─── Responsive container padding ──────────────────────────────────────── */
+.container-padding {
+  padding-left:  1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .container-padding { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+@media (min-width: 1024px) {
+  .container-padding { padding-left: 2rem; padding-right: 2rem; }
 }
 
-/* Add to your existing index.css */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+/* ─── Category hover micro-animation ────────────────────────────────────── */
+.category-icon { transition: transform 200ms ease; }
+.category-icon:hover { transform: translateY(-2px); }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Category hover effects */
-.category-icon {
-  transition: all 0.2s ease;
-}
-
-.category-icon:hover {
-  transform: translateY(-2px);
-}
-
-/* Property card animations */
-.property-card {
-  transition: transform 0.2s ease;
-}
-
-.property-card:hover {
-  transform: translateY(-4px);
+/* ─── Tailwind layer overrides for DaisyUI ───────────────────────────────── */
+/* Keep DaisyUI working but normalise primary colour to Rausch Red */
+:root {
+  --p:  #ff385c;
+  --pf: #e00b41;
+  --pc: #ffffff;
 }

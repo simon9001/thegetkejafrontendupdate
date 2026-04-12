@@ -13,13 +13,15 @@ import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import AgentDashboard from './pages/Dashboard/AgentDashboard';
 import LandlordDashboard from './pages/Dashboard/LandlordDashboard';
 import CaretakerDashboard from './pages/Dashboard/CaretakerDashboard';
-import VerifierDashboard from './pages/Dashboard/VerifierDashboard';
+import DeveloperDashboard from './pages/Dashboard/DeveloperDashboard';
+import VerifierDashboard from './pages/Dashboard/StaffDashboard';
 import UserManagement from './pages/Dashboard/UserManagement';
 import AddProperty from './pages/properties/AddProperty';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Profile from './pages/Auth/Profile';
 import Messages from './pages/Chat/Messages';
 import DashboardRedirect from './components/auth/DashboardRedirect';
+import BecomeHost from './pages/BecomeHost';
 import './App.css';
 
 function App() {
@@ -85,7 +87,7 @@ function App() {
         <Route
           path="/dashboard/admin"
           element={
-            <RoleRoute allowedRoles={['admin']}>
+            <RoleRoute allowedRoles={['admin', 'super_admin']}>
               <AdminDashboard />
             </RoleRoute>
           }
@@ -106,10 +108,20 @@ function App() {
             </RoleRoute>
           }
         />
+        {/* Generic add-property route — accessible to landlords, agents, and developers */}
+        <Route
+          path="/dashboard/add-property"
+          element={
+            <RoleRoute allowedRoles={['landlord', 'developer', 'agent']}>
+              <AddProperty />
+            </RoleRoute>
+          }
+        />
+        {/* Legacy landlord-scoped route — kept for backward compat */}
         <Route
           path="/dashboard/landlord/add-property"
           element={
-            <RoleRoute allowedRoles={['landlord']}>
+            <RoleRoute allowedRoles={['landlord', 'developer', 'agent']}>
               <AddProperty />
             </RoleRoute>
           }
@@ -123,9 +135,17 @@ function App() {
           }
         />
         <Route
-          path="/dashboard/verifier"
+          path="/dashboard/developer"
           element={
-            <RoleRoute allowedRoles={['verifier', 'admin']}>
+            <RoleRoute allowedRoles={['developer']}>
+              <DeveloperDashboard />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/dashboard/staff"
+          element={
+            <RoleRoute allowedRoles={['staff']}>
               <VerifierDashboard />
             </RoleRoute>
           }
@@ -133,11 +153,14 @@ function App() {
         <Route
           path="/dashboard/users"
           element={
-            <RoleRoute allowedRoles={['admin', 'verifier']}>
+            <RoleRoute allowedRoles={['admin', 'verifier', 'developer']}>
               <UserManagement />
             </RoleRoute>
           }
         />
+
+        {/* Become a host — no auth required so any user can start the application */}
+        <Route path="/become-host" element={<BecomeHost />} />
 
         {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

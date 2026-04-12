@@ -12,7 +12,7 @@ const SavedProperties: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { items: savedProperties } = useSelector((state: RootState) => state.savedProperties);
-    const { isAuthenticated } = useSelector((state: RootState) => state.authSlice);
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         // If not authenticated, redirect to login

@@ -2,116 +2,44 @@ import React, { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { useGetPropertyByIdQuery } from '../../features/Api/PropertiesApi';
-import { useGetProximityIntelligenceQuery } from '../../features/Api/SpatialApi';
+import { useGetPublicPropertyByIdQuery } from '../../features/Api/PropertiesApi';
 import PropertyChat from '../../components/property/PropertyChat';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
 import {
-    Heart,
-    Share2,
-    Star,
-    MapPin,
-    Camera,
-    Video,
-    Grid,
-    Home,
-    Ruler,
-    Users,
-    Calendar,
-    Clock,
-    Zap,
-    Music,
-    Mic,
-    Hospital,
-    Bus,
-    School,
-    Shield,
-    Eye,
-    Award,
-    BadgeCheck,
-    Moon,
-    ParkingCircle,
-    DoorOpen,
-    Building2,
-    AlertTriangle,
-    Volume2,
-    GlassWater,
-    Sparkles,
-    Key,
-    Ban,
-    MessageCircle,
-    User,
-    Navigation2
+    Heart, Share2, Star, MapPin, Camera, Video, Grid,
+    Home, Ruler, Users, Calendar, Clock, Zap, Music, Mic,
+    Shield, Eye, Award, BadgeCheck, Moon, ParkingCircle,
+    DoorOpen, Building2, AlertTriangle, Volume2, GlassWater,
+    Sparkles, Key, Ban, MessageCircle, User, Navigation2,
+    ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 
-// Memoized MapView to prevent expensive re-renders
-const MemoizedMapView = React.memo(({ lat, lng, propertyTitle }: { lat: number, lng: number, propertyTitle: string }) => {
-    return (
-        <div className="h-[300px] w-full rounded-xl overflow-hidden border border-gray-200">
-            <MapContainer
-                center={[lat, lng]}
-                zoom={15}
-                scrollWheelZoom={false}
-                className="h-full w-full"
-            >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={[lat, lng]}>
-                    <Popup>{propertyTitle}</Popup>
-                </Marker>
-            </MapContainer>
-        </div>
-    );
-});
+const MemoizedMapView = React.memo(({ lat, lng, propertyTitle }: { lat: number; lng: number; propertyTitle: string }) => (
+    <div className="h-[280px] w-full rounded-[14px] overflow-hidden border border-[#e5e5e5]">
+        <MapContainer center={[lat, lng]} zoom={15} scrollWheelZoom={false} className="h-full w-full">
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[lat, lng]}>
+                <Popup>{propertyTitle}</Popup>
+            </Marker>
+        </MapContainer>
+    </div>
+));
 
 const CommercialPropertyDetails: React.FC = () => {
     const { id = '' } = useParams();
-    const { data: propertyData, isLoading: isPropertyLoading } = useGetPropertyByIdQuery(id);
+    const { data: propertyData, isLoading: isPropertyLoading } = useGetPublicPropertyByIdQuery(id);
+    const realProperty = useMemo(() => propertyData?.property, [propertyData]);
 
-    // Memoize the property data to prevent unnecessary re-renders of heavy children
-    const realProperty = useMemo(() => propertyData, [propertyData]);
+    const lat = useMemo(() => realProperty?.location?.location?.coordinates[1] || 31.6148, [realProperty]);
+    const lng = useMemo(() => realProperty?.location?.location?.coordinates[0] || 77.3456, [realProperty]);
 
-    const lat = useMemo(() => realProperty?.location?.location.coordinates[1] || 31.6148, [realProperty]);
-    const lng = useMemo(() => realProperty?.location?.location.coordinates[0] || 77.3456, [realProperty]);
-
-    const { data: proximityData } = useGetProximityIntelligenceQuery({ lat, lng }, {
-        skip: !realProperty
-    });
-    const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.authSlice);
+    const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.auth);
     const navigate = useNavigate();
-
-    if (isPropertyLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-[#D4A373] border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-[#1B2430] font-medium animate-pulse">Loading venue details...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (!realProperty) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-[#F9F7F2]">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-[#1B2430] mb-2">Venue Not Found</h2>
-                    <p className="text-gray-500 mb-6">The venue you're looking for might have been moved or deleted.</p>
-                    <button
-                        onClick={() => navigate('/')}
-                        className="px-6 py-2 bg-[#1B2430] text-white rounded-full font-medium transition hover:shadow-lg"
-                    >
-                        Back to Home
-                    </button>
-                </div>
-            </div>
-        );
-    }
 
     const [selectedRate, setSelectedRate] = useState<'hourly' | 'half-day' | 'full-day' | 'weekend'>('full-day');
     const [eventType, setEventType] = useState('wedding');
@@ -123,8 +51,35 @@ const CommercialPropertyDetails: React.FC = () => {
     const [companyName, setCompanyName] = useState('');
     const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-    // Comprehensive commercial property data - Merge real with mock for UI completeness
-    const property = useMemo(() => ({
+    if (isPropertyLoading) {
+        return (
+            <Layout showSearch={false}>
+                <div className="flex items-center justify-center min-h-[60vh]">
+                    <div className="w-10 h-10 border-[3px] border-[#ff385c] border-t-transparent rounded-full animate-spin" />
+                </div>
+            </Layout>
+        );
+    }
+
+    if (!realProperty) {
+        return (
+            <Layout showSearch={false}>
+                <div className="text-center py-24">
+                    <h2 className="text-2xl font-semibold text-[#222222]">Venue not found</h2>
+                    <p className="text-[#6a6a6a] text-sm mt-2 mb-6">This listing may have been removed.</p>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="px-6 py-2.5 bg-[#222222] text-white text-sm font-semibold rounded-[8px] hover:bg-[#ff385c] transition-colors"
+                    >
+                        Back to home
+                    </button>
+                </div>
+            </Layout>
+        );
+    }
+
+    // Merge real backend data with sensible defaults for UI richness
+    const property = {
         ...realProperty,
         id: realProperty.id,
         name: realProperty.title,
@@ -133,90 +88,70 @@ const CommercialPropertyDetails: React.FC = () => {
         exactLocation: realProperty.location?.address || 'Address unavailable',
         startingPrice: realProperty.price_per_day || realProperty.price_per_month || 50000,
         priceUnit: realProperty.price_per_day ? 'day' : 'month',
+        currency: realProperty.currency || 'KSh',
         maxCapacity: realProperty.capacity || 500,
-        verifiedVenue: true,
-        rating: 4.9,
-        reviews: 87,
-
-        // Gallery
-        gallery: realProperty.images && realProperty.images.length > 0
-            ? realProperty.images.map((img: any) => img.image_url)
-            : [
-                'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop'
-            ],
-
-        // Mocking the complex fields for UI richness if not in backend
+        verifiedVenue: realProperty.is_verified || false,
+        gallery:
+            realProperty.images && realProperty.images.length > 0
+                ? realProperty.images.map((img: any) => img.image_url)
+                : ['https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2070&auto=format&fit=crop'],
         totalArea: realProperty.size_sqm || realProperty.size || 2500,
         indoorCapacity: Math.floor((realProperty.capacity || 500) * 0.6),
         outdoorCapacity: Math.floor((realProperty.capacity || 500) * 0.4),
         numberOfRooms: realProperty.bedrooms || 0,
         numberOfBathrooms: realProperty.bathrooms || 0,
-        parkingCapacity: realProperty.parking_spots || 50,
+        parkingCapacity: (realProperty as any).parking_spots || 50,
         property_type: realProperty.property_type || realProperty.type || 'Convention Center',
         availabilityCalendar: 'Available for 2024/2025 bookings',
-
         pricing: {
-            hourly: (realProperty.price_per_day || (realProperty.price_per_month ? realProperty.price_per_month / 30 : 50000)) / 8,
+            hourly: (realProperty.price_per_day || 50000) / 8,
             halfDay: (realProperty.price_per_day || 50000) * 0.7,
             fullDay: realProperty.price_per_day || 50000,
             weekend: (realProperty.price_per_day || 50000) * 1.5,
-            securityDeposit: realProperty.security_deposit || 50000,
-            cleaningFee: realProperty.cleaning_fee || 10000,
+            securityDeposit: (realProperty as any).security_deposit || 50000,
+            cleaningFee: (realProperty as any).cleaning_fee || 10000,
         },
-
         rules: {
-            allowedEventTypes: realProperty.category === 'recreational' ? ['Vacation', 'Short term'] : ['Corporate events', 'Product launches'],
+            allowedEventTypes:
+                realProperty.category === 'recreational'
+                    ? ['Vacation', 'Short term']
+                    : ['Corporate events', 'Product launches'],
             maxSoundLevel: '85 dB after 10 PM',
             musicCutoffTime: '1 AM',
-            alcoholPolicy: realProperty.is_smoking_allowed ? 'Smoking allowed' : 'No smoking',
+            alcoholPolicy: (realProperty as any).is_smoking_allowed ? 'Smoking allowed' : 'No smoking',
             requiredPermits: ['Event permit', 'Catering license'],
             ageRestrictions: '21+ for alcohol service',
         },
-
         host: {
+            id: realProperty.owner?.id || (realProperty as any).owner_id,
             name: realProperty.owner?.full_name || 'Host',
-            avatar: realProperty.owner?.avatar_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop',
-            responseRate: 98,
+            avatar: realProperty.owner?.avatar_url || null,
         },
-
         socialProof: {
-            responseTime: '< 2 hours',
-            eventsHosted: 156,
-            rating: 4.9,
-            reviews: 87,
-            pastBrands: ['Vogue', 'Netflix', 'Safaricom'],
-            cancellationPolicy: 'Moderate - Full refund 7 days prior',
+            cancellationPolicy: 'Moderate — full refund 7 days prior',
         },
-
-        // Carry over other mock fields for the WOW factor
-        uniqueFeatures: realProperty.amenities?.map(a => a.name) || [
-            '12 ft glass walls',
-            'Grand staircase',
-            'Rooftop deck',
-        ],
-        ceilingHeight: '8-12 meters',
+        uniqueFeatures: realProperty.amenities?.map((a: any) => a.name) || ['12 ft glass walls', 'Grand staircase', 'Rooftop deck'],
+        architecturalStyle: 'Contemporary glass and steel',
+        interiorTheme: 'Modern minimalist',
+        naturalLighting: 'Floor-to-ceiling windows',
+        ceilingHeight: '8–12 meters',
         powerCapacity: '200 amps',
         generatorBackup: '125 kVA generator',
-        wifiSpeed: realProperty.internet_speed || '250 Mbps',
+        wifiSpeed: (realProperty as any).internet_speed || '250 Mbps',
         soundSystem: 'Built-in surround sound',
         lightingSystem: 'Programmable LED',
         djBoothAvailable: true,
         stageAvailable: true,
         airConditioning: 'Centralized AC',
         equipmentLoading: 'Ground-level access',
-        safety: {
-            fireExits: 6,
-            cctv: true,
-        },
+        safety: { fireExits: 6, cctv: true },
         locationInfo: {
             accessibility: 'Paved road',
-            neighborhoodType: realProperty.neighborhood?.community_vibe || 'Private hillside estate',
+            neighborhoodType: (realProperty as any).neighborhood?.community_vibe || 'Private hillside estate',
             privacyRating: 'High',
-            nearbyLandmarks: proximityData?.landmarks?.map(l => l.name).slice(0, 3) || ['City Center', 'Main Station'],
-        }
-    }), [realProperty, proximityData]);
-
-
+            nearbyLandmarks: ['City Center', 'Main Station'],
+        },
+    };
 
     const getPriceForSelectedRate = () => {
         switch (selectedRate) {
@@ -224,172 +159,189 @@ const CommercialPropertyDetails: React.FC = () => {
             case 'half-day': return property.pricing.halfDay;
             case 'full-day': return property.pricing.fullDay;
             case 'weekend': return property.pricing.weekend;
-            default: return property.pricing.fullDay;
         }
     };
 
-    // Section Header Component
-    const SectionHeader = ({ title, icon: Icon, badge }: { title: string; icon: any; badge?: string }) => (
-        <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-                <div className="p-2 bg-[#D4A373]/10 rounded-lg">
-                    <Icon className="w-5 h-5 text-[#D4A373]" />
-                </div>
-                <h2 className="text-lg font-semibold text-[#1B2430]">{title}</h2>
-            </div>
-            {badge && (
-                <span className="text-xs bg-[#D4A373]/10 text-[#D4A373] px-2 py-1 rounded-full">
-                    {badge}
-                </span>
-            )}
-        </div>
-    );
+    const rateOptions: { key: typeof selectedRate; label: string }[] = [
+        { key: 'hourly', label: 'Hourly' },
+        { key: 'half-day', label: 'Half-day' },
+        { key: 'full-day', label: 'Full-day' },
+        { key: 'weekend', label: 'Weekend' },
+    ];
 
-    // Info Pill Component
+    // ── Reusable components ────────────────────────────────────────────────────
     const InfoPill = ({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) => (
-        <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-            <Icon className="w-4 h-4 text-[#D4A373]" />
-            <div>
-                <p className="text-xs text-gray-500">{label}</p>
-                <p className="text-sm font-medium text-[#1B2430]">{value}</p>
-            </div>
+        <div className="p-3 rounded-[14px] border border-[#e5e5e5]">
+            <Icon className="w-4 h-4 text-[#6a6a6a] mb-2" />
+            <p className="text-xs text-[#6a6a6a]">{label}</p>
+            <p className="text-sm font-medium text-[#222222] truncate">{value}</p>
         </div>
     );
 
-    // Moved outside component
+    const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+        <h3 className="text-xl font-semibold text-[#222222] mb-4">{children}</h3>
+    );
 
     return (
         <Layout showSearch={false}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-                {/* Hero Section - Immediate Impact */}
-                <div className="mb-6">
-                    {/* Title Row */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <h1 className="text-2xl lg:text-3xl font-bold text-[#1B2430]">
-                                    {property.name}
-                                </h1>
-                                {property.verifiedVenue && (
-                                    <div className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-600 rounded-full text-xs">
-                                        <BadgeCheck className="w-4 h-4" />
-                                        <span>Verified venue</span>
-                                    </div>
-                                )}
-                            </div>
-                            <p className="text-gray-600 text-sm lg:text-base max-w-2xl">
-                                {property.vibeDescription}
-                            </p>
+            <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+
+                {/* ── Title row ─────────────────────────────────────────────── */}
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+                    <div>
+                        <div className="flex items-center gap-2 mb-1">
+                            <h1 className="text-[26px] font-semibold text-[#222222] tracking-[-0.44px]">{property.name}</h1>
+                            {property.verifiedVenue && (
+                                <span className="flex items-center gap-1 px-2 py-0.5 bg-[#fff1f2] text-[#ff385c] text-xs font-medium rounded-full">
+                                    <BadgeCheck className="w-3.5 h-3.5" />
+                                    Verified venue
+                                </span>
+                            )}
                         </div>
-                        <div className="flex items-center gap-2">
-                            <button className="p-2 hover:bg-gray-100 rounded-full transition">
-                                <Share2 className="w-5 h-5 text-[#1B2430]" />
-                            </button>
-                            <button className="p-2 hover:bg-gray-100 rounded-full transition">
-                                <Heart className="w-5 h-5 text-[#1B2430]" />
-                            </button>
+                        <div className="flex flex-wrap items-center gap-2 text-sm text-[#222222]">
+                            <div className="flex items-center gap-1">
+                                <MapPin className="w-3.5 h-3.5 text-[#6a6a6a]" />
+                                <span className="underline cursor-pointer text-[#6a6a6a]">{property.cityLocation}</span>
+                            </div>
+                            <span className="text-[#6a6a6a]">·</span>
+                            <div className="flex items-center gap-1">
+                                <Users className="w-3.5 h-3.5 text-[#6a6a6a]" />
+                                <span className="text-[#6a6a6a]">Up to {property.maxCapacity} guests</span>
+                            </div>
                         </div>
                     </div>
-
-                    {/* Key Metrics Row */}
-                    <div className="flex flex-wrap items-center gap-4 mb-4">
-                        <div className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4 text-[#D4A373]" />
-                            <span className="text-sm text-gray-600">{property.cityLocation}</span>
-                        </div>
-                        <div className="w-px h-4 bg-gray-300"></div>
-                        <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 fill-current text-[#D4A373]" />
-                            <span className="text-sm font-medium">{property.rating}</span>
-                            <span className="text-sm text-gray-500">({property.reviews} reviews)</span>
-                        </div>
-                        <div className="w-px h-4 bg-gray-300"></div>
-                        <div className="flex items-center gap-1">
-                            <Users className="w-4 h-4 text-gray-400" />
-                            <span className="text-sm text-gray-600">Up to {property.maxCapacity} guests</span>
-                        </div>
-                        <div className="w-px h-4 bg-gray-300"></div>
-                        <a
-                            href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm font-bold text-[#D4A373] hover:underline"
-                        >
-                            <Navigation2 className="w-4 h-4" />
-                            <span>Get Directions</span>
-                        </a>
-                    </div>
-
-                    {/* Price and Quick Actions */}
-                    <div className="flex flex-wrap items-center gap-4 p-4 bg-amber-50 rounded-xl">
-                        <div>
-                            <span className="text-2xl font-bold text-[#1B2430]">₹{property.startingPrice.toLocaleString()}</span>
-                            <span className="text-gray-500"> / {property.priceUnit}</span>
-                        </div>
-                        <div className="w-px h-8 bg-amber-200"></div>
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2">
-                                <Calendar className="w-5 h-5 text-[#D4A373]" />
-                                <span className="text-sm">Check availability</span>
-                            </div>
-                            <button
-                                className="flex items-center gap-2 px-4 py-2 bg-[#D4A373] text-white rounded-lg hover:bg-[#E6B17E] transition"
-                            >
-                                <MessageCircle className="w-4 h-4" />
-                                <span>Contact host</span>
-                            </button>
-                        </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#f2f2f2] transition-colors text-sm font-semibold text-[#222222]">
+                            <Share2 className="w-4 h-4" />
+                            Share
+                        </button>
+                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#f2f2f2] transition-colors text-sm font-semibold text-[#222222]">
+                            <Heart className="w-4 h-4" />
+                            Save
+                        </button>
                     </div>
                 </div>
 
-                {/* Hero Gallery */}
-                <div className="mb-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                        {/* Main Large Image */}
-                        <div className="lg:col-span-2 aspect-[16/9] rounded-xl overflow-hidden">
-                            <img
-                                src={property.gallery[activeImageIndex]}
-                                alt={property.name}
-                                className="w-full h-full object-cover"
-                            />
+                {/* ── Airbnb-style gallery ──────────────────────────────────── */}
+                <div className="mb-8 relative">
+                    {property.gallery.length === 1 ? (
+                        <div className="aspect-[16/9] rounded-[14px] overflow-hidden">
+                            <img src={property.gallery[0]} alt={property.name} className="w-full h-full object-cover" />
                         </div>
-
-                        {/* Side Images Grid */}
-                        {property.gallery.slice(1, 5).map((img, idx) => (
-                            <div
-                                key={idx}
-                                className="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition"
-                                onClick={() => setActiveImageIndex(idx + 1)}
-                            >
-                                <img src={img} alt={`Gallery ${idx + 2}`} className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="grid grid-cols-2 gap-2 rounded-[14px] overflow-hidden" style={{ height: '460px' }}>
+                            <div className="overflow-hidden cursor-pointer" onClick={() => setActiveImageIndex(0)}>
+                                <img
+                                    src={property.gallery[activeImageIndex]}
+                                    alt={property.name}
+                                    className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+                                />
                             </div>
-                        ))}
-                    </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                {property.gallery.slice(1, 5).map((img: string, i: number) => (
+                                    <div
+                                        key={i}
+                                        className="overflow-hidden cursor-pointer"
+                                        onClick={() => setActiveImageIndex(i + 1)}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Gallery ${i + 2}`}
+                                            className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
-                    {/* Gallery Action Buttons */}
-                    <div className="flex items-center justify-end gap-2 mt-2">
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-black/70 text-white rounded-lg text-sm hover:bg-black transition">
+                    <div className="absolute bottom-4 right-4 flex items-center gap-2">
+                        {property.gallery.length > 1 && (
+                            <>
+                                <button
+                                    onClick={() => setActiveImageIndex(i => Math.max(0, i - 1))}
+                                    className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow hover:bg-white transition"
+                                >
+                                    <ChevronLeft className="w-4 h-4 text-[#222222]" />
+                                </button>
+                                <button
+                                    onClick={() => setActiveImageIndex(i => Math.min(property.gallery.length - 1, i + 1))}
+                                    className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow hover:bg-white transition"
+                                >
+                                    <ChevronRight className="w-4 h-4 text-[#222222]" />
+                                </button>
+                            </>
+                        )}
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
                             <Camera className="w-4 h-4" />
-                            View all photos ({property.gallery.length})
+                            Show all photos ({property.gallery.length})
                         </button>
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-black/70 text-white rounded-lg text-sm hover:bg-black transition">
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
                             <Video className="w-4 h-4" />
                             Virtual tour
                         </button>
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-black/70 text-white rounded-lg text-sm hover:bg-black transition">
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
                             <Grid className="w-4 h-4" />
                             Floor plan
                         </button>
                     </div>
+
+                    <div className="absolute bottom-4 left-4 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                        {activeImageIndex + 1} / {property.gallery.length}
+                    </div>
                 </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left Column - Detailed Info */}
-                    <div className="lg:col-span-2 space-y-8">
-                        {/* Overview Summary - Quick Decision Data */}
-                        <div>
-                            <SectionHeader title="Quick Overview" icon={Home} badge="Decision data" />
+                {/* ── Main 2-col layout ─────────────────────────────────────── */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12">
+
+                    {/* Left column */}
+                    <div className="space-y-8 min-w-0">
+
+                        {/* Host row */}
+                        <div className="flex items-center justify-between pb-6 border-b border-[#e5e5e5]">
+                            <div>
+                                <h2 className="text-xl font-semibold text-[#222222]">
+                                    Hosted by {property.host.name}
+                                </h2>
+                                <p className="text-[#6a6a6a] text-sm mt-0.5">
+                                    {property.property_type} · {property.totalArea} sqm · Up to {property.maxCapacity} guests
+                                </p>
+                            </div>
+                            <img
+                                src={property.host.avatar}
+                                alt={property.host.name}
+                                className="w-14 h-14 rounded-full object-cover shrink-0"
+                            />
+                        </div>
+
+                        {/* Highlights */}
+                        <div className="space-y-4 pb-6 border-b border-[#e5e5e5]">
+                            <div className="flex items-center gap-4">
+                                <BadgeCheck className="w-6 h-6 text-[#222222] shrink-0" />
+                                <div>
+                                    <p className="text-sm font-semibold text-[#222222]">Verified venue</p>
+                                    <p className="text-sm text-[#6a6a6a]">This venue has been inspected and verified by our team.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <Award className="w-6 h-6 text-[#222222] shrink-0" />
+                                <div>
+                                    <p className="text-sm font-semibold text-[#222222]">Cancellation policy</p>
+                                    <p className="text-sm text-[#6a6a6a]">{property.socialProof.cancellationPolicy}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Description */}
+                        {property.vibeDescription && (
+                            <div className="pb-6 border-b border-[#e5e5e5]">
+                                <p className="text-[#222222] text-sm leading-relaxed">{property.vibeDescription}</p>
+                            </div>
+                        )}
+
+                        {/* Quick overview grid */}
+                        <div className="pb-6 border-b border-[#e5e5e5]">
+                            <SectionTitle>Quick overview</SectionTitle>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <InfoPill icon={Building2} label="Property type" value={property.property_type} />
                                 <InfoPill icon={Ruler} label="Total area" value={`${property.totalArea} sqm`} />
@@ -402,97 +354,75 @@ const CommercialPropertyDetails: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Atmosphere & Features */}
-                        <div>
-                            <SectionHeader title="Atmosphere & Features" icon={Sparkles} />
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-xs text-gray-500">Architectural style</p>
-                                        <p className="text-sm font-medium">{property.architecturalStyle}</p>
+                        {/* Atmosphere & features */}
+                        <div className="pb-6 border-b border-[#e5e5e5]">
+                            <SectionTitle>Atmosphere & features</SectionTitle>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                {[
+                                    { label: 'Architectural style', value: property.architecturalStyle },
+                                    { label: 'Interior theme', value: property.interiorTheme },
+                                    { label: 'Natural lighting', value: property.naturalLighting },
+                                    { label: 'Ceiling height', value: property.ceilingHeight },
+                                ].map(({ label, value }) => (
+                                    <div key={label}>
+                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
+                                        <p className="text-sm font-medium text-[#222222] mt-0.5">{value}</p>
                                     </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Interior theme</p>
-                                        <p className="text-sm font-medium">{property.interiorTheme}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Natural lighting</p>
-                                        <p className="text-sm font-medium">{property.naturalLighting}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Ceiling height</p>
-                                        <p className="text-sm font-medium">{property.ceilingHeight}</p>
-                                    </div>
-                                </div>
-
-                                {/* Unique Features */}
-                                <div>
-                                    <p className="text-sm font-medium text-[#1B2430] mb-2">Unique features</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {property.uniqueFeatures.map((feature, idx) => (
-                                            <span key={idx} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
-                                                {feature}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Media Types */}
-                                <div className="flex gap-4 pt-2">
-                                    <button className="flex items-center gap-2 text-sm text-[#D4A373] hover:text-[#E6B17E]">
-                                        <Camera className="w-4 h-4" />
-                                        Drone photos
-                                    </button>
-                                    <button className="flex items-center gap-2 text-sm text-[#D4A373] hover:text-[#E6B17E]">
-                                        <Moon className="w-4 h-4" />
-                                        Night photos
-                                    </button>
-                                </div>
+                                ))}
+                            </div>
+                            <div className="flex flex-wrap gap-2 mb-4">
+                                {property.uniqueFeatures.map((f: string, i: number) => (
+                                    <span key={i} className="px-3 py-1 bg-[#f2f2f2] text-[#222222] rounded-full text-xs font-medium">
+                                        {f}
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="flex gap-4">
+                                <button className="flex items-center gap-1.5 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors">
+                                    <Camera className="w-4 h-4" />
+                                    Drone photos
+                                </button>
+                                <button className="flex items-center gap-1.5 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors">
+                                    <Moon className="w-4 h-4" />
+                                    Night photos
+                                </button>
                             </div>
                         </div>
 
-                        {/* Technical & Infrastructure - Critical for professionals */}
-                        <div className="bg-gray-50 p-5 rounded-xl">
-                            <SectionHeader title="Technical Infrastructure" icon={Zap} badge="For professionals" />
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                <div>
-                                    <p className="text-xs text-gray-500">Power capacity</p>
-                                    <p className="text-sm font-medium">{property.powerCapacity}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Generator backup</p>
-                                    <p className="text-sm font-medium">{property.generatorBackup}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">WiFi speed</p>
-                                    <p className="text-sm font-medium">{property.wifiSpeed}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Sound system</p>
-                                    <p className="text-sm font-medium">{property.soundSystem}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Lighting system</p>
-                                    <p className="text-sm font-medium">{property.lightingSystem}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">AC capacity</p>
-                                    <p className="text-sm font-medium">{property.airConditioning}</p>
-                                </div>
+                        {/* Technical infrastructure */}
+                        <div className="pb-6 border-b border-[#e5e5e5]">
+                            <div className="flex items-center justify-between mb-4">
+                                <SectionTitle>Technical infrastructure</SectionTitle>
+                                <span className="text-xs bg-[#fff1f2] text-[#ff385c] px-2 py-1 rounded-full font-medium">For professionals</span>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                                {[
+                                    { label: 'Power capacity', value: property.powerCapacity },
+                                    { label: 'Generator backup', value: property.generatorBackup },
+                                    { label: 'WiFi speed', value: property.wifiSpeed },
+                                    { label: 'Sound system', value: property.soundSystem },
+                                    { label: 'Lighting system', value: property.lightingSystem },
+                                    { label: 'AC capacity', value: property.airConditioning },
+                                ].map(({ label, value }) => (
+                                    <div key={label}>
+                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
+                                        <p className="text-sm font-medium text-[#222222] mt-0.5">{value}</p>
+                                    </div>
+                                ))}
                                 <div className="col-span-2">
-                                    <p className="text-xs text-gray-500">Equipment loading</p>
-                                    <p className="text-sm font-medium">{property.equipmentLoading}</p>
+                                    <p className="text-xs text-[#6a6a6a]">Equipment loading</p>
+                                    <p className="text-sm font-medium text-[#222222] mt-0.5">{property.equipmentLoading}</p>
                                 </div>
                             </div>
-                            <div className="flex gap-3 mt-3">
+                            <div className="flex gap-2">
                                 {property.djBoothAvailable && (
-                                    <span className="flex items-center gap-1 text-xs bg-green-50 text-green-600 px-2 py-1 rounded-full">
+                                    <span className="flex items-center gap-1 text-xs bg-[#f0fdf4] text-green-700 px-2 py-1 rounded-full font-medium">
                                         <Music className="w-3 h-3" />
                                         DJ booth
                                     </span>
                                 )}
                                 {property.stageAvailable && (
-                                    <span className="flex items-center gap-1 text-xs bg-green-50 text-green-600 px-2 py-1 rounded-full">
+                                    <span className="flex items-center gap-1 text-xs bg-[#f0fdf4] text-green-700 px-2 py-1 rounded-full font-medium">
                                         <Mic className="w-3 h-3" />
                                         Stage available
                                     </span>
@@ -500,53 +430,39 @@ const CommercialPropertyDetails: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Rules & Restrictions */}
-                        <div>
-                            <SectionHeader title="Rules & Restrictions" icon={Ban} />
-                            <div className="space-y-3">
+                        {/* Rules */}
+                        <div className="pb-6 border-b border-[#e5e5e5]">
+                            <SectionTitle>Rules & restrictions</SectionTitle>
+                            <div className="space-y-4">
                                 <div className="flex flex-wrap gap-2">
-                                    {property.rules.allowedEventTypes.map((type, idx) => (
-                                        <span key={idx} className="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs">
-                                            {type}
+                                    {property.rules.allowedEventTypes.map((t: string, i: number) => (
+                                        <span key={i} className="px-3 py-1 bg-[#f0fdf4] text-green-700 rounded-full text-xs font-medium">
+                                            {t}
                                         </span>
                                     ))}
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <div className="flex items-start gap-2">
-                                        <Volume2 className="w-4 h-4 text-[#D4A373] mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500">Max sound level</p>
-                                            <p className="text-sm">{property.rules.maxSoundLevel}</p>
+                                    {[
+                                        { icon: Volume2, label: 'Max sound level', value: property.rules.maxSoundLevel },
+                                        { icon: Clock, label: 'Music cutoff', value: property.rules.musicCutoffTime },
+                                        { icon: GlassWater, label: 'Alcohol policy', value: property.rules.alcoholPolicy },
+                                        { icon: Key, label: 'Age restriction', value: property.rules.ageRestrictions },
+                                    ].map(({ icon: Icon, label, value }) => (
+                                        <div key={label} className="flex items-start gap-2">
+                                            <Icon className="w-4 h-4 text-[#6a6a6a] mt-0.5 shrink-0" />
+                                            <div>
+                                                <p className="text-xs text-[#6a6a6a]">{label}</p>
+                                                <p className="text-sm text-[#222222]">{value}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <Clock className="w-4 h-4 text-[#D4A373] mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500">Music cutoff</p>
-                                            <p className="text-sm">{property.rules.musicCutoffTime}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <GlassWater className="w-4 h-4 text-[#D4A373] mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500">Alcohol policy</p>
-                                            <p className="text-sm">{property.rules.alcoholPolicy}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <Key className="w-4 h-4 text-[#D4A373] mt-0.5" />
-                                        <div>
-                                            <p className="text-xs text-gray-500">Age restriction</p>
-                                            <p className="text-sm">{property.rules.ageRestrictions}</p>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-1">Required permits</p>
+                                    <p className="text-xs text-[#6a6a6a] mb-1.5">Required permits</p>
                                     <div className="flex flex-wrap gap-2">
-                                        {property.rules.requiredPermits.map((permit, idx) => (
-                                            <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
-                                                {permit}
+                                        {property.rules.requiredPermits.map((p: string, i: number) => (
+                                            <span key={i} className="px-2 py-1 bg-[#f2f2f2] text-[#6a6a6a] rounded text-xs">
+                                                {p}
                                             </span>
                                         ))}
                                     </div>
@@ -554,323 +470,263 @@ const CommercialPropertyDetails: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Safety & Compliance */}
-                        <div>
-                            <SectionHeader title="Safety & Compliance" icon={Shield} />
+                        {/* Safety */}
+                        <div className="pb-6 border-b border-[#e5e5e5]">
+                            <SectionTitle>Safety & compliance</SectionTitle>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <div className="flex items-center gap-2">
-                                    <DoorOpen className="w-4 h-4 text-[#D4A373]" />
-                                    <span className="text-sm">{property.safety.fireExits} fire exits</span>
+                                    <DoorOpen className="w-4 h-4 text-[#6a6a6a]" />
+                                    <span className="text-sm text-[#222222]">{property.safety.fireExits} fire exits</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Eye className="w-4 h-4 text-[#D4A373]" />
-                                    <span className="text-sm">{property.safety.cctv ? 'CCTV' : 'No CCTV'}</span>
+                                    <Eye className="w-4 h-4 text-[#6a6a6a]" />
+                                    <span className="text-sm text-[#222222]">{property.safety.cctv ? 'CCTV' : 'No CCTV'}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <User className="w-4 h-4 text-[#D4A373]" />
-                                    <span className="text-sm">On-site manager</span>
+                                    <User className="w-4 h-4 text-[#6a6a6a]" />
+                                    <span className="text-sm text-[#222222]">On-site manager</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <AlertTriangle className="w-4 h-4 text-[#D4A373]" />
-                                    <span className="text-sm">First aid available</span>
+                                    <AlertTriangle className="w-4 h-4 text-[#6a6a6a]" />
+                                    <span className="text-sm text-[#222222]">First aid available</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Location Intelligence - Updated to use locationInfo */}
-                        <div>
-                            <SectionHeader title="Location Intelligence" icon={MapPin} />
-                            <div className="space-y-3">
-                                <div className="flex items-start gap-2">
-                                    <MapPin className="w-4 h-4 text-[#D4A373] mt-0.5" />
-                                    <span className="text-sm text-gray-600">{property.exactLocation}</span>
+                        {/* Map */}
+                        <div className="pb-6 border-b border-[#e5e5e5]">
+                            <SectionTitle>Where you'll host</SectionTitle>
+                            <p className="text-sm text-[#6a6a6a] -mt-2 mb-4">{property.exactLocation}</p>
+                            <div className="grid grid-cols-2 gap-3 mb-4">
+                                {[
+                                    { label: 'Accessibility', value: property.locationInfo.accessibility },
+                                    { label: 'Neighborhood', value: property.locationInfo.neighborhoodType },
+                                    { label: 'Privacy rating', value: property.locationInfo.privacyRating },
+                                ].map(({ label, value }) => (
+                                    <div key={label}>
+                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
+                                        <p className="text-sm font-medium text-[#222222]">{value}</p>
+                                    </div>
+                                ))}
+                                <div>
+                                    <p className="text-xs text-[#6a6a6a]">Nearby landmarks</p>
+                                    <p className="text-sm font-medium text-[#222222]">{property.locationInfo.nearbyLandmarks.join(', ')}</p>
                                 </div>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <p className="text-xs text-gray-500">Accessibility</p>
-                                        <p className="text-sm">{property.locationInfo.accessibility}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Neighborhood</p>
-                                        <p className="text-sm">{property.locationInfo.neighborhoodType}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500">Privacy rating</p>
-                                        <p className="text-sm text-green-600">{property.locationInfo.privacyRating}</p>
-                                    </div>
+                            </div>
+                            <MemoizedMapView lat={lat} lng={lng} propertyTitle={property.name} />
+                            <a
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors"
+                            >
+                                <Navigation2 className="w-4 h-4" />
+                                Get directions
+                            </a>
+                        </div>
+
+                        {/* Credibility */}
+                        <div className="pb-6 border-b border-[#e5e5e5] rounded-[14px] border border-[#e5e5e5] p-5">
+                            <SectionTitle>Credibility</SectionTitle>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <p className="text-sm font-semibold text-[#222222]">
+                                        {property.verifiedVenue ? 'Verified venue' : 'Unverified'}
+                                    </p>
+                                    <p className="text-xs text-[#6a6a6a]">
+                                        {property.verifiedVenue ? 'Inspected by our team' : 'Pending verification'}
+                                    </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-1">Nearby landmarks</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {property.locationInfo.nearbyLandmarks.map((landmark, idx) => (
-                                            <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
-                                                {landmark}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                                {/* Map View */}
-                                <div className="mt-4">
-                                    <MemoizedMapView lat={lat} lng={lng} propertyTitle={property.name} />
+                                    <p className="text-sm font-semibold text-[#222222]">{property.socialProof.cancellationPolicy}</p>
+                                    <p className="text-xs text-[#6a6a6a]">cancellation policy</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Proximity Intelligence */}
-                        {proximityData && (
-                            <div>
-                                <SectionHeader title="Proximity Intelligence" icon={Eye} badge="Nearby amenities" />
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {proximityData.landmarks.map((landmark, idx) => {
-                                        let Icon = Building2;
-                                        if (landmark.type.toLowerCase().includes('university')) Icon = School;
-                                        if (landmark.type.toLowerCase().includes('hospital')) Icon = Hospital;
-                                        if (landmark.type.toLowerCase().includes('transit') || landmark.type.toLowerCase().includes('bus')) Icon = Bus;
-
-                                        return (
-                                            <div key={idx} className="flex flex-col p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <Icon className="w-4 h-4 text-[#D4A373]" />
-                                                    <span className="text-xs font-semibold text-gray-700">{landmark.name}</span>
-                                                </div>
-                                                <div className="flex justify-between items-center text-[10px] text-gray-500">
-                                                    <span>{(landmark.distance_meters / 1000).toFixed(1)} km away</span>
-                                                    <span className="flex items-center gap-1">
-                                                        <Clock className="w-3 h-3" />
-                                                        {landmark.walking_time_mins} min walk
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Social Proof & Credibility */}
-                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-5 rounded-xl">
-                            <SectionHeader title="Credibility" icon={Award} />
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <div>
-                                    <p className="text-2xl font-bold text-[#1B2430]">{property.socialProof.eventsHosted}+</p>
-                                    <p className="text-xs text-gray-500">events hosted</p>
-                                </div>
-                                <div>
-                                    <p className="text-2xl font-bold text-[#1B2430]">{property.socialProof.rating}</p>
-                                    <p className="text-xs text-gray-500">rating ({property.socialProof.reviews} reviews)</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium text-[#1B2430]">{property.socialProof.responseTime}</p>
-                                    <p className="text-xs text-gray-500">response time</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium text-[#1B2430]">{property.host.responseRate}%</p>
-                                    <p className="text-xs text-gray-500">response rate</p>
-                                </div>
-                            </div>
-                            <div className="mt-3">
-                                <p className="text-xs text-gray-500 mb-1">Past brands & productions</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {property.socialProof.pastBrands.map((brand, idx) => (
-                                        <span key={idx} className="px-2 py-1 bg-white text-[#1B2430] rounded text-xs font-medium">
-                                            {brand}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Chat Section */}
+                        {/* Chat */}
                         <PropertyChat
                             propertyId={property.id}
                             host={{
                                 id: realProperty.owner?.id,
                                 name: property.host.name,
                                 avatar: property.host.avatar,
-                                responseRate: property.host.responseRate,
-                                responseTime: property.socialProof.responseTime,
-                                verified: true
+                                verified: property.verifiedVenue,
                             }}
                             currentUser={currentUser}
                             isAuthenticated={isAuthenticated}
                         />
                     </div>
 
-                    {/* Right Column - Booking & Pricing Card */}
-                    <div className="lg:col-span-1">
-                        <div className="sticky top-24 border border-gray-200 rounded-xl p-6 shadow-lg">
-                            <h3 className="text-lg font-semibold text-[#1B2430] mb-4">Book this venue</h3>
+                    {/* ── Right sticky booking card ──────────────────────────── */}
+                    <div>
+                        <div className="sticky top-24">
+                            <div
+                                className="
+                                    bg-white border border-[#e5e5e5] rounded-[20px] p-6
+                                    shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px,rgba(0,0,0,0.1)_0px_4px_8px]
+                                "
+                            >
+                                <h3 className="text-lg font-semibold text-[#222222] mb-4">Book this venue</h3>
 
-                            {/* Rate Selection */}
-                            <div className="mb-4">
-                                <label className="text-xs text-gray-500 mb-1 block">SELECT RATE TYPE</label>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <button
-                                        onClick={() => setSelectedRate('hourly')}
-                                        className={`p-2 text-sm rounded-lg border transition ${selectedRate === 'hourly'
-                                            ? 'bg-[#D4A373] text-white border-[#D4A373]'
-                                            : 'border-gray-200 hover:border-[#D4A373]'
-                                            }`}
-                                    >
-                                        Hourly
-                                    </button>
-                                    <button
-                                        onClick={() => setSelectedRate('half-day')}
-                                        className={`p-2 text-sm rounded-lg border transition ${selectedRate === 'half-day'
-                                            ? 'bg-[#D4A373] text-white border-[#D4A373]'
-                                            : 'border-gray-200 hover:border-[#D4A373]'
-                                            }`}
-                                    >
-                                        Half-day
-                                    </button>
-                                    <button
-                                        onClick={() => setSelectedRate('full-day')}
-                                        className={`p-2 text-sm rounded-lg border transition ${selectedRate === 'full-day'
-                                            ? 'bg-[#D4A373] text-white border-[#D4A373]'
-                                            : 'border-gray-200 hover:border-[#D4A373]'
-                                            }`}
-                                    >
-                                        Full-day
-                                    </button>
-                                    <button
-                                        onClick={() => setSelectedRate('weekend')}
-                                        className={`p-2 text-sm rounded-lg border transition ${selectedRate === 'weekend'
-                                            ? 'bg-[#D4A373] text-white border-[#D4A373]'
-                                            : 'border-gray-200 hover:border-[#D4A373]'
-                                            }`}
-                                    >
-                                        Weekend
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Event Type */}
-                            <div className="mb-4">
-                                <label className="text-xs text-gray-500 mb-1 block">EVENT TYPE</label>
-                                <select
-                                    value={eventType}
-                                    onChange={(e) => setEventType(e.target.value)}
-                                    className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                >
-                                    <option value="wedding">Wedding</option>
-                                    <option value="corporate">Corporate event</option>
-                                    <option value="film">Film shoot</option>
-                                    <option value="party">Private party</option>
-                                    <option value="product-launch">Product launch</option>
-                                    <option value="conference">Conference</option>
-                                </select>
-                            </div>
-
-                            {/* Guest Count */}
-                            <div className="mb-4">
-                                <label className="text-xs text-gray-500 mb-1 block">NUMBER OF GUESTS</label>
-                                <input
-                                    type="number"
-                                    value={guestCount}
-                                    onChange={(e) => setGuestCount(Number(e.target.value))}
-                                    min={1}
-                                    max={property.maxCapacity}
-                                    className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                />
-                                <p className="text-xs text-gray-400 mt-1">Max capacity: {property.maxCapacity}</p>
-                            </div>
-
-                            {/* Date & Time */}
-                            <div className="grid grid-cols-2 gap-2 mb-4">
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">DATE</label>
-                                    <input
-                                        type="date"
-                                        value={eventDate}
-                                        onChange={(e) => setEventDate(e.target.value)}
-                                        className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">START TIME</label>
-                                    <input
-                                        type="time"
-                                        value={eventTime}
-                                        onChange={(e) => setEventTime(e.target.value)}
-                                        className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Contact Details */}
-                            <div className="space-y-2 mb-4">
-                                <input
-                                    type="text"
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    placeholder="Your full name"
-                                    className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                />
-                                <input
-                                    type="tel"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    placeholder="Phone number"
-                                    className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                />
-                                <input
-                                    type="text"
-                                    value={companyName}
-                                    onChange={(e) => setCompanyName(e.target.value)}
-                                    placeholder="Company / Organization (optional)"
-                                    className="w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40"
-                                />
-                            </div>
-
-                            {/* Price Breakdown */}
-                            <div className="border-t border-gray-200 pt-4 mb-4">
-                                <h4 className="font-medium text-[#1B2430] mb-3">Price breakdown</h4>
-                                <div className="space-y-2">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-600">Venue rental ({selectedRate})</span>
-                                        <span className="font-medium">₹{getPriceForSelectedRate().toLocaleString()}</span>
+                                {/* Price */}
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <span className="text-2xl font-semibold text-[#222222]">
+                                            {property.currency} {property.startingPrice.toLocaleString()}
+                                        </span>
+                                        <span className="text-[#6a6a6a] text-sm"> /{property.priceUnit}</span>
                                     </div>
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-600">Security deposit</span>
-                                        <span className="font-medium">₹{property.pricing.securityDeposit.toLocaleString()}</span>
+                                    {property.verifiedVenue && (
+                                        <div className="flex items-center gap-1">
+                                            <BadgeCheck className="w-4 h-4 text-[#ff385c]" />
+                                            <span className="text-xs text-[#ff385c] font-medium">Verified</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Rate type selector */}
+                                <div className="mb-4">
+                                    <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-2">Rate type</p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {rateOptions.map(({ key, label }) => (
+                                            <button
+                                                key={key}
+                                                onClick={() => setSelectedRate(key)}
+                                                className={`p-2 text-sm rounded-[8px] border transition font-medium ${
+                                                    selectedRate === key
+                                                        ? 'bg-[#222222] text-white border-[#222222]'
+                                                        : 'border-[#c1c1c1] text-[#222222] hover:border-[#222222]'
+                                                }`}
+                                            >
+                                                {label}
+                                            </button>
+                                        ))}
                                     </div>
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-600">Cleaning fee</span>
-                                        <span className="font-medium">₹{property.pricing.cleaningFee.toLocaleString()}</span>
+                                </div>
+
+                                {/* Booking form */}
+                                <div className="border border-[#c1c1c1] rounded-[8px] overflow-hidden mb-3 divide-y divide-[#c1c1c1]">
+                                    <div className="p-3">
+                                        <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Event type</p>
+                                        <select
+                                            value={eventType}
+                                            onChange={e => setEventType(e.target.value)}
+                                            className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                        >
+                                            <option value="wedding">Wedding</option>
+                                            <option value="corporate">Corporate event</option>
+                                            <option value="film">Film shoot</option>
+                                            <option value="party">Private party</option>
+                                            <option value="product-launch">Product launch</option>
+                                            <option value="conference">Conference</option>
+                                        </select>
                                     </div>
-                                    <div className="flex items-center justify-between text-sm text-amber-600">
+                                    <div className="grid grid-cols-2 divide-x divide-[#c1c1c1]">
+                                        <div className="p-3">
+                                            <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Date</p>
+                                            <input
+                                                type="date"
+                                                value={eventDate}
+                                                onChange={e => setEventDate(e.target.value)}
+                                                className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                            />
+                                        </div>
+                                        <div className="p-3">
+                                            <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Start time</p>
+                                            <input
+                                                type="time"
+                                                value={eventTime}
+                                                onChange={e => setEventTime(e.target.value)}
+                                                className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="p-3">
+                                        <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">
+                                            Number of guests (max {property.maxCapacity})
+                                        </p>
+                                        <input
+                                            type="number"
+                                            value={guestCount}
+                                            onChange={e => setGuestCount(Number(e.target.value))}
+                                            min={1}
+                                            max={property.maxCapacity}
+                                            className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* CTA */}
+                                <button className="w-full py-3 bg-[#ff385c] hover:bg-[#e00b41] text-white font-semibold rounded-[8px] transition-colors mb-3 flex items-center justify-center gap-2">
+                                    <MessageCircle className="w-4 h-4" />
+                                    Check availability
+                                </button>
+                                <p className="text-xs text-[#6a6a6a] text-center mb-4">You'll receive a detailed quote within 2 hours</p>
+
+                                {/* Price breakdown */}
+                                <div className="space-y-2 border-t border-[#e5e5e5] pt-4">
+                                    <div className="flex justify-between text-sm text-[#222222]">
+                                        <span className="underline">Venue rental ({selectedRate})</span>
+                                        <span>{property.currency} {getPriceForSelectedRate().toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-[#222222]">
+                                        <span className="underline">Cleaning fee</span>
+                                        <span>{property.currency} {property.pricing.cleaningFee.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-[#6a6a6a]">
+                                        <span>Security deposit (refundable)</span>
+                                        <span>{property.currency} {property.pricing.securityDeposit.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between font-semibold text-[#222222] pt-2 border-t border-[#e5e5e5]">
                                         <span>Subtotal</span>
-                                        <span className="font-bold">₹{(getPriceForSelectedRate() + property.pricing.securityDeposit + property.pricing.cleaningFee).toLocaleString()}</span>
+                                        <span>
+                                            {property.currency}{' '}
+                                            {(getPriceForSelectedRate() + property.pricing.cleaningFee).toLocaleString()}
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Book Button */}
-                            <button className="w-full py-3 bg-[#D4A373] text-white font-bold rounded-lg hover:bg-[#E6B17E] transition shadow-lg mb-3">
-                                Check availability
-                            </button>
-
-                            <p className="text-xs text-gray-500 text-center">
-                                You'll receive a detailed quote within 2 hours
-                            </p>
-
-                            {/* Trust Badges */}
-                            <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-gray-200">
-                                <div className="flex items-center gap-1">
-                                    <Shield className="w-4 h-4 text-green-600" />
-                                    <span className="text-xs text-gray-600">Secure booking</span>
+                                {/* Contact details */}
+                                <div className="space-y-2 mt-4">
+                                    <input
+                                        type="text"
+                                        value={fullName}
+                                        onChange={e => setFullName(e.target.value)}
+                                        placeholder="Your full name"
+                                        className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]"
+                                    />
+                                    <input
+                                        type="tel"
+                                        value={phoneNumber}
+                                        onChange={e => setPhoneNumber(e.target.value)}
+                                        placeholder="Phone number"
+                                        className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={companyName}
+                                        onChange={e => setCompanyName(e.target.value)}
+                                        placeholder="Company / Organization (optional)"
+                                        className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]"
+                                    />
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <Award className="w-4 h-4 text-[#D4A373]" />
-                                    <span className="text-xs text-gray-600">Verified venue</span>
-                                </div>
-                            </div>
 
-                            {/* Cancellation Policy */}
-                            <div className="mt-3 text-center">
-                                <span className="text-xs text-gray-400 cursor-help hover:text-gray-600">
+                                {/* Trust badges */}
+                                <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-[#f2f2f2]">
+                                    <div className="flex items-center gap-1">
+                                        <Shield className="w-4 h-4 text-[#6a6a6a]" />
+                                        <span className="text-xs text-[#6a6a6a]">Secure booking</span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <Award className="w-4 h-4 text-[#6a6a6a]" />
+                                        <span className="text-xs text-[#6a6a6a]">Verified venue</span>
+                                    </div>
+                                </div>
+
+                                <p className="text-xs text-[#6a6a6a] text-center mt-3">
                                     {property.socialProof.cancellationPolicy}
-                                </span>
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 const Messages: React.FC = () => {
-    const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.authSlice);
+    const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.auth);
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
     const [newMessage, setNewMessage] = useState('');
     const [showConverationList, setShowConversationList] = useState(true);
@@ -43,7 +43,7 @@ const Messages: React.FC = () => {
         try {
             await sendMsg({
                 conversationId: selectedConversationId,
-                message: newMessage.trim()
+                content: newMessage.trim()
             }).unwrap();
             setNewMessage('');
         } catch (error) {
@@ -64,7 +64,7 @@ const Messages: React.FC = () => {
     }, [conversations, selectedConversationId]);
 
     const getOtherParticipant = (conversation: any) => {
-        return conversation.guest_id === currentUser?.user_id ? conversation.host : conversation.guest;
+        return conversation.guest_id === currentUser?.id ? conversation.host : conversation.guest;
     };
 
     return (
@@ -110,7 +110,7 @@ const Messages: React.FC = () => {
                                                     alt={otherUser?.full_name}
                                                     className="w-12 h-12 rounded-full object-cover"
                                                 />
-                                                {conv.unread_count > 0 && (
+                                                {(conv.unread_count ?? 0) > 0 && (
                                                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#D4A373] text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white">
                                                         {conv.unread_count}
                                                     </span>
@@ -120,7 +120,7 @@ const Messages: React.FC = () => {
                                                 <div className="flex justify-between items-center mb-1">
                                                     <span className="font-bold text-sm truncate">{otherUser?.full_name}</span>
                                                     <span className={`text-[10px] ${isActive ? 'text-gray-400' : 'text-gray-500'}`}>
-                                                        {new Date(conv.updated_at).toLocaleDateString()}
+                                                        {new Date(conv.last_message_at || conv.created_at).toLocaleDateString()}
                                                     </span>
                                                 </div>
                                                 <p className={`text-xs truncate ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
@@ -181,7 +181,7 @@ const Messages: React.FC = () => {
                                         </div>
                                     ) : messages.length > 0 ? (
                                         messages.map((msg: any) => {
-                                            const isFromMe = msg.sender_id === currentUser?.user_id;
+                                            const isFromMe = msg.sender_id === currentUser?.id;
                                             return (
                                                 <div
                                                     key={msg.id}
