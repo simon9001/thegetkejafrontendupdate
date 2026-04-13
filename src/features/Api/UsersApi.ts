@@ -130,7 +130,7 @@ export const UsersApi = createApi({
     // Creates a row in id_verifications with status='pending' for staff to review.
     // On approval the backend upgrades the user's role to landlord or developer.
     submitVerification: builder.mutation<{ message: string; code: string }, {
-      requested_role:  'landlord' | 'developer';
+      requested_role:  'landlord' | 'developer' | 'agent';
       doc_type:        'national_id' | 'passport' | 'company_cert' | 'earb_license' | 'nca_cert';
       doc_number?:     string;
       front_image?:    string;   // base64 dataUrl

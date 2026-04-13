@@ -47,8 +47,8 @@ const PropertyDetails: React.FC = () => {
     const { data: property, isLoading: isPropertyLoading } = useGetPublicPropertyByIdQuery(id);
     const realProperty = useMemo(() => property?.property, [property]);
 
-    const lat = useMemo(() => realProperty?.location?.location?.coordinates[1] || 31.6148, [realProperty]);
-    const lng = useMemo(() => realProperty?.location?.location?.coordinates[0] || 77.3456, [realProperty]);
+    const lat = useMemo(() => realProperty?.location?.latitude || -1.2921, [realProperty]);
+    const lng = useMemo(() => realProperty?.location?.longitude || 36.8219, [realProperty]);
 
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [showAllAmenities, setShowAllAmenities] = useState(false);
@@ -62,58 +62,64 @@ const PropertyDetails: React.FC = () => {
 
     const propertyData = useMemo(() => {
         if (!realProperty) return null;
+        
+        // Handle images mapping
+        const mediaImages = (realProperty.media ?? [])
+            .filter((m: any) => m.media_type === 'photo')
+            .map((m: any) => m.url);
+        
+        const displayImages = mediaImages.length > 0 ? mediaImages : ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop'];
+
         return {
             id: realProperty.id,
             title: realProperty.title,
             description: realProperty.description,
-            price: realProperty.price_per_month || realProperty.price_per_night || realProperty.price || 0,
-            currency: realProperty.currency || 'KSh',
-            location: realProperty.location?.address || realProperty.location?.town || 'Kenya',
-            type: realProperty.property_type || realProperty.type || 'Apartment',
-            sizes: realProperty.size_sqm || realProperty.size || 0,
+            price: realProperty.pricing?.monthly_rent || realProperty.pricing?.asking_price || realProperty.short_term_config?.price_per_night || 0,
+            currency: realProperty.pricing?.currency || 'KSh',
+            location: [realProperty.location?.area, realProperty.location?.county].filter(Boolean).join(', ') || 'Kenya',
+            fullAddress: [realProperty.location?.estate_name, realProperty.location?.road_street, realProperty.location?.area, realProperty.location?.county].filter(Boolean).join(', '),
+            type: (realProperty.listing_type || 'Apartment').replace(/_/g, ' '),
+            category: realProperty.listing_category,
+            sizes: realProperty.floor_area_sqm || realProperty.plot_area_sqft || 0,
             bedrooms: realProperty.bedrooms || 0,
             bathrooms: realProperty.bathrooms || 0,
-            floorLevel: realProperty.floor_level || 'N/A',
-            furnished: realProperty.furnished_status || 'Unfurnished',
+            floorLevel: realProperty.rental_unit?.floor_level || 'N/A',
+            furnished: realProperty.is_furnished || 'Unfurnished',
             yearBuilt: realProperty.year_built || 'N/A',
-            internetSpeed: realProperty.internet_speed || 'N/A',
-            images:
-                realProperty.images && realProperty.images.length > 0
-                    ? realProperty.images.map((img: any) => img.image_url)
-                    : ['https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop'],
+            internetSpeed: realProperty.internet_speed || 'Fiber Ready',
+            images: displayImages,
             host: {
-                id: realProperty.owner?.id || (realProperty as any).owner_id,
-                name: realProperty.owner?.full_name || 'Host',
+                id: realProperty.owner?.id,
+                name: realProperty.owner?.full_name || 'Verified Host',
                 avatar: realProperty.owner?.avatar_url || null,
-                verified: realProperty.is_verified || false,
+                verified: realProperty.owner?.is_verified || false,
             },
-            amenities:
-                realProperty.amenities && realProperty.amenities.length > 0
-                    ? realProperty.amenities.map((a: any) => ({ name: a.name, icon: a.icon_name || 'Sparkles', details: a.details }))
-                    : [
-                        { name: 'High-speed WiFi', icon: 'Wifi' },
-                        { name: 'Free Parking', icon: 'Car' },
-                        { name: 'Water Included', icon: 'Droplets' },
-                    ],
+            amenities: (realProperty.amenities ?? []).map((a: any) => ({
+                name: a.name,
+                icon: a.category === 'security' ? 'Shield' : a.category === 'recreation' ? 'Droplets' : 'Sparkles',
+                details: a.notes
+            })),
             status: {
-                verifiedProperty: realProperty.is_verified || false,
+                verifiedProperty: realProperty.status === 'verified' || realProperty.is_featured,
                 views: realProperty.views_count || 0,
                 dateListed: realProperty.created_at || new Date().toISOString(),
+                construction: realProperty.construction_status,
+                management: realProperty.management_model,
             },
             pricing: {
-                cleaningFee: realProperty.cleaning_fee || 0,
-                serviceCharge: realProperty.service_fee || 0,
-                tax: realProperty.tax_amount || 0,
-                securityDeposit: realProperty.security_deposit || 0,
+                cleaningFee: realProperty.short_term_config?.cleaning_fee || 0,
+                serviceCharge: realProperty.pricing?.service_charge || 0,
+                tax: 0,
+                securityDeposit: realProperty.pricing?.deposit_amount || 0,
             },
             houseRules: [
-                realProperty.is_pet_friendly ? 'Pets allowed' : 'No pets',
-                realProperty.is_smoking_allowed ? 'Smoking allowed' : 'No smoking',
-                `Notice period: ${realProperty.notice_period || '1 month'}`,
-                `Lease duration: ${realProperty.lease_duration || '12 months'}`,
+                realProperty.compound_is_gated ? 'Gated community' : 'Open compound',
+                realProperty.is_furnished ? 'Furnished unit' : 'Unfurnished',
+                `Parking: ${realProperty.parking_spaces || 0} slots`,
+                `Water: ${realProperty.water_supply?.replace(/_/g, ' ') || 'Normal'}`,
             ],
-            communityVibe: realProperty.neighborhood?.community_vibe || 'Quiet, upscale residential community.',
-            lightExposure: realProperty.neighborhood?.light_exposure || 'Excellent natural light.',
+            communityVibe: realProperty.description?.slice(0, 100) + '...',
+            lightExposure: 'Excellent natural light and ventilation.',
         };
     }, [realProperty]);
 
@@ -177,7 +183,7 @@ const PropertyDetails: React.FC = () => {
                             <span className="text-[#6a6a6a]">·</span>
                             <div className="flex items-center gap-1">
                                 <MapPin className="w-3.5 h-3.5 text-[#6a6a6a]" />
-                                <span className="underline cursor-pointer hover:text-[#222222]">{propertyData.location}</span>
+                                <span className="underline cursor-pointer hover:text-[#222222]">{propertyData.fullAddress || propertyData.location}</span>
                             </div>
                         </div>
                     </div>

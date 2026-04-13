@@ -83,7 +83,7 @@ const BecomeHost: React.FC = () => {
   const [done, setDone] = useState(false);
 
   // Step 1 — role
-  const [role, setRole] = useState<'landlord' | 'developer' | null>(null);
+  const [role, setRole] = useState<'landlord' | 'developer' | 'agent' | null>(null);
 
   // Step 2 — identity
   const [docType, setDocType] = useState<'national_id' | 'passport'>('national_id');
@@ -136,7 +136,7 @@ const BecomeHost: React.FC = () => {
     );
   }
 
-  const maxStep = role === 'developer' ? 4 : 3;
+  const maxStep = (role === 'developer' || role === 'agent') ? 4 : 3;
 
   const validate = (): string | null => {
     if (step === 1) {
@@ -215,7 +215,7 @@ const BecomeHost: React.FC = () => {
     );
   }
 
-  const visibleSteps = role === 'developer' ? STEPS : STEPS.filter(s => s !== 'Business Details');
+  const visibleSteps = (role === 'developer' || role === 'agent') ? STEPS : STEPS.filter(s => s !== 'Business Details');
 
   return (
     <div className="min-h-screen bg-[#f7f7f7]">
@@ -294,6 +294,13 @@ const BecomeHost: React.FC = () => {
                       title: 'Landlord / Individual Host',
                       desc: 'You own or manage one or a few properties — apartments, houses, bedsitters, or short-stay units.',
                       docs: 'National ID or Passport',
+                    },
+                    {
+                      key: 'agent' as const,
+                      icon: User,
+                      title: 'Real Estate Agent',
+                      desc: 'You manage properties on behalf of landlords or developers. Requires a valid license and identity verification.',
+                      docs: 'National ID + Agent License',
                     },
                     {
                       key: 'developer' as const,
@@ -388,37 +395,57 @@ const BecomeHost: React.FC = () => {
             )}
 
             {/* ── STEP 3: Developer business docs (developer only) ── */}
-            {step === 3 && role === 'developer' && (
+            {step === 3 && (role === 'developer' || role === 'agent') && (
               <>
                 <div>
-                  <h2 className="text-xl font-bold text-[#222222] mb-1">Business Details</h2>
-                  <p className="text-sm text-[#6a6a6a]">As a developer, we need your company or professional registration details.</p>
+                  <h2 className="text-xl font-bold text-[#222222] mb-1">
+                    {role === 'developer' ? 'Business Details' : 'Professional Credentials'}
+                  </h2>
+                  <p className="text-sm text-[#6a6a6a]">
+                    {role === 'developer' 
+                      ? 'As a developer, we need your company or professional registration details.'
+                      : 'As an agent, we need your licensing and professional details.'}
+                  </p>
                 </div>
 
-                <div>
-                  <Label required>Company / business name</Label>
-                  <input value={companyName} onChange={e => setCompanyName(e.target.value)}
-                    placeholder="e.g. Acme Properties Ltd" className={inputCls} />
-                </div>
+                {role === 'developer' && (
+                  <div>
+                    <Label required>Company / business name</Label>
+                    <input value={companyName} onChange={e => setCompanyName(e.target.value)}
+                      placeholder="e.g. Acme Properties Ltd" className={inputCls} />
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label>KRA PIN</Label>
-                    <input value={kraPin} onChange={e => setKraPin(e.target.value)}
-                      placeholder="e.g. A012345678Z" className={inputCls} />
-                  </div>
-                  <div>
-                    <Label>NCA Registration No.</Label>
-                    <input value={ncaReg} onChange={e => setNcaReg(e.target.value)}
-                      placeholder="e.g. NCA/2023/0001" className={inputCls} />
-                  </div>
+                  {role === 'developer' ? (
+                    <>
+                      <div>
+                        <Label>KRA PIN</Label>
+                        <input value={kraPin} onChange={e => setKraPin(e.target.value)}
+                          placeholder="e.g. A012345678Z" className={inputCls} />
+                      </div>
+                      <div>
+                        <Label>NCA Registration No.</Label>
+                        <input value={ncaReg} onChange={e => setNcaReg(e.target.value)}
+                          placeholder="e.g. NCA/2023/0001" className={inputCls} />
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <Label required>EAARB License Number</Label>
+                      <input value={kraPin} onChange={e => setKraPin(e.target.value)}
+                        placeholder="e.g. REA/2024/00123" className={inputCls} />
+                    </div>
+                  )}
                 </div>
 
                 <div>
-                  <Label required>Business document type</Label>
+                  <Label required>{role === 'developer' ? 'Business document type' : 'Certification type'}</Label>
                   <div className="flex gap-3">
-                    {([['company_cert', 'Company Certificate'], ['nca_cert', 'NCA Certificate']] as const).map(([val, label]) => (
-                      <button key={val} type="button" onClick={() => setBizDocType(val)}
+                    {(role === 'developer' 
+                      ? [['company_cert', 'Company Certificate'], ['nca_cert', 'NCA Certificate']] as const
+                      : [['earb_license', 'EAARB License'], ['other', 'Other License']] as const).map(([val, label]) => (
+                      <button key={val} type="button" onClick={() => setBizDocType(val as any)}
                         className={`flex-1 py-2.5 rounded-xl border text-sm font-bold transition-all ${bizDocType === val ? 'border-[#ff385c] bg-[#fff1f3] text-[#ff385c]' : 'border-gray-200 text-[#6a6a6a] hover:border-gray-400'}`}>
                         {label}
                       </button>
@@ -426,8 +453,10 @@ const BecomeHost: React.FC = () => {
                   </div>
                 </div>
 
-                <ImageUploader label="Business document *"
-                  hint="Upload your company cert, NCA cert, or official business registration"
+                <ImageUploader label={role === 'developer' ? 'Business document *' : 'License document *'}
+                  hint={role === 'developer' 
+                    ? 'Upload your company cert, NCA cert, or official business registration'
+                    : 'Upload your EAARB license or valid professional certification'}
                   icon={Briefcase} value={bizImg} onChange={setBizImg} />
               </>
             )}
@@ -453,6 +482,9 @@ const BecomeHost: React.FC = () => {
                       { label: 'KRA PIN', value: kraPin || '—' },
                       { label: 'NCA Reg No.', value: ncaReg || '—' },
                       { label: 'Business document', value: bizImg ? '✓ Uploaded' : '— (optional)' },
+                    ] : role === 'agent' ? [
+                      { label: 'License number', value: kraPin || '—' },
+                      { label: 'License document', value: bizImg ? '✓ Uploaded' : '✗ Missing' },
                     ] : []),
                   ].map(row => (
                     <div key={row.label} className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">

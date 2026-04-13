@@ -7,14 +7,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './baseQuery';
 
-// ─── Landlord dashboard KPIs ────────────────────────────────────────────────
 export interface LandlordKpi {
-  properties:  { total: number; active: number; vacant: number };
-  tenancies:   { active: number; pending: number };
-  visits:      { pending_confirmation: number; upcoming: number };
-  revenue:     { this_month_kes: number; escrow_kes: number };
-  short_stay:  { active_bookings: number; pending_payment: number };
-  team:        { caretakers: number; agents: number };
+  properties:  { total: number };
+  tenancies:   { active: number; pending_applications: number };
+  visits:      { pending: number };
+  earnings:    { total_kes: number };
+  messages:    { unread: number };
+  short_stay:  { upcoming_bookings: number };
+  boosts:      { active: number };
+  generated_at: string;
   code?: string;
 }
 
@@ -52,9 +53,9 @@ export const DashboardApi = createApi({
       providesTags: ['Dashboard'],
     }),
 
-    // ── Landlord dashboard (legacy alias — kept for backward compat) ─────────
+    // ── Landlord dashboard ──────────────────────────────────────────────────
     getLandlordDashboard: builder.query<LandlordKpi, void>({
-      query: () => 'dashboard/stats',
+      query: () => 'landlord/dashboard',
       providesTags: ['Dashboard'],
     }),
 

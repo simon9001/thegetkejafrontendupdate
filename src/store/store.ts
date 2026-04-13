@@ -7,6 +7,7 @@ import { DashboardApi }         from '../features/Api/DashboardApi';
 import { SpatialApi }           from '../features/Api/SpatialApi';
 import { chatApi }              from '../features/Api/ChatApi';
 import { UsersApi }             from '../features/Api/UsersApi';
+import { LandlordApi }          from '../features/Api/LandlordApi';
 import { SavedPropertiesApi }   from '../features/Api/SavedPropertiesApi';
 import authReducer           from '../features/Slice/AuthSlice';
 import propertiesReducer     from '../features/Slice/PropertiesSlice';
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   [DashboardApi.reducerPath]:       DashboardApi.reducer,
   [chatApi.reducerPath]:            chatApi.reducer,
   [UsersApi.reducerPath]:           UsersApi.reducer,
+  [LandlordApi.reducerPath]:        LandlordApi.reducer,
   [SavedPropertiesApi.reducerPath]: SavedPropertiesApi.reducer,
   // Feature slices
   auth:            persistedAuthReducer,
@@ -56,6 +58,7 @@ export const store = configureStore({
       .concat(DashboardApi.middleware)
       .concat(chatApi.middleware)
       .concat(UsersApi.middleware)
+      .concat(LandlordApi.middleware)
       .concat(SavedPropertiesApi.middleware),
 });
 
