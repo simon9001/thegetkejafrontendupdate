@@ -5,24 +5,34 @@ import { updateTokens, clearCredentials } from '../Slice/AuthSlice';
 import type { RootState } from '../../store/store';
 
 // ---------------------------------------------------------------------------
+// Environment setup — fail fast if missing
+// ---------------------------------------------------------------------------
+const API_URL = import.meta.env.VITE_API_URL;
+
+if (!API_URL) {
+  throw new Error(
+    'VITE_API_URL is not defined. Make sure it is set in your environment variables (Vercel).'
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Base query — attaches Bearer token if one exists in state
 // ---------------------------------------------------------------------------
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL ?? '/api',
+  baseUrl: API_URL,
   prepareHeaders: (headers, { getState }) => {
-    // Safe access — state.auth may be undefined during redux-persist rehydration
     const token = (getState() as RootState)?.auth?.tokens?.accessToken;
+
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }
+
     return headers;
   },
 });
 
 // ---------------------------------------------------------------------------
 // Refresh mutex — ensures only ONE refresh call is in flight at a time.
-// Without this, parallel 401s each fire a refresh; the backend rotates the
-// token on the first call, making every subsequent refresh fail → logout.
 // ---------------------------------------------------------------------------
 let refreshPromise: Promise<boolean> | null = null;
 
@@ -40,35 +50,57 @@ export const baseQueryWithReauth: BaseQueryFn<
     const refreshToken = (api.getState() as RootState)?.auth?.tokens?.refreshToken;
 
     if (refreshToken) {
-      // If a refresh is already in flight, wait for it instead of firing another.
+      // Prevent multiple refresh calls at the same time
       if (!refreshPromise) {
-        refreshPromise = Promise.resolve(baseQuery(
-          { url: 'auth/refresh-token', method: 'POST', body: { refreshToken } },
-          api,
-          extraOptions,
-        )).then((refreshResult) => {
-          if (refreshResult.data) {
-            const { accessToken, refreshToken: newRefreshToken } = refreshResult.data as {
-              accessToken: string;
-              refreshToken: string;
-            };
-            api.dispatch(updateTokens({ accessToken, refreshToken: newRefreshToken }));
-            return true;
-          }
-          api.dispatch(clearCredentials());
-          return false;
-        }).finally(() => {
-          refreshPromise = null;
-        });
+        refreshPromise = Promise.resolve(
+          baseQuery(
+            {
+              url: 'auth/refresh-token', // ⚠️ DO NOT prefix with /api
+              method: 'POST',
+              body: { refreshToken },
+            },
+            api,
+            extraOptions
+          )
+        )
+          .then((refreshResult) => {
+            if (refreshResult.data) {
+              const { accessToken, refreshToken: newRefreshToken } =
+                refreshResult.data as {
+                  accessToken: string;
+                  refreshToken: string;
+                };
+
+              api.dispatch(
+                updateTokens({
+                  accessToken,
+                  refreshToken: newRefreshToken,
+                })
+              );
+
+              return true;
+            }
+
+            api.dispatch(clearCredentials());
+            return false;
+          })
+          .catch(() => {
+            api.dispatch(clearCredentials());
+            return false;
+          })
+          .finally(() => {
+            refreshPromise = null;
+          });
       }
 
       const refreshed = await refreshPromise;
+
       if (refreshed) {
-        // Retry original request with the new access token now in state
+        // Retry original request with new token
         result = await baseQuery(args, api, extraOptions);
       }
     } else {
-      // No refresh token — force logout
+      // No refresh token → logout
       api.dispatch(clearCredentials());
     }
   }
