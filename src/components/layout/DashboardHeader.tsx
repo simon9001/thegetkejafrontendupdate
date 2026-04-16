@@ -53,7 +53,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onMenuClick }) => {
                 <div className="flex items-center gap-3 group cursor-pointer">
                     <div className="flex flex-col items-end hidden sm:flex">
                         <span className="text-xs font-black text-white leading-none capitalize">{user?.full_name?.split(' ')[0]}</span>
-                        <span className="text-[10px] font-bold text-[#D4A373] uppercase tracking-tighter opacity-80">{user?.role}</span>
+                        <span className="text-[10px] font-bold text-[#D4A373] uppercase tracking-tighter opacity-80">{user?.roles?.[0]}</span>
                     </div>
                     <div className="w-9 h-9 md:w-10 md:h-10 rounded-[12px] md:rounded-[14px] bg-[#D4A373] flex items-center justify-center text-[#1B2430] overflow-hidden shadow-lg shadow-[#D4A373]/20 border-2 border-[#D4A373]/50 transform transition-transform group-hover:scale-110 shrink-0">
                         {user?.avatar_url ? (

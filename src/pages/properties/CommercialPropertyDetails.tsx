@@ -8,10 +8,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
     Heart, Share2, MapPin, Camera, Video, Grid,
-    Home, Ruler, Users, Calendar, Clock, Music, Mic,
+    Ruler, Users, Calendar, Clock, Music, Mic,
     Shield, Eye, Award, BadgeCheck, Moon, ParkingCircle,
-    DoorOpen, Building2, AlertTriangle, Volume2, GlassWater,
-    Sparkles, MessageCircle, User, Navigation2,
+    DoorOpen, Building2, AlertTriangle, Volume2, GlassWater, Key,
+    MessageCircle, User, Navigation2,
     ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import Layout from '../../components/layout/Layout';

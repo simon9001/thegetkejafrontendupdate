@@ -32,7 +32,7 @@ const GreetingCard: React.FC = () => {
     };
 
     const getRoleBadgeColor = () => {
-        switch (user?.role) {
+        switch (user?.roles?.[0]) {
             case 'admin': return 'from-red-500/20 to-orange-500/20 text-orange-500 border-orange-500/30';
             case 'verifier': return 'from-blue-500/20 to-cyan-500/20 text-cyan-500 border-cyan-500/30';
             case 'landlord': return 'from-[#D4A373]/20 to-[#B68D64]/20 text-[#D4A373] border-[#D4A373]/30';
@@ -41,7 +41,7 @@ const GreetingCard: React.FC = () => {
     };
 
     const getRoleMessage = () => {
-        switch (user?.role) {
+        switch (user?.roles?.[0]) {
             case 'admin': return 'System Overview & Central Control';
             case 'verifier': return 'Platform Integrity & Verification Queue';
             case 'landlord': return 'Portfolio Performance & Estate Management';
@@ -59,7 +59,7 @@ const GreetingCard: React.FC = () => {
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
                         <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border bg-gradient-to-r ${getRoleBadgeColor()}`}>
-                            {user?.role} Access
+                            {user?.roles?.[0]} Access
                         </span>
                         <div className="flex items-center gap-1.5 text-gray-500 text-[10px] font-bold uppercase tracking-wider">
                             <Sparkles size={12} className="text-[#D4A373]" />

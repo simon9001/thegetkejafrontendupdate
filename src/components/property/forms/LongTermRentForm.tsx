@@ -1,6 +1,6 @@
 // components/property/forms/LongTermRentForm.tsx
 import React, { useState } from 'react';
-import { MapPin, Home, DollarSign, Users } from 'lucide-react';
+import { Home, DollarSign, Users } from 'lucide-react';
 import LocationPicker from '../shared/LocationPicker';
 // import AmenitiesSelector from '../shared/AmenitiesSelector';
 

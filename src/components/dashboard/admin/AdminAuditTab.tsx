@@ -1,6 +1,6 @@
 // components/dashboard/admin/AdminAuditTab.tsx
 import React, { useState } from 'react';
-import { FileText, Search, Filter, Shield, Download, Calendar } from 'lucide-react';
+import { FileText, Search, Shield, Download, Calendar } from 'lucide-react';
 import { SectionHeader, Pagination, EmptyState } from '../shared';
 import { useGetAuditLogQuery } from '../../../features/Api/AdminApi';
 import { exportToCsv } from '../../../utils/csvExport';

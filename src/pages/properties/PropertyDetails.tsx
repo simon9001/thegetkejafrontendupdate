@@ -84,7 +84,7 @@ const PropertyDetails: React.FC = () => {
     );
 
     // Server-side pricing quote
-    const { data: quote } = useGetPriceQuoteQuery(
+    useGetPriceQuoteQuery(
         { propertyId: id, checkIn, checkOut, guests },
         { skip: !checkIn || !checkOut || id === '' }
     );
@@ -189,9 +189,6 @@ const PropertyDetails: React.FC = () => {
 
     if (!propertyData) return null;
 
-    const _totalNights = quote?.nights ?? (checkIn && checkOut
-        ? Math.max(1, Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000))
-        : 1);
 
     const handleSaveToggle = async () => {
         if (!isAuthenticated) return toast.error('Please login to save properties');
@@ -418,7 +415,6 @@ const PropertyDetails: React.FC = () => {
                                 {(() => {
                                     const cat  = realProperty.listing_category;
                                     const type = realProperty.listing_type;
-                                    const _p   = realProperty.pricing ?? {};
                                     const stc  = (realProperty as any).short_term_config ?? {};
                                     const ru   = (realProperty as any).rental_unit ?? {};
                                     const pd   = (realProperty as any).plot_details ?? {};

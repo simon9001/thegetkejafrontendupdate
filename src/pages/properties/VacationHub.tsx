@@ -6,8 +6,7 @@ import Layout from '../../components/layout/Layout.js';
 import StatusPreview from '../../components/property/StatusPreview.js';
 import SearchResults from '../../components/Search/SearchResults.js';
 import { useGetPublicPropertiesQuery } from '../../features/Api/PropertiesApi.js';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../store/store.js';
+
 import { statusData } from '../../data/statusData.js';
 import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
 import HeartButton from '../../components/ui/HeartButton.js';
@@ -128,7 +127,6 @@ const VacationHub: React.FC = () => {
     { skip: hasFilters }
   );
 
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const handleStatusClick = (_index: number) => {
     // TODO: status preview modal not yet implemented
