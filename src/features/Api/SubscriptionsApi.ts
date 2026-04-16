@@ -70,6 +70,21 @@ export const subscriptionsApi = createApi({
       invalidatesTags:   ['MySubscription'],
     }),
 
+    /** POST /api/subscriptions/paystack/verify — authenticated */
+    verifyPaystackPayment: builder.mutation<UserSubscription, {
+      plan_id:             string;
+      billing_cycle:       'monthly' | 'annual';
+      paystack_reference:  string;
+    }>({
+      query: (body) => ({
+        url:    'subscriptions/paystack/verify',
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (res: any) => res?.subscription ?? res,
+      invalidatesTags:   ['MySubscription'],
+    }),
+
     /** POST /api/subscriptions/cancel — authenticated */
     cancelSubscription: builder.mutation<{ message: string; access_until: string }, { reason?: string }>({
       query: (body) => ({
@@ -86,5 +101,6 @@ export const {
   useGetPlansQuery,
   useGetMySubscriptionQuery,
   useSubscribeMutation,
+  useVerifyPaystackPaymentMutation,
   useCancelSubscriptionMutation,
 } = subscriptionsApi;

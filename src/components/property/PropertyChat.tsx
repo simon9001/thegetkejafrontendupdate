@@ -2,8 +2,9 @@
 // Chat widget embedded in the property detail page.
 // Calls POST /api/chat/start to create/get a conversation, then polls for messages.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { MessageCircle, Send, Loader2, ChevronDown } from 'lucide-react';
+import { MessageCircle, Send, Loader2, ChevronDown, Lock, Sparkles } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import {
   useStartConversationMutation,
   useGetMessagesQuery,
@@ -11,7 +12,7 @@ import {
 } from '../../features/Api/ChatApi';
 
 interface PropertyChatProps {
-  propertyId: string;
+  propertyId:       string;
   host: {
     id?:          string;
     name:         string;
@@ -20,6 +21,7 @@ interface PropertyChatProps {
   };
   currentUser:      any;
   isAuthenticated:  boolean;
+  isFreeTier?:      boolean;   // true → blur widget and show upgrade prompt
 }
 
 const PropertyChat: React.FC<PropertyChatProps> = ({
@@ -27,6 +29,7 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
   host,
   currentUser,
   isAuthenticated,
+  isFreeTier = false,
 }) => {
   const [isOpen, setIsOpen]                     = useState(false);
   const [conversationId, setConversationId]     = useState<string | null>(null);
@@ -104,6 +107,46 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
 
   const avatarFallback = host.name?.charAt(0)?.toUpperCase() ?? 'O';
   const myId = currentUser?.id ?? currentUser?.user_id;
+
+  // ── Free tier: show locked overlay ────────────────────────────────────────
+  if (isFreeTier) {
+    return (
+      <div className="relative border border-[#e5e5e5] rounded-2xl overflow-hidden shadow-sm select-none">
+        {/* Blurred preview of the chat widget */}
+        <div className="pointer-events-none blur-[3px] opacity-40">
+          <div className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#ff385c]/10 flex items-center justify-center shrink-0">
+                <MessageCircle className="w-4 h-4 text-[#ff385c]" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[#222222]">Chat with owner</p>
+                <p className="text-[11px] text-[#6a6a6a]">{host.name}</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-[#e5e5e5] h-20 bg-[#fafafa]" />
+        </div>
+        {/* Lock overlay */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/80 backdrop-blur-[1px]">
+          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+            <Lock className="w-5 h-5 text-gray-400" />
+          </div>
+          <p className="text-sm font-bold text-[#222222]">Contact locked</p>
+          <p className="text-xs text-gray-400 text-center px-6">
+            Upgrade your plan to chat with {host.name}
+          </p>
+          <Link
+            to="/"
+            className="mt-1 flex items-center gap-1.5 px-4 py-2 bg-[#ff385c] text-white text-xs font-bold rounded-full hover:bg-[#e00b41] transition-colors"
+          >
+            <Sparkles className="w-3 h-3" />
+            Upgrade Plan
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="border border-[#e5e5e5] rounded-2xl overflow-hidden shadow-sm">

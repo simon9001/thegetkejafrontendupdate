@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import CommercialPropertyDetails from './CommercialPropertyDetails';
 import PropertyChat from '../../components/property/PropertyChat';
+import { useGetMySubscriptionQuery } from '../../features/Api/SubscriptionsApi';
 import { toast } from 'react-hot-toast';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -68,6 +69,10 @@ const PropertyDetails: React.FC = () => {
     const [isBooking, setIsBooking] = useState(false);
 
     const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.auth);
+
+    // Subscription tier check — free tier users cannot contact landlords/caretakers
+    const { data: mySub } = useGetMySubscriptionQuery(undefined, { skip: !isAuthenticated });
+    const isFreeTier = !mySub || (mySub.plan?.price_monthly_kes === 0);
 
     // ── API Hooks ──
     const { data: savedProps } = useGetSavedPropertiesQuery(undefined, { skip: !isAuthenticated });
@@ -610,6 +615,7 @@ const PropertyDetails: React.FC = () => {
                             host={propertyData.host}
                             currentUser={currentUser}
                             isAuthenticated={isAuthenticated}
+                            isFreeTier={isFreeTier}
                         />
 
                         {/* Reviews */}
