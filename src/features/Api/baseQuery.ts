@@ -3,23 +3,13 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { updateTokens, clearCredentials } from '../Slice/AuthSlice';
 import type { RootState } from '../../store/store';
-
-// ---------------------------------------------------------------------------
-// Environment setup — fail fast if missing
-// ---------------------------------------------------------------------------
-const API_URL = import.meta.env.VITE_API_URL;
-
-if (!API_URL) {
-  throw new Error(
-    'VITE_API_URL is not defined. Make sure it is set in your environment variables (Vercel).'
-  );
-}
+import { apiDomain } from '../../apiDomain/ApiDomain';
 
 // ---------------------------------------------------------------------------
 // Base query — attaches Bearer token if one exists in state
 // ---------------------------------------------------------------------------
 const baseQuery = fetchBaseQuery({
-  baseUrl: API_URL,
+  baseUrl: apiDomain,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState)?.auth?.tokens?.accessToken;
 
