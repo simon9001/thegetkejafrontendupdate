@@ -126,11 +126,20 @@ export const UsersApi = createApi({
       invalidatesTags: ['MyProfile'],
     }),
 
+    // ── Self: get current verification status ─────────────────────────────
+    // Returns the latest id_verifications row for the logged-in user, or null.
+    getMyVerification: builder.query<
+      { verification: { id: string; status: string; doc_type: string; doc_number: string | null; submitted_at: string; reviewed_at: string | null; rejection_reason: string | null } | null; code: string },
+      void
+    >({
+      query: () => 'users/me/verification',
+      providesTags: ['MyProfile'],
+    }),
+
     // ── Self: submit ID / role verification request ────────────────────────
     // Creates a row in id_verifications with status='pending' for staff to review.
     // On approval the backend upgrades the user's role to landlord or developer.
     submitVerification: builder.mutation<{ message: string; code: string }, {
-      requested_role:  'landlord' | 'developer' | 'agent';
       doc_type:        'national_id' | 'passport' | 'company_cert' | 'earb_license' | 'nca_cert';
       doc_number?:     string;
       front_image?:    string;   // base64 dataUrl
@@ -159,5 +168,6 @@ export const {
   useDeleteUserMutation,
   useGetMyProfileQuery,
   useUpdateMyProfileMutation,
+  useGetMyVerificationQuery,
   useSubmitVerificationMutation,
 } = UsersApi;

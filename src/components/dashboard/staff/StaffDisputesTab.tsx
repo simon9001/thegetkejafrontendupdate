@@ -1,9 +1,9 @@
 // components/dashboard/staff/StaffDisputesTab.tsx
 import React from 'react';
-import { Scale, AlertCircle, CheckCircle } from 'lucide-react';
+import { Scale, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
-import { SectionHeader, Badge, EmptyState, Pagination } from '../shared';
+import { SectionHeader, Badge, EmptyState } from '../shared';
 import {
   useGetModerationDisputesQuery,
   useResolveDisputeMutation,
@@ -15,7 +15,7 @@ const StaffDisputesTab: React.FC = () => {
 
   const handleResolve = async (id: string, resolution: 'resolved_guest'|'resolved_host') => {
     try {
-      await resolve({ disputeId: id, resolution, notes: 'Resolved by Staff' }).unwrap();
+      await resolve({ disputeId: id, resolution, resolution_notes: 'Resolved by Staff' }).unwrap();
       toast.success('Dispute resolved');
     } catch (e: any) {
       toast.error(e?.data?.message ?? 'Resolution failed');

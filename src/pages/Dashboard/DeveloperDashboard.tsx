@@ -11,6 +11,7 @@ import type { NavItem } from '../../components/dashboard/shared';
 
 
 // Import Developer Tabs
+import DeveloperOverviewTab from '../../components/dashboard/developer/DeveloperOverviewTab';
 import DeveloperProjectsTab from '../../components/dashboard/developer/DeveloperProjectsTab';
 import DeveloperPipelineTab from '../../components/dashboard/developer/DeveloperPipelineTab';
 import DeveloperUnitsTab from '../../components/dashboard/developer/DeveloperUnitsTab';
@@ -26,13 +27,22 @@ const NAV: NavItem[] = [
 
 const DeveloperDashboard: React.FC = () => {
   const user = useSelector(selectCurrentUser);
+  const isDeveloper = !!user && (user.roles?.includes('developer') || user.roles?.includes('super_admin'));
   const [activeNav, setActiveNav] = useState('overview');
 
-  const isDeveloper = !!user && (user.roles?.includes('developer') || user.roles?.includes('super_admin'));
   const { data: propertiesData } = useGetMyPropertiesQuery(undefined, { skip: !isDeveloper });
-  const properties = propertiesData?.properties ?? [];
+  const stats = { ownedProperties: propertiesData?.total ?? 0 };
 
-  if (!user || !isDeveloper) return <div className="p-20 text-center">Access Denied</div>;
+  if (!user) return <div className="p-20 text-center">Please login to access the Developer Dashboard.</div>;
+
+  if (!isDeveloper) {
+    return (
+      <div className="p-20 text-center">
+        <h2 className="text-xl font-bold text-red-600">Access Denied</h2>
+        <p className="text-gray-600 mt-2">You do not have developer permissions.</p>
+      </div>
+    );
+  }
 
   return (
     <DashboardShell
@@ -42,10 +52,7 @@ const DeveloperDashboard: React.FC = () => {
       roleLabel="Developer"
     >
       {activeNav === 'overview' && (
-        <div className="p-12 text-center bg-white rounded-2xl border border-gray-100">
-          <h2 className="text-xl font-bold text-[#222222]">Developer Overview</h2>
-          <p className="text-sm text-[#6a6a6a] mt-1">Manage your large-scale projects and sales pipeline.</p>
-        </div>
+        <DeveloperOverviewTab stats={stats} userName={user.full_name ?? 'Developer'} />
       )}
       {activeNav === 'projects' && <DeveloperProjectsTab />}
       {activeNav === 'pipeline' && <DeveloperPipelineTab />}

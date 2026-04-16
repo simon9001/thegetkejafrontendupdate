@@ -1,7 +1,7 @@
 // components/dashboard/landlord/LandlordTeamTab.tsx
 import React, { useState } from 'react';
-import { Users, Phone, Mail, Edit3, UserCog, ShieldCheck, Trash2, Search, Plus, Loader2 } from 'lucide-react';
-import { SectionHeader, Badge } from '../shared';
+import { Users, Phone, Mail, Edit3, ShieldCheck, Trash2, Plus, Loader2 } from 'lucide-react';
+import { SectionHeader } from '../shared';
 import { useListTeamMembersQuery, useRevokeTeamMemberMutation } from '../../../features/Api/LandlordApi';
 import { toast } from 'react-hot-toast';
 import AddTeamMemberModal from './AddTeamMemberModal';

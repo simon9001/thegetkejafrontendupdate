@@ -1,9 +1,9 @@
 // components/dashboard/staff/StaffReviewsTab.tsx
 import React from 'react';
-import { Flag, ThumbsUp, ThumbsDown, AlertTriangle, Star } from 'lucide-react';
+import { AlertTriangle, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
-import { SectionHeader, Badge, EmptyState, Pagination } from '../shared';
+import { SectionHeader, EmptyState } from '../shared';
 import {
   useGetFraudReviewQueueQuery,
   usePublishReviewMutation,
@@ -21,7 +21,7 @@ const StaffReviewsTab: React.FC = () => {
     try {
       if (action === 'publish') await publish(id).unwrap();
       if (action === 'reject') await reject({ reviewId: id, notes: 'Rejected by staff' }).unwrap();
-      if (action === 'escalate') await escalate(id).unwrap();
+      if (action === 'escalate') await escalate({ reviewId: id, notes: '' }).unwrap();
       toast.success(`Review ${action}ed`);
     } catch (e: any) {
       toast.error(e?.data?.message ?? 'Action failed');

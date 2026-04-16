@@ -53,6 +53,7 @@ export interface Property {
     water_bill_type?:     string;
     electricity_bill_type?: string;
     negotiable?:          boolean;
+    agent_commission_pct?: number;
   };
   location?: {
     address?: string;
@@ -113,6 +114,62 @@ export interface Property {
   tax_amount?:         number;
   price_per_day?:      number;
   parking_spots?:      number;
+  // Fields returned by backend but missing from type
+  floor_area_sqm?:   number;
+  plot_area_sqft?:   number;
+  parking_spaces?:   number;   // alias for parking_spots
+  compound_is_gated?: boolean;
+  water_supply?:     string;
+  electricity_supply?: string;
+  published_at?:     string;
+  // Nested sub-tables
+  rental_unit?: {
+    floor_level?: number;
+    unit_type?:  string;
+    faces?:      string;
+    has_balcony?: boolean;
+    is_corner_unit?: boolean;
+  };
+  plot_details?: {
+    size_acres?:    number;
+    size_sqft?:     number;
+    road_frontage_m?: number;
+    is_corner_plot?: boolean;
+    terrain?:       string;
+    soil_type?:     string;
+    is_serviced?:   boolean;
+    zoning_use?:    string;
+    payment_plan_available?: boolean;
+    installment_months?: number;
+  };
+  offplan_details?: {
+    project_name:     string;
+    developer_name?:  string;
+    completion_quarter?: string;
+    construction_pct?: number;
+    total_units_in_project?: number;
+    units_sold?:      number;
+    payment_plan?:    any;
+    escrow_bank?:     string;
+    nca_reg_number?:  string;
+  };
+  // Structured configuration for short-stays
+  short_term_config?: {
+    short_term_type:    'airbnb_bnb' | 'party_home' | 'holiday_home' | 'serviced_apartment';
+    price_per_night:    number;
+    price_per_weekend?: number;
+    min_nights?:        number;
+    max_guests?:        number;
+    check_in_time?:     string;
+    check_out_time?:    string;
+    cleaning_fee?:      number;
+    damage_deposit?:    number;
+    rules?:             string[];
+    catering_available?: boolean;
+    airbnb_listing_url?: string;
+    instant_book?: boolean;
+    max_nights?:  number;
+  };
 }
 
 export interface PaginatedProperties {
@@ -131,12 +188,13 @@ export const PropertiesApi = createApi({
 
     // ── Landlord: list own properties ──────────────────────────────────────
     // GET /api/landlord/properties
-    getMyProperties: builder.query<PaginatedProperties, { status?: string; page?: number; limit?: number } | void>({
+    getMyProperties: builder.query<PaginatedProperties, { status?: string; page?: number; limit?: number; search?: string } | void>({
       query: (params) => {
         const q = new URLSearchParams();
         if (params?.status) q.set('status', params.status);
         if (params?.page)   q.set('page', String(params.page));
         if (params?.limit)  q.set('limit', String(params.limit));
+        if (params?.search) q.set('search', params.search);
         const qs = q.toString();
         return qs ? `landlord/properties?${qs}` : 'landlord/properties';
       },
@@ -301,46 +359,102 @@ export const PropertiesApi = createApi({
       invalidatesTags: [{ type: 'StaffProperty', id: 'LIST' }],
     }),
 
-    // ── Spatial: search external places ──────────────────────────────────
-    // GET /api/spatial/search-external  (kept for map/search autocomplete)
-    searchExternalPlaces: builder.query<any[], string>({
+    // ── Search: full-text + filter ────────────────────────────────────────
+    // GET /api/search?q=&listing_category=&county=&min_price=&max_price=&bedrooms=&page=&limit=
+    searchProperties: builder.query<
+      { properties: Property[]; total: number; page: number; limit: number; pages: number; code: string },
+      {
+        q?: string;
+        listing_category?: string;
+        listing_type?: string;
+        county?: string;
+        area?: string;
+        min_price?: number;
+        max_price?: number;
+        bedrooms?: number;
+        is_furnished?: string;
+        page?: number;
+        limit?: number;
+      } | void
+    >({
+      query: (params) => {
+        const q = new URLSearchParams();
+        if (params?.q)                 q.set('q',                 params.q);
+        if (params?.listing_category)  q.set('listing_category',  params.listing_category);
+        if (params?.listing_type)      q.set('listing_type',      params.listing_type);
+        if (params?.county)            q.set('county',            params.county);
+        if (params?.area)              q.set('area',              params.area);
+        if (params?.min_price != null) q.set('min_price',         String(params.min_price));
+        if (params?.max_price != null) q.set('max_price',         String(params.max_price));
+        if (params?.bedrooms != null)  q.set('bedrooms',          String(params.bedrooms));
+        if (params?.is_furnished)      q.set('is_furnished',      params.is_furnished);
+        if (params?.page)              q.set('page',              String(params.page));
+        if (params?.limit)             q.set('limit',             String(params.limit));
+        const qs = q.toString();
+        return qs ? `search?${qs}` : 'search';
+      },
+      providesTags: [{ type: 'Property', id: 'SEARCH' }],
+    }),
+
+    // ── Search: radius / nearby ───────────────────────────────────────────
+    // GET /api/search/nearby?lat=&lng=&radius_km=&...filters
+    searchNearby: builder.query<
+      { properties: Property[]; total: number; page: number; limit: number; pages: number; code: string },
+      { lat: number; lng: number; radius_km?: number; q?: string; listing_category?: string; page?: number; limit?: number }
+    >({
+      query: ({ lat, lng, radius_km = 5, q, listing_category, page, limit }) => {
+        const params = new URLSearchParams({ lat: String(lat), lng: String(lng), radius_km: String(radius_km) });
+        if (q)                params.set('q',                q);
+        if (listing_category) params.set('listing_category', listing_category);
+        if (page)             params.set('page',             String(page));
+        if (limit)            params.set('limit',            String(limit));
+        return `search/nearby?${params.toString()}`;
+      },
+      providesTags: [{ type: 'Property', id: 'NEARBY' }],
+    }),
+
+    // ── Search: map bounds ────────────────────────────────────────────────
+    // GET /api/search/map?north=&south=&east=&west=&...filters
+    searchInBounds: builder.query<
+      { properties: Property[]; total: number; code: string },
+      { north: number; south: number; east: number; west: number; listing_category?: string; q?: string }
+    >({
+      query: ({ north, south, east, west, listing_category, q }) => {
+        const params = new URLSearchParams({
+          north: String(north), south: String(south),
+          east:  String(east),  west:  String(west),
+        });
+        if (listing_category) params.set('listing_category', listing_category);
+        if (q)                params.set('q', q);
+        return `search/map?${params.toString()}`;
+      },
+    }),
+
+    // ── Legacy alias: kept for any components still calling getProperties ─
+    getProperties: builder.query<PaginatedProperties, any>({
+      query: (params) => ({
+        url:    'properties',
+        method: 'GET',
+        params,
+      }),
+      providesTags: [{ type: 'Property', id: 'LIST' }],
+    }),
+
+    // ── Natural-language search alias (maps to /api/search) ──────────────
+    searchNatural: builder.query<{ properties: Property[]; total: number }, string>({
       query: (q) => ({
-        url:    'spatial/search-external',
+        url:    'search',
         method: 'GET',
         params: { q },
       }),
     }),
 
-    // ── Spatial: link landmark ────────────────────────────────────────────
-    // POST /api/spatial/link-landmark
+    // ── Spatial: link landmark (kept for when spatial router is re-enabled) ─
     linkLandmark: builder.mutation<any, { propertyId: string; landmark: any }>({
       query: (body) => ({
         url:    'spatial/link-landmark',
         method: 'POST',
         body,
-      }),
-    }),
-
-    // ── Legacy alias: kept so VacationHub & SearchModal don't break ───────
-    // These hit the landlord list — public browsing requires backend Properties
-    // module to be re-enabled; until then these show the authenticated user's
-    // own properties on the home feed.
-    getProperties: builder.query<PaginatedProperties, any>({
-      query: (params) => ({
-        url:    'landlord/properties',
-        method: 'GET',
-        params,
-      }),
-      providesTags: [{ type: 'LandlordProperty', id: 'LIST' }],
-    }),
-
-    // ── Natural-language search ───────────────────────────────────────────
-    // NOTE: backend /api/spatial or NLP endpoint — adjust URL when added
-    searchNatural: builder.query<{ properties: Property[]; total: number }, string>({
-      query: (q) => ({
-        url:    'spatial/search',
-        method: 'GET',
-        params: { q },
       }),
     }),
 
@@ -352,6 +466,27 @@ export const PropertiesApi = createApi({
         method: 'POST',
         body:   formData,
       }),
+    }),
+
+    // ── Add nearby places (post-creation) ────────────────────────────────
+    // POST /api/properties/:id/nearby-places
+    addNearbyPlaces: builder.mutation<
+      { message: string; code: string },
+      {
+        propertyId: string;
+        places: Array<{
+          place_type: string; name: string;
+          latitude: number; longitude: number;
+          google_maps_url?: string; school_type?: string; matatu_stage_name?: string;
+        }>;
+      }
+    >({
+      query: ({ propertyId, places }) => ({
+        url:    `properties/${propertyId}/nearby-places`,
+        method: 'POST',
+        body:   { places },
+      }),
+      invalidatesTags: (_r, _e, { propertyId }) => [{ type: 'LandlordProperty', id: propertyId }],
     }),
 
     // ── Boost (landlord) ─────────────────────────────────────────────────
@@ -374,13 +509,13 @@ export const PropertiesApi = createApi({
 
     // ── Public: list properties (no auth required) ────────────────────
     // GET /api/properties
-    getPublicProperties: builder.query<PaginatedProperties, { category?: string; page?: number; limit?: number; status?: string } | void>({
+    getPublicProperties: builder.query<PaginatedProperties, { listing_category?: string; page?: number; limit?: number; status?: string } | void>({
       query: (params) => {
         const q = new URLSearchParams();
-        if (params?.category) q.set('category', params.category);
-        if (params?.page)     q.set('page', String(params.page));
-        if (params?.limit)    q.set('limit', String(params.limit));
-        if (params?.status)   q.set('status', params.status);
+        if (params?.listing_category) q.set('listing_category', params.listing_category);
+        if (params?.page)             q.set('page', String(params.page));
+        if (params?.limit)            q.set('limit', String(params.limit));
+        if (params?.status)           q.set('status', params.status);
         const qs = q.toString();
         return qs ? `properties?${qs}` : 'properties';
       },
@@ -390,6 +525,7 @@ export const PropertiesApi = createApi({
 });
 
 export const {
+  useAddNearbyPlacesMutation,
   useGetPublicPropertyByIdQuery,
   useGetPublicPropertiesQuery,
   useGetMyPropertiesQuery,
@@ -406,11 +542,16 @@ export const {
   useVerifyPropertyMutation,
   useRejectPropertyMutation,
   useStrikePropertyMutation,
-  useSearchExternalPlacesQuery,
-  useLazySearchExternalPlacesQuery,
   useLinkLandmarkMutation,
   useGetPropertiesQuery,
   useSearchNaturalQuery,
   useBoostPropertyMutation,
   useUploadPropertyImagesMutation,
+  // Search
+  useSearchPropertiesQuery,
+  useLazySearchPropertiesQuery,
+  useSearchNearbyQuery,
+  useLazySearchNearbyQuery,
+  useSearchInBoundsQuery,
+  useLazySearchInBoundsQuery,
 } = PropertiesApi;

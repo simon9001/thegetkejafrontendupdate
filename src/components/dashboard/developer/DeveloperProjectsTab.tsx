@@ -1,6 +1,6 @@
 // components/dashboard/developer/DeveloperProjectsTab.tsx
 import React, { useState } from 'react';
-import { Building2, Plus, Search, Filter, MapPin, Eye, Edit3, Trash2 } from 'lucide-react';
+import { Building2, Plus, Search, MapPin, Edit3, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SectionHeader, Badge, Pagination, EmptyState, ConfirmModal } from '../shared';
 import { useGetMyPropertiesQuery, useDeletePropertyMutation } from '../../../features/Api/PropertiesApi';

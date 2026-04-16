@@ -8,6 +8,7 @@ import EmailVerifiedSuccess from './components/auth/EmailVerifiedSuccess';
 import VacationHub from './pages/properties/VacationHub';
 import PropertyDetails from './pages/properties/PropertyDetails';
 import SavedProperties from './pages/properties/SavedProperties';
+import PropertiesPage from './pages/properties/PropertiesPage';
 import RoleRoute from './components/auth/RoleRoute';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import AgentDashboard from './pages/Dashboard/AgentDashboard';
@@ -16,7 +17,7 @@ import CaretakerDashboard from './pages/Dashboard/CaretakerDashboard';
 import DeveloperDashboard from './pages/Dashboard/DeveloperDashboard';
 import VerifierDashboard from './pages/Dashboard/StaffDashboard';
 import UserManagement from './pages/Dashboard/UserManagement';
-import AddProperty from './pages/properties/AddProperty';
+import AddProperty from './components/dashboard/landlord/AddProperty';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Profile from './pages/Auth/Profile';
 import Messages from './pages/Chat/Messages';
@@ -65,6 +66,7 @@ function App() {
         {/* Home page is now Vacation Hub */}
         <Route path="/" element={<VacationHub />} />
         <Route path="/vacation-hub" element={<Navigate to="/" replace />} />
+        <Route path="/properties" element={<PropertiesPage />} />
 
         <Route
           path="/property/:id"

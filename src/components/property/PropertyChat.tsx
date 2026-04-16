@@ -1,230 +1,236 @@
+// components/property/PropertyChat.tsx
+// Chat widget embedded in the property detail page.
+// Calls POST /api/chat/start to create/get a conversation, then polls for messages.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { MessageCircle, Send, Loader2, ChevronDown } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Send, Clock } from 'lucide-react';
 import {
-    useGetOrCreateConversationMutation,
-    useGetMessagesQuery,
-    useSendMessageMutation
+  useStartConversationMutation,
+  useGetMessagesQuery,
+  useSendMessageMutation,
 } from '../../features/Api/ChatApi';
 
 interface PropertyChatProps {
-    propertyId: string;
-    host: {
-        id?: string;
-        name: string;
-        avatar: string;
-        responseRate: number;
-        responseTime: string;
-        verified: boolean;
-    };
-    currentUser: any;
-    isAuthenticated: boolean;
+  propertyId: string;
+  host: {
+    id?:          string;
+    name:         string;
+    avatar?:      string | null;
+    verified?:    boolean;
+  };
+  currentUser:      any;
+  isAuthenticated:  boolean;
 }
 
-// Helper component for individual messages to prevent unnecessary re-renders
-const MessageItem = React.memo(({ msg, isFromMe, hostName, hostAvatar, currentUserAvatar }: any) => {
-    return (
-        <div className={`chat ${isFromMe ? 'chat-end' : 'chat-start'}`}>
-            <div className="chat-image avatar">
-                <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full ring-1 ring-gray-200">
-                    <img
-                        src={isFromMe ? currentUserAvatar || 'https://img.daisyui.com/images/profile/demo/anon@192.webp' : hostAvatar}
-                        alt={isFromMe ? 'You' : hostName}
-                        className="object-cover"
-                    />
-                </div>
-            </div>
-            <div className="chat-header text-[10px] mb-1 font-medium text-gray-400">
-                {isFromMe ? 'You' : hostName}
-                <time className="ml-2 font-normal">
-                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </time>
-            </div>
-            <div className={`chat-bubble text-sm min-h-0 py-2 px-3 ${isFromMe
-                ? 'bg-[#D4A373] text-white shadow-sm'
-                : 'bg-[#1B2430] text-white shadow-sm'
-                }`}>
-                {msg.message}
-            </div>
-            <div className="chat-footer opacity-40 text-[10px] mt-1">
-                {msg.status}
-            </div>
-        </div>
-    );
-});
-
 const PropertyChat: React.FC<PropertyChatProps> = ({
-    propertyId,
-    host,
-    currentUser,
-    isAuthenticated
+  propertyId,
+  host,
+  currentUser,
+  isAuthenticated,
 }) => {
-    const [isChatOpen, setIsChatOpen] = useState(false);
-    const [message, setMessage] = useState('');
-    const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen]                     = useState(false);
+  const [conversationId, setConversationId]     = useState<string | null>(null);
+  const [inputText, setInputText]               = useState('');
+  const [initialMsg, setInitialMsg]             = useState('');
+  const [startingUp, setStartingUp]             = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Chat API hooks
-    const [getOrCreateConversation] = useGetOrCreateConversationMutation();
-    const { data: realMessages = [], isLoading: isMessagesLoading } = useGetMessagesQuery(activeConversationId || '', {
-        skip: !activeConversationId,
-        pollingInterval: 3000,
-    });
-    const [sendMsg] = useSendMessageMutation();
+  const [startConversation] = useStartConversationMutation();
+  const { data: msgData, isLoading: msgsLoading } = useGetMessagesQuery(
+    { conversationId: conversationId ?? '', page: 1 },
+    { skip: !conversationId, pollingInterval: 4000 },
+  );
+  const [sendMessage, { isLoading: sending }] = useSendMessageMutation();
 
-    // Scroll to bottom on new messages
-    useEffect(() => {
-        if (isChatOpen) {
-            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [realMessages, isChatOpen]);
+  const messages = msgData?.messages ?? [];
 
-    const handleOpenChat = useCallback(async () => {
-        if (!isAuthenticated) {
-            alert('Please login to chat with the host');
-            return;
-        }
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    if (isOpen) messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isOpen]);
 
-        setIsChatOpen(prev => !prev);
+  // ── Open chat: start conversation if needed ───────────────────────────────
+  const handleOpen = useCallback(async () => {
+    if (!isAuthenticated) {
+      toast.error('Please sign in to chat with the owner');
+      return;
+    }
+    if (!host.id) {
+      toast.error('Owner information is unavailable for this listing');
+      return;
+    }
+    setIsOpen(true);
+  }, [isAuthenticated, host.id]);
 
-        if (!isChatOpen && !activeConversationId) {
-            try {
-                const hostId = host.id || (host as any).owner_id || (host as any).ownerId;
-                if (!hostId) {
-                    console.error('Host ID is missing for property:', propertyId, 'Host object:', host);
-                    toast.error('Unable to start chat: Host information is unavailable.');
-                    return;
-                }
+  const handleStartConversation = useCallback(async () => {
+    if (!initialMsg.trim()) return;
+    if (!host.id) return;
+    setStartingUp(true);
+    try {
+      const res = await startConversation({
+        property_id:     propertyId,
+        recipient_id:    host.id,
+        initial_message: initialMsg.trim(),
+        type:            'property_enquiry',
+      }).unwrap();
+      setConversationId(res.conversation.id);
+      setInitialMsg('');
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? 'Could not start conversation. Try again.');
+    } finally {
+      setStartingUp(false);
+    }
+  }, [initialMsg, host.id, propertyId, startConversation]);
 
-                const conversation = await getOrCreateConversation({
-                    propertyId,
-                    hostId: hostId
-                }).unwrap();
-                setActiveConversationId(conversation.id);
-            } catch (error) {
-                console.error('Failed to create/get conversation:', error);
-            }
-        }
-    }, [isAuthenticated, isChatOpen, activeConversationId, propertyId, host.id, getOrCreateConversation]);
+  // ── Send message ──────────────────────────────────────────────────────────
+  const handleSend = useCallback(async () => {
+    if (!inputText.trim() || !conversationId) return;
+    const text = inputText.trim();
+    setInputText('');
+    try {
+      await sendMessage({ conversationId, body: text }).unwrap();
+    } catch {
+      setInputText(text);
+      toast.error('Failed to send. Please try again.');
+    }
+  }, [inputText, conversationId, sendMessage]);
 
-    const handleSendMessage = useCallback(async () => {
-        if (!message.trim() || !activeConversationId) return;
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+  };
+  const handleInitialKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleStartConversation(); }
+  };
 
-        const currentMsg = message.trim();
-        setMessage(''); // Clear immediately for snappy UI
+  const avatarFallback = host.name?.charAt(0)?.toUpperCase() ?? 'O';
+  const myId = currentUser?.id ?? currentUser?.user_id;
 
-        try {
-            await sendMsg({
-                conversationId: activeConversationId,
-                content: currentMsg,
-            }).unwrap();
-        } catch (error) {
-            console.error('Failed to send message:', error);
-            setMessage(currentMsg); // Restore on failure
-        }
-    }, [message, activeConversationId, sendMsg]);
-
-    const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            handleSendMessage();
-        }
-    };
-
-    return (
-        <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-            <button
-                onClick={handleOpenChat}
-                className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition"
-            >
-                <div className="flex items-center gap-2">
-                    <MessageCircle className="w-5 h-5 text-[#D4A373]" />
-                    <span className="font-medium text-[#1B2430]">Chat with host</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                        {host.responseRate}% response rate
-                    </span>
-                    <span className="text-sm text-gray-500 font-medium">
-                        {isChatOpen ? 'Close' : 'Open'}
-                    </span>
-                </div>
-            </button>
-
-            <AnimatePresence>
-                {isChatOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="border-t border-gray-200 overflow-hidden"
-                    >
-                        {/* Chat Messages */}
-                        <div className="h-[400px] overflow-y-auto p-4 space-y-4 bg-gray-50/50">
-                            {isMessagesLoading && realMessages.length === 0 ? (
-                                <div className="flex justify-center py-20">
-                                    <span className="loading loading-spinner text-[#D4A373] loading-lg"></span>
-                                </div>
-                            ) : realMessages.length > 0 ? (
-                                realMessages.map((msg: any) => (
-                                    <MessageItem
-                                        key={msg.id}
-                                        msg={msg}
-                                        isFromMe={msg.sender_id === currentUser?.user_id}
-                                        hostName={host.name}
-                                        hostAvatar={host.avatar}
-                                        currentUserAvatar={currentUser?.avatar_url}
-                                    />
-                                ))
-                            ) : (
-                                <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-                                    <div className="w-12 h-12 bg-[#D4A373]/10 rounded-full flex items-center justify-center mb-3">
-                                        <MessageCircle className="w-6 h-6 text-[#D4A373]" />
-                                    </div>
-                                    <p className="text-sm text-gray-500 italic">
-                                        No messages yet. Say hello to {host.name}!
-                                    </p>
-                                </div>
-                            )}
-                            <div ref={messagesEndRef} />
-                        </div>
-
-                        {/* Chat Input */}
-                        <div className="p-4 border-t border-gray-200 bg-white">
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="text"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    onKeyPress={handleKeyPress}
-                                    placeholder={`Message ${host.name}...`}
-                                    className="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4A373]/40 text-sm transition"
-                                />
-                                <button
-                                    onClick={handleSendMessage}
-                                    disabled={!message.trim()}
-                                    className={`p-2 rounded-lg transition shadow-sm ${!message.trim()
-                                        ? 'bg-gray-100 text-gray-400'
-                                        : 'bg-[#D4A373] text-white hover:bg-[#E6B17E]'
-                                        }`}
-                                >
-                                    <Send className="w-5 h-5" />
-                                </button>
-                            </div>
-                            <div className="flex items-center gap-1 mt-3">
-                                <div className="p-1 bg-[#D4A373]/10 rounded">
-                                    <Clock className="w-3 h-3 text-[#D4A373]" />
-                                </div>
-                                <p className="text-[10px] text-gray-500">
-                                    Typically responds within {host.responseTime}
-                                </p>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+  return (
+    <div className="border border-[#e5e5e5] rounded-2xl overflow-hidden shadow-sm">
+      {/* Header toggle */}
+      <button
+        type="button"
+        onClick={isOpen ? () => setIsOpen(false) : handleOpen}
+        className="w-full flex items-center justify-between px-4 py-3.5 bg-white hover:bg-[#fafafa] transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#ff385c]/10 flex items-center justify-center shrink-0">
+            <MessageCircle className="w-4.5 h-4.5 text-[#ff385c]" />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-[#222222]">Chat with owner</p>
+            <p className="text-[11px] text-[#6a6a6a]">{host.name}</p>
+          </div>
         </div>
-    );
+        <ChevronDown className={`w-4 h-4 text-[#6a6a6a] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Chat panel */}
+      {isOpen && (
+        <div className="border-t border-[#e5e5e5]">
+          {/* Messages area */}
+          <div className="h-72 overflow-y-auto flex flex-col gap-3 p-4 bg-[#fafafa]">
+            {msgsLoading && messages.length === 0 ? (
+              <div className="flex items-center justify-center h-full">
+                <Loader2 className="w-5 h-5 text-[#ff385c] animate-spin" />
+              </div>
+            ) : messages.length === 0 && conversationId ? (
+              <div className="flex flex-col items-center justify-center h-full text-center">
+                <MessageCircle className="w-8 h-8 text-[#e5e5e5] mb-2" />
+                <p className="text-xs text-[#6a6a6a]">No messages yet. Start the conversation!</p>
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#ff385c]/10 flex items-center justify-center mb-3">
+                  <MessageCircle className="w-6 h-6 text-[#ff385c]" />
+                </div>
+                <p className="text-sm font-semibold text-[#222222] mb-1">Ask {host.name} anything</p>
+                <p className="text-xs text-[#6a6a6a]">Type your first message below to get started</p>
+              </div>
+            ) : (
+              // Messages — backend returns newest first, reverse to show oldest at top
+              [...messages].reverse().map((msg) => {
+                const isMe = msg.sender_id === myId;
+                return (
+                  <div key={msg.id} className={`flex items-end gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+                    {/* Avatar */}
+                    {!isMe && (
+                      <div className="w-7 h-7 rounded-full bg-[#222222] flex items-center justify-center shrink-0 text-white text-[10px] font-bold overflow-hidden">
+                        {host.avatar
+                          ? <img src={host.avatar} alt={host.name} className="w-full h-full object-cover" />
+                          : avatarFallback}
+                      </div>
+                    )}
+                    {/* Bubble */}
+                    <div
+                      className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
+                        isMe
+                          ? 'bg-[#ff385c] text-white rounded-br-sm'
+                          : 'bg-white text-[#222222] border border-[#e5e5e5] rounded-bl-sm'
+                      }`}
+                    >
+                      {msg.is_deleted ? (
+                        <span className="italic opacity-60">Message deleted</span>
+                      ) : (
+                        msg.body
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input area */}
+          <div className="bg-white border-t border-[#e5e5e5] p-3">
+            {!conversationId ? (
+              /* First message — starts the conversation */
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={initialMsg}
+                  onChange={(e) => setInitialMsg(e.target.value)}
+                  onKeyDown={handleInitialKeyDown}
+                  placeholder={`Ask ${host.name} about this property…`}
+                  className="flex-1 px-3 py-2 text-sm border border-[#e5e5e5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] bg-[#fafafa]"
+                />
+                <button
+                  type="button"
+                  onClick={handleStartConversation}
+                  disabled={!initialMsg.trim() || startingUp}
+                  className="px-4 py-2 bg-[#ff385c] text-white text-sm font-bold rounded-xl hover:bg-[#e00b41] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                >
+                  {startingUp ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  Send
+                </button>
+              </div>
+            ) : (
+              /* Subsequent messages */
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Type a message…"
+                  className="flex-1 px-3 py-2 text-sm border border-[#e5e5e5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] bg-[#fafafa]"
+                />
+                <button
+                  type="button"
+                  onClick={handleSend}
+                  disabled={!inputText.trim() || sending}
+                  className="p-2.5 bg-[#ff385c] text-white rounded-xl hover:bg-[#e00b41] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default PropertyChat;

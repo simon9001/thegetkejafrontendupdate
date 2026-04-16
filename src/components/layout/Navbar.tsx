@@ -183,6 +183,28 @@ const Navbar: React.FC<NavbarProps> = ({
               <Globe className="w-[18px] h-[18px]" />
             </button>
 
+            {/* Saved properties icon — always visible in navbar */}
+            <Link
+              to="/saved"
+              aria-label={`Saved properties${savedCount > 0 ? ` (${savedCount})` : ''}`}
+              className={`
+                relative flex items-center justify-center w-10 h-10 rounded-full
+                transition-colors duration-150 hover:bg-black/[0.04]
+                ${textColor}
+              `}
+            >
+              <Heart
+                className={`w-[18px] h-[18px] transition-colors ${
+                  savedCount > 0 ? 'fill-[#ff385c] text-[#ff385c]' : ''
+                }`}
+              />
+              {savedCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-[#ff385c] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                  {savedCount > 9 ? '9+' : savedCount}
+                </span>
+              )}
+            </Link>
+
             {/* ── User menu pill ──────────────────────────────────────────── */}
             <div className="relative">
               <button

@@ -1,6 +1,6 @@
 // components/dashboard/landlord/LandlordCaretakersTab.tsx
 import React from 'react';
-import { Users, Phone, Mail, Edit3, UserCog } from 'lucide-react';
+import { Phone, Mail, Edit3, UserCog } from 'lucide-react';
 import { SectionHeader, Badge } from '../shared';
 
 const MOCK_CARETAKERS = [

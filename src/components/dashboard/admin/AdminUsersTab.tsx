@@ -1,8 +1,8 @@
 // components/dashboard/admin/AdminUsersTab.tsx
 import React, { useState } from 'react';
-import { Search, Filter, UserX, UserCheck, Shield, ChevronDown, Download } from 'lucide-react';
+import { Search, UserX, UserCheck, Shield, ChevronDown, Download } from 'lucide-react';
 import { SectionHeader, Badge, Pagination, ConfirmModal, EmptyState } from '../shared';
-import { useGetUsersQuery, useUpdateUserRoleMutation, useUpdateUserStatusMutation } from '../../../features/Api/DashboardApi';
+import { useGetUsersQuery } from '../../../features/Api/DashboardApi';
 import { useSuspendUserMutation, useBanUserMutation, useReactivateUserMutation, useGetUserStatsQuery } from '../../../features/Api/AdminApi';
 import { exportToCsv } from '../../../utils/csvExport';
 
@@ -41,7 +41,7 @@ const AdminUsersTab: React.FC = () => {
 
   const handleExport = () => {
     if (!users.length) return;
-    const exportData = users.map(u => ({
+    const exportData = users.map((u: any) => ({
       name: u.full_name ?? '—',
       email: u.email,
       roles: (u.roles ?? []).join(', '),

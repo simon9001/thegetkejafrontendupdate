@@ -10,12 +10,12 @@ import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, Building2, CheckCircle2, ChevronRight, ChevronLeft,
-  UploadCloud, X, Loader2, User, Briefcase, Shield,
+  X, Loader2, User, Briefcase, Shield,
   FileText, Camera, AlertTriangle, ArrowLeft,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { selectCurrentUser, selectIsAuthenticated } from '../features/Slice/AuthSlice';
-import { useSubmitVerificationMutation } from '../features/Api/UsersApi';
+import { useSubmitVerificationMutation, useGetMyVerificationQuery } from '../features/Api/UsersApi';
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const Label: React.FC<{ children: React.ReactNode; required?: boolean }> = ({ children, required }) => (
@@ -78,6 +78,7 @@ const BecomeHost: React.FC = () => {
   const user       = useSelector(selectCurrentUser);
   const isAuth     = useSelector(selectIsAuthenticated);
   const [submit, { isLoading }] = useSubmitVerificationMutation();
+  const { data: verifData } = useGetMyVerificationQuery(undefined, { skip: !isAuth });
 
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
@@ -118,6 +119,30 @@ const BecomeHost: React.FC = () => {
 
   // Already a landlord or developer — no need to apply
   const existingRoles = user?.roles ?? [];
+  const pendingVerif  = verifData?.verification;
+
+  if (pendingVerif?.status === 'pending') {
+    return (
+      <div className="min-h-screen bg-[#f7f7f7] flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-10 max-w-sm w-full text-center">
+          <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-7 h-7 text-amber-500" />
+          </div>
+          <h2 className="text-xl font-bold text-[#222222] mb-2">Application under review</h2>
+          <p className="text-sm text-[#6a6a6a] mb-1">
+            Your application (<strong className="capitalize">{pendingVerif.doc_type.replace(/_/g, ' ')}</strong>) was submitted on{' '}
+            {new Date(pendingVerif.submitted_at).toLocaleDateString()}.
+          </p>
+          <p className="text-sm text-[#6a6a6a] mb-6">Our staff will review it within 1–2 business days. You'll get an email when it's done.</p>
+          <button onClick={() => navigate('/')}
+            className="block w-full py-3 bg-[#222222] text-white rounded-xl font-bold text-sm hover:bg-[#ff385c] transition-all">
+            Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (existingRoles.includes('landlord') || existingRoles.includes('developer')) {
     return (
       <div className="min-h-screen bg-[#f7f7f7] flex items-center justify-center p-6">
@@ -165,7 +190,6 @@ const BecomeHost: React.FC = () => {
     if (err) { toast.error(err); return; }
     try {
       const body: any = {
-        requested_role: role,
         doc_type:       docType,
         doc_number:     docNumber.trim(),
         front_image:    frontImg ?? undefined,
@@ -239,6 +263,20 @@ const BecomeHost: React.FC = () => {
       </header>
 
       <div className="max-w-3xl mx-auto px-6 pb-24 pt-8">
+        {/* Rejection notice */}
+        {pendingVerif?.status === 'rejected' && (
+          <div className="mb-6 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl">
+            <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-bold text-red-700 text-sm">Your previous application was rejected.</p>
+              {pendingVerif.rejection_reason && (
+                <p className="text-red-600 text-xs mt-0.5">{pendingVerif.rejection_reason}</p>
+              )}
+              <p className="text-red-500 text-xs mt-1">Please re-submit with corrected documents below.</p>
+            </div>
+          </div>
+        )}
+
         {/* Hero */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#222222] tracking-tight">Share Your Home</h1>
@@ -482,7 +520,7 @@ const BecomeHost: React.FC = () => {
                       { label: 'KRA PIN', value: kraPin || '—' },
                       { label: 'NCA Reg No.', value: ncaReg || '—' },
                       { label: 'Business document', value: bizImg ? '✓ Uploaded' : '— (optional)' },
-                    ] : role === 'agent' ? [
+                    ] : (role as string) === 'agent' ? [
                       { label: 'License number', value: kraPin || '—' },
                       { label: 'License document', value: bizImg ? '✓ Uploaded' : '✗ Missing' },
                     ] : []),

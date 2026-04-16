@@ -1,6 +1,5 @@
 // components/dashboard/landlord/LandlordReportsTab.tsx
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SectionHeader } from '../shared';
 

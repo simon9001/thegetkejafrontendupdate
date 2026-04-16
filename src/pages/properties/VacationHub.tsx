@@ -1,518 +1,394 @@
-import React, { useState, useRef } from 'react';
-import { Star, Building2, Hotel, Home, Sparkles, ChevronLeft, ChevronRight, Search, MapPin, ArrowRight } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Sparkles, MapPin, ArrowRight, Search, SlidersHorizontal, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Layout from '../../components/layout/Layout.js';
-import HeartButton from '../../components/ui/HeartButton.js';
-import PropertyStatus from '../../components/property/PropertyStatus.js';
 import StatusPreview from '../../components/property/StatusPreview.js';
-import FilterButton from '../../components/ui/FilterButton.js';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useSearchByRadiusQuery } from '../../features/Api/SpatialApi.js';
-import { useGetPublicPropertiesQuery, useSearchNaturalQuery } from '../../features/Api/PropertiesApi.js';
+import SearchResults from '../../components/Search/SearchResults.js';
+import { useGetPublicPropertiesQuery } from '../../features/Api/PropertiesApi.js';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.js';
 import { statusData } from '../../data/statusData.js';
+import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
+import HeartButton from '../../components/ui/HeartButton.js';
+import { useSearchParams } from 'react-router-dom';
 
+// ── Category tabs matching actual DB enum values ──────────────────────────────
+const CATEGORIES = [
+  { value: '',                label: 'All',        },
+  { value: 'long_term_rent',  label: 'Long Rent',  },
+  { value: 'for_sale',        label: 'For Sale',   },
+  { value: 'short_term_rent', label: 'Short Stay', },
+  { value: 'commercial',      label: 'Commercial', },
+];
+
+
+const BEDROOM_OPTIONS = [
+  { value: '',  label: 'Any' },
+  { value: '0', label: 'Bedsitter' },
+  { value: '1', label: '1 bd' },
+  { value: '2', label: '2 bd' },
+  { value: '3', label: '3 bd' },
+  { value: '4', label: '4+ bd' },
+];
+
+// ── Property card (same logic as SearchResults.tsx) ───────────────────────────
+const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void }> = ({ property: p, onNavigate }) => {
+  const cover =
+    (p.media ?? []).find((m: any) => m.is_cover)?.url ??
+    p.media?.[0]?.url ??
+    null;
+
+  const pricing  = Array.isArray(p.pricing) ? p.pricing[0] : p.pricing;
+  const amount   = pricing?.monthly_rent ?? pricing?.asking_price ?? 0;
+  const currency = pricing?.currency ?? 'KES';
+  const location = p.location;
+
+  return (
+    <div
+      onClick={() => onNavigate(p.id)}
+      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md cursor-pointer transition-shadow border border-gray-100 group"
+    >
+      <div className="relative h-48 bg-gray-100 overflow-hidden">
+        {cover ? (
+          <img src={cover} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-300">
+            <Maximize2 className="w-10 h-10" />
+          </div>
+        )}
+        {p.listing_category && (
+          <span className="absolute top-3 left-3 bg-white/90 text-[#ff385c] text-xs font-semibold px-2 py-0.5 rounded-full capitalize">
+            {p.listing_category.replace(/_/g, ' ')}
+          </span>
+        )}
+        <div className="absolute top-3 right-3 z-10">
+          <HeartButton property={p} size="sm" />
+        </div>
+      </div>
+      <div className="p-4">
+        <h3 className="font-semibold text-[#222] text-sm line-clamp-2 mb-1">{p.title}</h3>
+        {(location?.area || location?.county) && (
+          <div className="flex items-center gap-1 text-gray-400 text-xs mb-2">
+            <MapPinIcon className="w-3 h-3 flex-shrink-0" />
+            <span className="truncate">{[location.area, location.county].filter(Boolean).join(', ')}</span>
+          </div>
+        )}
+        <div className="flex items-center gap-3 text-gray-500 text-xs mb-3">
+          {p.bedrooms != null && p.bedrooms > 0 && (
+            <span className="flex items-center gap-1"><BedDouble className="w-3 h-3" />{p.bedrooms} bd</span>
+          )}
+          {p.bathrooms != null && p.bathrooms > 0 && (
+            <span className="flex items-center gap-1"><Bath className="w-3 h-3" />{p.bathrooms} ba</span>
+          )}
+        </div>
+        <p className="text-[#ff385c] font-bold text-sm">
+          {amount ? `${currency} ${Number(amount).toLocaleString()}` : 'Price on request'}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+// ── Main page ─────────────────────────────────────────────────────────────────
 const VacationHub: React.FC = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [activeCategory, setActiveCategory] = useState<string>('featured');
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [showStatus, setShowStatus] = useState(false);
-    const [statusInitialIndex, setStatusInitialIndex] = useState(0);
-    const [heroSearchQuery, setHeroSearchQuery] = useState('');
-    const [isHeroSearching, setIsHeroSearching] = useState(false);
-    const [heroSearchResults, setHeroSearchResults] = useState<any[] | null>(null);
+  const navigate  = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showFilters, setShowFilters] = useState(false);
 
-    // Search State from Redux
-    const { mapView } = useSelector((state: RootState) => state.properties);
-    const isSearchActive = mapView.radius > 0;
+  // Read active filters from URL so the filter bar and SearchResults stay in sync
+  const activeCategory = searchParams.get('listing_category') ?? '';
+  const activeBedrooms = searchParams.get('bedrooms')         ?? '';
+  const activeMinPrice = searchParams.get('min_price')        ?? '';
+  const activeMaxPrice = searchParams.get('max_price')        ?? '';
+  const activeArea     = searchParams.get('area')             ?? '';
+  const heroQ          = searchParams.get('q')                ?? '';
 
-    // Fetch properties
-    useSearchByRadiusQuery(
-        {
-            lat: mapView.center.lat,
-            lng: mapView.center.lng,
-            radius: mapView.radius,
-            maxPrice: mapView.maxPrice,
-            minBedrooms: mapView.minBedrooms,
-            q: mapView.query
-        },
-        { skip: !isSearchActive }
-    );
+  const hasFilters = !!(activeCategory || activeBedrooms || activeMinPrice || activeMaxPrice || activeArea || heroQ);
 
-    const { data: catProperties, isFetching: isCatLoading } = useGetPublicPropertiesQuery(
-        { category: activeCategory === 'featured' ? undefined : activeCategory },
-        { skip: !!heroSearchResults }
-    );
+  const setParam = (key: string, value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(key, value); else next.delete(key);
+    next.delete('page');
+    setSearchParams(next);
+  };
 
-    const { data: naturalResults, isFetching: isNaturalLoading } = useSearchNaturalQuery(
-        heroSearchQuery,
-        { skip: !isHeroSearching || !heroSearchQuery }
-    );
+  const clearAll = () => setSearchParams({});
 
-    // Effect to handle hero search results
-    React.useEffect(() => {
-        if (naturalResults) {
-            setHeroSearchResults(naturalResults.properties);
-            setIsHeroSearching(false);
-        }
-    }, [naturalResults]);
+  // Hero search
+  const handleHeroSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const input = (e?.target as HTMLFormElement)?.querySelector('input')?.value?.trim();
+    if (input) setParam('q', input);
+  };
 
-    const handleHeroSearch = (e?: React.FormEvent) => {
-        if (e) e.preventDefault();
-        if (heroSearchQuery.trim()) {
-            setIsHeroSearching(true);
-        }
-    };
+  // Default listing (no filters active) — use public properties endpoint
+  const { data: defaultData, isFetching: defaultLoading } = useGetPublicPropertiesQuery(
+    { limit: 20 },
+    { skip: hasFilters }
+  );
 
-    const handleClearSearch = () => {
-        setHeroSearchQuery('');
-        setHeroSearchResults(null);
-    };
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-    // Process properties based on search state
-    const getBaseProperties = () => {
-        if (heroSearchResults) return heroSearchResults;
-        return catProperties?.properties || [];
-    };
+  const handleStatusClick = (_index: number) => {
+    // TODO: status preview modal not yet implemented
+  };
 
-    const properties = getBaseProperties();
-    const isLoading = isHeroSearching || isNaturalLoading || isCatLoading;
+  return (
+    <Layout showSearch={true}>
 
-    // Filter properties based on selected categories (amenities/styles) and verification
-    const filterProperties = (props: any[] | undefined) => {
-        if (!props) return [];
-        let filtered = props;
+      {/* ── Hero ────────────────────────────────────────────────────────── */}
+      <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-64 h-64 bg-[#C5A373] rounded-full filter blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C5A373] rounded-full filter blur-3xl" />
+        </div>
 
-        // Ensure only active properties are shown and hide struck ones
-        // Removed `is_verified === true` to allow unverified properties to appear (e.g., newly added ones)
-        filtered = filtered.filter(p => !p.is_struck);
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center lg:text-left lg:flex lg:items-center lg:justify-between"
+          >
+            <div className="lg:w-2/3">
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                <Sparkles className="w-4 h-4 text-[#C5A373]" />
+                <span className="text-xs font-semibold uppercase tracking-wider">Welcome to GetKeja</span>
+              </div>
 
-        const categorized = selectedCategories.length === 0
-            ? filtered
-            : filtered.filter(p => p.category && selectedCategories.includes(p.category));
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black mb-4 leading-tight">
+                Find Your <span className="text-[#C5A373]">Perfect</span><br />Property in Kenya
+              </h1>
 
-        // Sort boosted properties to the top
-        return [...categorized].sort((a, b) => (b.is_boosted ? 1 : 0) - (a.is_boosted ? 1 : 0));
-    };
+              <p className="text-lg lg:text-xl text-white/80 mb-8 max-w-2xl lg:mx-0 mx-auto">
+                Browse thousands of verified rentals, homes for sale, and commercial spaces across Kenya.
+              </p>
 
-    const filteredProperties = filterProperties(properties);
+              {/* Hero search bar */}
+              <form
+                onSubmit={handleHeroSearch}
+                className="bg-white rounded-full p-1.5 max-w-2xl mx-auto lg:mx-0 shadow-2xl"
+              >
+                <div className="flex items-center">
+                  <div className="flex-1 flex items-center gap-2 px-4">
+                    <MapPin className="w-5 h-5 text-[#C5A373]" />
+                    <input
+                      type="text"
+                      defaultValue={heroQ}
+                      placeholder="Try: '2 bedroom in Kilimani under 30k'"
+                      className="w-full py-2 text-[#1B2430] placeholder-gray-400 focus:outline-none text-sm"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-[#C5A373] hover:bg-[#8B6E4E] transition-colors text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 group"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span>Search</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              </form>
 
-    // Refs for horizontal scroll containers
-    const scrollRef = useRef<HTMLDivElement>(null);
+              {/* Quick stats */}
+              <div className="flex items-center gap-8 mt-8 justify-center lg:justify-start">
+                <div>
+                  <div className="text-2xl font-black text-[#C5A373]">500+</div>
+                  <div className="text-xs text-white/60">Verified Properties</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-[#C5A373]">50k+</div>
+                  <div className="text-xs text-white/60">Happy Guests</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-[#C5A373]">100+</div>
+                  <div className="text-xs text-white/60">Destinations</div>
+                </div>
+              </div>
+            </div>
 
-    // Scroll function
-    const scroll = (direction: 'left' | 'right') => {
-        if (scrollRef.current) {
-            const scrollAmount = 400;
-            const newScrollLeft = direction === 'left'
-                ? scrollRef.current.scrollLeft - scrollAmount
-                : scrollRef.current.scrollLeft + scrollAmount;
+            <div className="hidden lg:block lg:w-1/3">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-[#C5A373]/20 rounded-full filter blur-2xl" />
+                <img
+                  src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
+                  alt="Luxury property"
+                  className="relative rounded-2xl shadow-2xl"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
-            scrollRef.current.scrollTo({
-                left: newScrollLeft,
-                behavior: 'smooth'
-            });
-        }
-    };
+        {/* Curved bottom */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 100L60 91.7C120 83.3 240 66.7 360 58.3C480 50 600 50 720 54.2C840 58.3 960 66.7 1080 70.8C1200 75 1320 75 1380 75L1440 75V100H1380C1320 100 1200 100 1080 100C960 100 840 100 720 100C600 100 480 100 360 100C240 100 120 100 60 100H0Z" fill="white" />
+          </svg>
+        </div>
+      </div>
 
-    // Category tabs configuration
-    const categoryTabs = [
-        { id: 'featured', label: 'All Featured', icon: Sparkles },
-        { id: 'residential', label: 'Residential', icon: Home },
-        { id: 'commercial', label: 'Commercial', icon: Building2 },
-        { id: 'recreational', label: 'Recreational', icon: Hotel },
-    ];
+      {/* ── Body ────────────────────────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    const styleCategories = [
-        'Beach', 'Windmills', 'Modern', 'Countryside', 'Pools', 'Islands',
-        'Lake', 'Skiing', 'Castles', 'Caves', 'Camping', 'Arctic',
-        'Desert', 'Barns', 'Lux'
-    ];
+        {/* Status stories */}
+        <div className="py-6 lg:py-8 border-b border-gray-100">
+          <StatusPreview statuses={statusData} onStatusClick={handleStatusClick} />
+        </div>
 
-    const handleCategoryChange = (category: string) => {
-        setSelectedCategories(prev =>
-            prev.includes(category)
-                ? prev.filter(c => c !== category)
-                : [...prev, category]
-        );
-    };
+        {/* ── Filter bar ──────────────────────────────────────────────── */}
+        <div className="sticky top-16 sm:top-20 bg-white z-20 border-b border-gray-100 shadow-sm">
 
-    const handleClearAllFilters = () => {
-        setSelectedCategories([]);
-    };
-    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+          {/* Row: scrollable category pills + single filter button */}
+          <div className="flex items-center gap-2 px-4 sm:px-0 py-3">
 
-    const handleStatusClick = (index: number) => {
-        setStatusInitialIndex(index);
-        setShowStatus(true);
-    };
+            {/* Horizontally scrollable category pills — no wrap on mobile */}
+            <div className="flex gap-2 overflow-x-auto no-scrollbar flex-1 min-w-0">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setParam('listing_category', cat.value)}
+                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${
+                    activeCategory === cat.value
+                      ? 'bg-[#ff385c] border-[#ff385c] text-white'
+                      : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
 
-    const handleViewDetails = (propertyId: number | string) => {
-        setShowStatus(false);
-        navigate(`/property/${propertyId}`);
-    };
-
-    // Property Card Component
-    const PropertyCard = ({ property, authenticated }: { property: any, authenticated: boolean }) => {
-        const handleClick = () => {
-            if (!authenticated) {
-                navigate('/login', { state: { from: location.pathname } });
-            } else {
-                navigate(`/property/${property.id}`);
-            }
-        };
-
-        // Support both flat fields (old) and nested backend shape (new)
-        const monthlyRent  = property.pricing?.monthly_rent  ?? property.price_per_month  ?? 0;
-        const askingPrice  = property.pricing?.asking_price   ?? property.price_per_night  ?? property.price ?? 0;
-        const displayPrice = monthlyRent || askingPrice;
-        const priceLabel   = monthlyRent ? 'month' : 'night';
-        const primaryImage =
-          property.media?.find((m: any) => m.is_cover)?.url ??
-          property.media?.[0]?.url ??
-          property.image ??
-          property.images?.find((img: any) => img.is_primary)?.image_url ??
-          property.images?.[0]?.image_url ??
-          'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400';
-
-        return (
-            <div
-                className="min-w-[160px] sm:min-w-[180px] md:min-w-[200px] lg:min-w-[220px] group cursor-pointer"
-                onClick={handleClick}
+            {/* Single filter button — shows active-filter dot when filters applied */}
+            <button
+              onClick={() => setShowFilters((v) => !v)}
+              className={`relative flex-shrink-0 flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full border text-sm font-medium transition-colors ${
+                showFilters || !!(activeBedrooms || activeMinPrice || activeMaxPrice || activeArea)
+                  ? 'bg-[#222] text-white border-[#222]'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+              }`}
             >
-                <div className="relative aspect-square rounded-lg lg:rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                    <img
-                        src={primaryImage}
-                        alt={property.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    />
+              <SlidersHorizontal className="w-4 h-4" />
+              <span className="hidden sm:inline">Filters</span>
+              {/* Active indicator dot */}
+              {!!(activeBedrooms || activeMinPrice || activeMaxPrice || activeArea) && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff385c] border-2 border-white" />
+              )}
+            </button>
 
-                    <div
-                        className="absolute top-2 right-2 z-10"
-                        onClick={(e) => {
-                            if (!authenticated) {
-                                e.stopPropagation();
-                                navigate('/login', { state: { from: location.pathname } });
-                            }
-                        }}
+            {/* Clear all — only when something is active */}
+            {hasFilters && (
+              <button
+                onClick={clearAll}
+                className="flex-shrink-0 flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Clear</span>
+              </button>
+            )}
+          </div>
+
+          {/* Expandable filter panel — full-width, grid on desktop / stacked on mobile */}
+          {showFilters && (
+            <div className="border-t border-gray-100 px-4 sm:px-0 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Bedrooms</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {BEDROOM_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setParam('bedrooms', opt.value)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+                        activeBedrooms === opt.value
+                          ? 'bg-[#ff385c] border-[#ff385c] text-white'
+                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-400'
+                      }`}
                     >
-                        <HeartButton property={property} size="sm" />
-                    </div>
-
-                    {isSearchActive && property.dist_meters !== undefined && (
-                        <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[10px] font-medium">
-                            {(property.dist_meters / 1000).toFixed(1)} km away
-                        </div>
-                    )}
+                      {opt.label}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                <div className="mt-2.5 space-y-0.5">
-                    <div className="flex items-start justify-between">
-                        <h3 className="text-sm font-semibold text-[#1B2430] truncate pr-2">
-                            {property.title}
-                        </h3>
-                        <div className="flex items-center gap-1 shrink-0">
-                            <Star className="w-3 h-3 fill-current text-[#D4A373]" />
-                            <span className="text-xs font-medium">4.8</span>
-                        </div>
-                    </div>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Area / Location</label>
+                <input
+                  type="text"
+                  value={activeArea}
+                  onChange={(e) => setParam('area', e.target.value)}
+                  placeholder="e.g. Westlands, Kilimani"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                />
+              </div>
 
-                    <p className="text-xs text-gray-500">
-                        {property.location?.area ?? property.location?.town ?? property.neighborhood?.name ?? 'Kenya'}
-                    </p>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Min Price (KES)</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={activeMinPrice}
+                  onChange={(e) => setParam('min_price', e.target.value)}
+                  placeholder="e.g. 5000"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                />
+              </div>
 
-                    <p className="mt-1.5 flex items-baseline gap-1">
-                        <span className="text-sm font-extrabold text-[#1B2430]">
-                            {property.currency || '$'}{displayPrice.toLocaleString()}
-                        </span>
-                        <span className="text-xs text-gray-500"> /{priceLabel}</span>
-                    </p>
-                </div>
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Max Price (KES)</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={activeMaxPrice}
+                  onChange={(e) => setParam('max_price', e.target.value)}
+                  placeholder="e.g. 50000"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                />
+              </div>
             </div>
-        );
-    };
+          )}
+        </div>
 
-    return (
-        <Layout showSearch={true}>
-            {/* Hero Section */}
-            <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-0 w-64 h-64 bg-[#C5A373] rounded-full filter blur-3xl"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C5A373] rounded-full filter blur-3xl"></div>
-                </div>
-
-                {/* Content */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center lg:text-left lg:flex lg:items-center lg:justify-between"
-                    >
-                        <div className="lg:w-2/3">
-                            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-                                <Sparkles className="w-4 h-4 text-[#C5A373]" />
-                                <span className="text-xs font-semibold uppercase tracking-wider">
-                                    Welcome to Your Dream Getaway
-                                </span>
-                            </div>
-
-                            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black mb-4 leading-tight">
-                                Discover <span className="text-[#C5A373]">Extraordinary</span><br />
-                                Places to Stay
-                            </h1>
-
-                            <p className="text-lg lg:text-xl text-white/80 mb-8 max-w-2xl lg:mx-0 mx-auto">
-                                From luxury villas to cozy apartments, find the perfect space for your next adventure.
-                                Explore thousands of verified properties worldwide.
-                            </p>
-
-                            {/* Search Bar */}
-                            <form onSubmit={handleHeroSearch} className="bg-white rounded-full p-1.5 max-w-2xl mx-auto lg:mx-0 shadow-2xl">
-                                <div className="flex items-center">
-                                    <div className="flex-1 flex items-center gap-2 px-4">
-                                        <MapPin className="w-5 h-5 text-[#C5A373]" />
-                                        <input
-                                            type="text"
-                                            value={heroSearchQuery}
-                                            onChange={(e) => setHeroSearchQuery(e.currentTarget.value)}
-                                            placeholder="Where do you want to go? (e.g. house in embu under 20k)"
-                                            className="w-full py-2 text-[#1B2430] placeholder-gray-400 focus:outline-none text-sm"
-                                        />
-                                        {heroSearchQuery && (
-                                            <button
-                                                type="button"
-                                                onClick={handleClearSearch}
-                                                className="text-gray-400 hover:text-gray-600 px-2"
-                                            >
-                                                ×
-                                            </button>
-                                        )}
-                                    </div>
-                                    <button
-                                        type="submit"
-                                        disabled={isHeroSearching}
-                                        className="bg-[#C5A373] hover:bg-[#8B6E4E] disabled:bg-gray-400 transition-colors text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 group"
-                                    >
-                                        {isHeroSearching ? (
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                        ) : (
-                                            <Search className="w-4 h-4" />
-                                        )}
-                                        <span>Search</span>
-                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </div>
-                            </form>
-
-                            {/* Stats */}
-                            <div className="flex items-center gap-8 mt-8 justify-center lg:justify-start">
-                                <div>
-                                    <div className="text-2xl font-black text-[#C5A373]">500+</div>
-                                    <div className="text-xs text-white/60">Verified Properties</div>
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-black text-[#C5A373]">50k+</div>
-                                    <div className="text-xs text-white/60">Happy Guests</div>
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-black text-[#C5A373]">100+</div>
-                                    <div className="text-xs text-white/60">Destinations</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Hero Image */}
-                        <div className="hidden lg:block lg:w-1/3">
-                            <div className="relative">
-                                <div className="absolute -inset-4 bg-[#C5A373]/20 rounded-full filter blur-2xl"></div>
-                                <img
-                                    src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
-                                    alt="Luxury property"
-                                    className="relative rounded-2xl shadow-2xl"
-                                />
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-
-                {/* Curved Bottom Edge */}
-                <div className="absolute bottom-0 left-0 right-0">
-                    <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                        <path d="M0 100L60 91.7C120 83.3 240 66.7 360 58.3C480 50 600 50 720 54.2C840 58.3 960 66.7 1080 70.8C1200 75 1320 75 1380 75L1440 75V100H1380C1320 100 1200 100 1080 100C960 100 840 100 720 100C600 100 480 100 360 100C240 100 120 100 60 100H0Z" fill="white" />
-                    </svg>
-                </div>
-            </div>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Status Stories Section */}
-                <div className="py-6 lg:py-8 border-b border-gray-100">
-                    <StatusPreview
-                        statuses={statusData}
-                        onStatusClick={handleStatusClick}
+        {/* ── Property content ─────────────────────────────────────────── */}
+        <div className="py-8">
+          {hasFilters ? (
+            // When the user has applied any filter/search — delegate to SearchResults
+            // which uses useSearchPropertiesQuery and reads from URL params
+            <SearchResults />
+          ) : (
+            // Default homepage view — all approved properties via useGetPublicPropertiesQuery
+            defaultLoading ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-4">
+                <div className="w-12 h-12 border-4 border-[#C5A373] border-t-transparent rounded-full animate-spin" />
+                <p className="text-gray-500 font-medium animate-pulse">Loading properties...</p>
+              </div>
+            ) : (defaultData?.properties ?? []).length === 0 ? (
+              <div className="text-center py-24 text-gray-400">
+                <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-200" />
+                <p className="text-lg font-medium">No properties available yet.</p>
+                <p className="text-sm mt-1">Check back soon — new listings are added daily.</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-sm text-gray-500 mb-5">
+                  <span className="font-semibold text-gray-800">{defaultData?.total ?? 0}</span> properties available
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  {(defaultData?.properties ?? []).map((p: any) => (
+                    <PropertyCard
+                      key={p.id}
+                      property={p}
+                      onNavigate={(id) => navigate(`/property/${id}`)}
                     />
+                  ))}
                 </div>
-
-                {/* Filter & Category Section */}
-                <div className="py-4 lg:py-6 sticky top-20 bg-white z-20 border-b border-gray-50">
-                    <div className="flex items-center justify-between">
-                        <div className="flex gap-2 lg:gap-4 overflow-x-auto no-scrollbar py-1">
-                            {categoryTabs.map((tab) => {
-                                const Icon = tab.icon;
-                                return (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => {
-                                            setActiveCategory(tab.id);
-                                        }}
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 text-sm whitespace-nowrap ${activeCategory === tab.id && !isSearchActive
-                                            ? 'bg-[#1B2430] text-white shadow-md'
-                                            : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                                            }`}
-                                    >
-                                        <Icon className="w-4 h-4" />
-                                        <span className="font-semibold">{tab.label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        <div className="hidden lg:block h-8 w-[1px] bg-gray-200 mx-4"></div>
-
-                        <FilterButton
-                            categories={styleCategories}
-                            selectedCategories={selectedCategories}
-                            onCategoryChange={handleCategoryChange}
-                            onClearAll={handleClearAllFilters}
-                        />
-                    </div>
-                </div>
-
-                {/* Content Section */}
-                <div className="py-8">
-                    {isLoading ? (
-                        <div className="flex flex-col items-center justify-center py-20 gap-4">
-                            <div className="w-12 h-12 border-4 border-[#D4A373] border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-gray-500 font-medium animate-pulse">Finding perfect stays...</p>
-                        </div>
-                    ) : (
-                        <div>
-                            {activeCategory === 'featured' && !heroSearchResults ? (
-                                // Grouped by category view
-                                <div className="space-y-16">
-                                    {categoryTabs.slice(1).map((cat) => {
-                                        const catProps = filteredProperties.filter(p => p.category === cat.id);
-                                        if (catProps.length === 0) return null;
-
-                                        return (
-                                            <div key={cat.id}>
-                                                <div className="flex items-center justify-between mb-8">
-                                                    <div>
-                                                        <h2 className="text-2xl font-bold text-[#1B2430] flex items-center gap-2">
-                                                            <cat.icon className="w-6 h-6 text-[#C5A373]" />
-                                                            {cat.label}
-                                                        </h2>
-                                                        <p className="text-gray-500 text-sm mt-1">
-                                                            Discover our best {cat.label.toLowerCase()} properties
-                                                        </p>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => setActiveCategory(cat.id)}
-                                                        className="text-[#C5A373] font-bold text-sm flex items-center gap-1 hover:underline"
-                                                    >
-                                                        View all <ArrowRight className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                                                    {catProps.slice(0, 4).map((p) => (
-                                                        <PropertyCard key={p.id} property={p} authenticated={isAuthenticated} />
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                // Standard filtered view
-                                <div>
-                                    <div className="flex items-center justify-between mb-8">
-                                        <div>
-                                            <h2 className="text-2xl font-bold text-[#1B2430]">
-                                                {heroSearchResults ? 'Search Results' :
-                                                    categoryTabs.find(t => t.id === activeCategory)?.label}
-                                            </h2>
-                                            <p className="text-gray-500 text-sm mt-1">
-                                                {filteredProperties.length} stunning properties found
-                                            </p>
-                                        </div>
-                                        {filteredProperties.length > 4 && (
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => scroll('left')}
-                                                    className="p-2.5 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
-                                                >
-                                                    <ChevronLeft className="w-5 h-5" />
-                                                </button>
-                                                <button
-                                                    onClick={() => scroll('right')}
-                                                    className="p-2.5 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
-                                                >
-                                                    <ChevronRight className="w-5 h-5" />
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {filteredProperties.length > 0 ? (
-                                        <div
-                                            ref={scrollRef}
-                                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
-                                        >
-                                            {filteredProperties.map((p) => (
-                                                <PropertyCard key={p.id} property={p} authenticated={isAuthenticated} />
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                                            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                                                <Sparkles className="w-10 h-10 text-gray-300" />
-                                            </div>
-                                            <h3 className="text-xl font-bold text-[#1B2430]">No properties found</h3>
-                                            <p className="text-gray-500 mt-2">Try adjusting your search query or filters</p>
-                                            <button
-                                                onClick={() => {
-                                                    handleClearSearch();
-                                                    handleClearAllFilters();
-                                                }}
-                                                className="mt-6 px-6 py-2.5 bg-[#1B2430] text-white rounded-full font-bold hover:shadow-lg transition-all"
-                                            >
-                                                Reset everything
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Property Status Modal */}
-            <AnimatePresence>
-                {showStatus && (
-                    <PropertyStatus
-                        statuses={statusData}
-                        initialIndex={statusInitialIndex}
-                        onClose={() => setShowStatus(false)}
-                        onViewDetails={handleViewDetails}
-                    />
-                )}
-            </AnimatePresence>
-        </Layout>
-    );
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    </Layout>
+  );
 };
 
 export default VacationHub;

@@ -1,7 +1,7 @@
 // components/dashboard/admin/AdminReviewsTab.tsx
 import React from 'react';
-import { Star, AlertCircle, CheckCircle, XCircle, TrendingUp } from 'lucide-react';
-import { SectionHeader, Badge, StatCard, EmptyState } from '../shared';
+import { Star, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { SectionHeader, StatCard, EmptyState } from '../shared';
 import {
   useGetReviewStatsQuery,
   useGetFraudReviewQueueQuery,

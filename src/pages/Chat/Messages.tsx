@@ -22,19 +22,21 @@ const Messages: React.FC = () => {
     const [newMessage, setNewMessage] = useState('');
     const [showConverationList, setShowConversationList] = useState(true);
 
-    const { data: conversations = [], isLoading: isConversationsLoading } = useGetConversationsQuery(undefined, {
+    const { data: conversations, isLoading: isConversationsLoading } = useGetConversationsQuery(undefined, {
         skip: !isAuthenticated,
         pollingInterval: 10000,
     });
+    const convList = (conversations as any)?.conversations ?? conversations ?? [];
 
-    const { data: messages = [], isLoading: isMessagesLoading } = useGetMessagesQuery(selectedConversationId || '', {
+    const { data: messages, isLoading: isMessagesLoading } = useGetMessagesQuery({ conversationId: selectedConversationId || '' }, {
         skip: !selectedConversationId,
         pollingInterval: 5000,
     });
+    const msgList = (messages as any)?.messages ?? messages ?? [];
 
     const [sendMsg] = useSendMessageMutation();
 
-    const selectedConversation = conversations.find(c => c.id === selectedConversationId);
+    const selectedConversation = convList.find((c: any) => c.id === selectedConversationId);
 
     const handleSendMessage = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -43,7 +45,7 @@ const Messages: React.FC = () => {
         try {
             await sendMsg({
                 conversationId: selectedConversationId,
-                content: newMessage.trim()
+                body: newMessage.trim()
             }).unwrap();
             setNewMessage('');
         } catch (error) {
@@ -58,10 +60,10 @@ const Messages: React.FC = () => {
 
     // Auto-select first conversation if none selected on desktop
     useEffect(() => {
-        if (conversations.length > 0 && !selectedConversationId && window.innerWidth > 1024) {
-            setSelectedConversationId(conversations[0].id);
+        if (convList.length > 0 && !selectedConversationId && window.innerWidth > 1024) {
+            setSelectedConversationId(convList[0].id);
         }
-    }, [conversations, selectedConversationId]);
+    }, [convList, selectedConversationId]);
 
     const getOtherParticipant = (conversation: any) => {
         return conversation.guest_id === currentUser?.id ? conversation.host : conversation.guest;
@@ -91,8 +93,8 @@ const Messages: React.FC = () => {
                                 <div className="flex justify-center py-10">
                                     <span className="loading loading-spinner text-[#D4A373]"></span>
                                 </div>
-                            ) : conversations.length > 0 ? (
-                                conversations.map((conv) => {
+                            ) : convList.length > 0 ? (
+                                convList.map((conv: any) => {
                                     const otherUser = getOtherParticipant(conv);
                                     const isActive = selectedConversationId === conv.id;
                                     return (
@@ -179,8 +181,8 @@ const Messages: React.FC = () => {
                                         <div className="flex justify-center py-10">
                                             <span className="loading loading-spinner text-[#D4A373]"></span>
                                         </div>
-                                    ) : messages.length > 0 ? (
-                                        messages.map((msg: any) => {
+                                    ) : msgList.length > 0 ? (
+                                        msgList.map((msg: any) => {
                                             const isFromMe = msg.sender_id === currentUser?.id;
                                             return (
                                                 <div

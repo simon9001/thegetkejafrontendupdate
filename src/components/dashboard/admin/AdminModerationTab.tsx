@@ -1,13 +1,12 @@
 // components/dashboard/admin/AdminModerationTab.tsx
 import React, { useState } from 'react';
-import { ShieldAlert, UserCheck, Scale, AlertTriangle, MessageSquare, CheckCircle, XCircle } from 'lucide-react';
+import { UserCheck, Scale, AlertTriangle, MessageSquare, CheckCircle, XCircle } from 'lucide-react';
 import { SectionHeader, Badge, Pagination, ConfirmModal, EmptyState } from '../shared';
 import {
   useGetModerationVerificationsQuery,
   useApproveVerificationMutation,
   useRejectVerificationMutation,
   useGetModerationDisputesQuery,
-  useResolveDisputeMutation,
   useGetFraudReviewQueueQuery,
   useGetReportedMessagesQuery,
 } from '../../../features/Api/AdminApi';
@@ -28,7 +27,6 @@ const AdminModerationTab: React.FC = () => {
   // Mutations
   const [approveVerif] = useApproveVerificationMutation();
   const [rejectVerif] = useRejectVerificationMutation();
-  const [resolveDispute] = useResolveDisputeMutation();
 
   const handleAction = async (notes?: string) => {
     if (!actionTarget) return;

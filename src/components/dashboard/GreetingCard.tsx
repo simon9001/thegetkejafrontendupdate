@@ -4,7 +4,7 @@ import type { RootState } from '../../store/store';
 import { Calendar, Clock, Sparkles } from 'lucide-react';
 
 const GreetingCard: React.FC = () => {
-    const { user } = useSelector((state: RootState) => state.authSlice);
+    const { user } = useSelector((state: RootState) => state.auth);
     const now = new Date();
 
     const greeting = () => {

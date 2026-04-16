@@ -43,14 +43,14 @@ export interface DashboardStats {
 
 export const DashboardApi = createApi({
   reducerPath: 'dashboardApi',
-  baseQuery: baseQueryWithReauth,
-  tagTypes: ['Dashboard', 'Users'],
+  baseQuery:   baseQueryWithReauth,
+  tagTypes:    ['Dashboard', 'Users', 'ShortStay', 'Profile'],
   endpoints: (builder) => ({
 
     // ── Unified role-aware dashboard stats ──────────────────────────────────
     getDashboardStats: builder.query<DashboardStats, void>({
       query: () => 'dashboard/stats',
-      providesTags: ['Dashboard'],
+      providesTags: ['Dashboard', 'Profile'],
     }),
 
     // ── Landlord dashboard ──────────────────────────────────────────────────

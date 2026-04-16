@@ -1,6 +1,6 @@
 // components/dashboard/caretaker/CaretakerSecurityTab.tsx
 import React from 'react';
-import { Shield, Clock, AlertTriangle } from 'lucide-react';
+import { Clock, AlertTriangle } from 'lucide-react';
 import { SectionHeader } from '../shared';
 
 const CaretakerSecurityTab: React.FC = () => (

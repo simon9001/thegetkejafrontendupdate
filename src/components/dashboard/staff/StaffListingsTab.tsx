@@ -1,6 +1,6 @@
 // components/dashboard/staff/StaffListingsTab.tsx
 import React, { useState } from 'react';
-import { Building2, Eye, ThumbsUp, ThumbsDown, ExternalLink } from 'lucide-react';
+import { Building2, ThumbsUp, ThumbsDown, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { SectionHeader, Badge, Pagination, ConfirmModal } from '../shared';
@@ -57,8 +57,8 @@ const StaffListingsTab: React.FC = () => {
               className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-start gap-5">
                 <div className="w-24 h-24 rounded-xl bg-gray-100 overflow-hidden shrink-0 border border-gray-200">
-                  {p.media?.[0]?.url 
-                    ? <img src={p.media[0].url} className="w-full h-full object-cover" alt="" />
+                  {p.cover_url
+                    ? <img src={p.cover_url} className="w-full h-full object-cover" alt="" />
                     : <div className="w-full h-full flex items-center justify-center text-gray-300"><Building2 className="w-8 h-8" /></div>
                   }
                 </div>
@@ -67,7 +67,7 @@ const StaffListingsTab: React.FC = () => {
                       <h3 className="font-bold text-[#222222] truncate">{p.title}</h3>
                       <Badge status={p.status} />
                    </div>
-                   <p className="text-xs text-[#6a6a6a] mb-2">{p.owner_email} · {p.property_type} · KES {p.price?.toLocaleString()}</p>
+                   <p className="text-xs text-[#6a6a6a] mb-2">{p.owner_email} · {p.property_type} · {p.currency} {p.price?.toLocaleString()}</p>
                    <div className="flex gap-2">
                      <button onClick={() => handleApprove(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-100"><ThumbsUp className="w-3.5 h-3.5" /> Approve</button>
                      <button onClick={() => setRejectId(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 text-xs font-bold rounded-lg hover:bg-red-100 transition-colors border border-red-100"><ThumbsDown className="w-3.5 h-3.5" /> Reject</button>

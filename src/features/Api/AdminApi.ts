@@ -64,19 +64,22 @@ export interface BookingStats {
 
 export interface IdVerification {
   id: string;
-  user_id: string;
+  user_id: string | null;
   doc_type: 'national_id' | 'passport' | 'company_cert' | 'earb_license' | 'nca_cert';
-  doc_number?: string;
-  front_image_url?: string;
-  back_image_url?: string;
-  selfie_url?: string;
+  doc_number: string | null;
+  front_image_url: string | null;
+  back_image_url: string | null;
+  selfie_url: string | null;
   status: 'pending' | 'approved' | 'rejected' | 'expired';
-  rejection_reason?: string;
+  rejection_reason: string | null;
   submitted_at: string;
-  reviewed_at?: string;
-  expires_at?: string;
-  user_full_name?: string;
-  user_email?: string;
+  reviewed_at: string | null;
+  // flat user fields
+  user_email: string | null;
+  user_phone: string | null;
+  user_full_name: string | null;
+  user_display_name: string | null;
+  user_avatar_url: string | null;
 }
 
 export interface Dispute {

@@ -8,7 +8,7 @@ interface DashboardHeaderProps {
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onMenuClick }) => {
-    const { user } = useSelector((state: RootState) => state.authSlice);
+    const { user } = useSelector((state: RootState) => state.auth);
 
     return (
         <header className="h-[72px] bg-[#1B2430] flex items-center justify-between px-4 md:px-8 sticky top-0 z-40 border-b border-[#2C3A4E]/50">

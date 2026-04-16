@@ -10,7 +10,7 @@ import { DashboardShell } from '../../components/dashboard/shared';
 import type { NavItem } from '../../components/dashboard/shared';
 
 
-// Import Agent Tabs
+import AgentOverviewTab from '../../components/dashboard/agent/AgentOverviewTab';
 import AgentListingsTab from '../../components/dashboard/agent/AgentListingsTab';
 import AgentViewingsTab from '../../components/dashboard/agent/AgentViewingsTab';
 import AgentLeadsTab from '../../components/dashboard/agent/AgentLeadsTab';
@@ -32,7 +32,19 @@ const AgentDashboard: React.FC = () => {
   const { data: propertiesData } = useGetMyPropertiesQuery(undefined, { skip: !user });
   const properties = propertiesData?.properties ?? [];
 
+  // Build stats from real endpoint data
+  const stats = { ownedProperties: propertiesData?.total ?? 0, activeBookings: 0, activeCaretakers: 0 };
+
   if (!user) return <div className="p-20 text-center">Please login to access your dashboard.</div>;
+
+  if (!user.roles.includes('agent')) {
+    return (
+      <div className="p-20 text-center">
+        <h2 className="text-xl font-bold text-red-600">Access Denied</h2>
+        <p className="text-gray-600 mt-2">You do not have the required permissions to view the Agent Dashboard.</p>
+      </div>
+    );
+  }
 
   return (
     <DashboardShell
@@ -42,10 +54,7 @@ const AgentDashboard: React.FC = () => {
       roleLabel="Agent"
     >
       {activeNav === 'overview' && (
-        <div className="p-12 text-center bg-white rounded-2xl border border-gray-100">
-          <h2 className="text-xl font-bold text-[#222222]">Agent Overview</h2>
-          <p className="text-sm text-[#6a6a6a] mt-1">Track your listings, viewings, and commissions here.</p>
-        </div>
+        <AgentOverviewTab stats={stats} userName={user.full_name ?? 'Agent'} />
       )}
       {activeNav === 'listings' && <AgentListingsTab properties={properties} />}
       {activeNav === 'viewings' && <AgentViewingsTab />}

@@ -1,6 +1,6 @@
 // components/dashboard/admin/AdminRevenueTab.tsx
 import React, { useState } from 'react';
-import { DollarSign, TrendingUp, CreditCard, Calendar, Download, Filter } from 'lucide-react';
+import { DollarSign, TrendingUp, CreditCard, Calendar, Download } from 'lucide-react';
 import { SectionHeader, StatCard } from '../shared';
 import {
   useGetRevenueBreakdownQuery,

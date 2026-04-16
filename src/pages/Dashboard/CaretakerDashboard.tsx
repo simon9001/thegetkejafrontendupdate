@@ -5,7 +5,6 @@ import {
   LayoutDashboard, Building2, Wrench, Droplets, Shield
 } from 'lucide-react';
 import { selectCurrentUser } from '../../features/Slice/AuthSlice';
-import { useGetDashboardStatsQuery } from '../../features/Api/DashboardApi';
 import { DashboardShell } from '../../components/dashboard/shared';
 import type { NavItem } from '../../components/dashboard/shared';
 
@@ -28,9 +27,17 @@ const CaretakerDashboard: React.FC = () => {
   const user = useSelector(selectCurrentUser);
   const [activeNav, setActiveNav] = useState('overview');
 
-  const { data: stats } = useGetDashboardStatsQuery(undefined, { skip: !user });
-
   if (!user) return <div className="p-20 text-center">Please login to access your dashboard.</div>;
+
+  // Security Guard: Ensure current user actually has the caretaker role
+  if (!user.roles.includes('caretaker')) {
+    return (
+      <div className="p-20 text-center">
+        <h2 className="text-xl font-bold text-red-600">Access Denied</h2>
+        <p className="text-gray-600 mt-2">You do not have the required caretaker permissions.</p>
+      </div>
+    );
+  }
 
   return (
     <DashboardShell

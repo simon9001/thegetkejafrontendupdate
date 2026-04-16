@@ -1,7 +1,7 @@
 // components/dashboard/admin/AdminPropertiesTab.tsx
 import React, { useState } from 'react';
-import { Search, Building2, Eye, CheckCircle, XCircle, ChevronDown, MapPin, Download } from 'lucide-react';
-import { SectionHeader, Badge, Pagination, ConfirmModal, EmptyState, StatCard } from '../shared';
+import { Building2, Eye, CheckCircle, XCircle, Download } from 'lucide-react';
+import { SectionHeader, Badge, Pagination, ConfirmModal, EmptyState } from '../shared';
 import {
   useGetPropertyStatsQuery,
   useGetPendingListingsQuery,

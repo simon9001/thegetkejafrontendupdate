@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Bell, Search, ChevronRight, Plus, Filter, Menu } from 'lucide-react';
+import { LogOut, Plus, Menu } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { clearCredentials } from '../../features/Slice/AuthSlice';
 import { useNavigate } from 'react-router-dom';

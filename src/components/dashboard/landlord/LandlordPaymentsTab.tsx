@@ -1,6 +1,5 @@
 // components/dashboard/landlord/LandlordPaymentsTab.tsx
 import React from 'react';
-import { DollarSign } from 'lucide-react';
 import { SectionHeader, Badge } from '../shared';
 
 const LandlordPaymentsTab: React.FC<{ stats: any }> = ({ stats }) => (

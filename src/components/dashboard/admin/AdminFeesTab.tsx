@@ -1,20 +1,15 @@
 // components/dashboard/admin/AdminFeesTab.tsx
 import React, { useState } from 'react';
-import { Settings, Save, RefreshCcw, DollarSign, Award, ArrowUpRight, CheckCircle } from 'lucide-react';
-import { SectionHeader, EmptyState } from '../shared';
+import { Settings, Save, DollarSign, Award, ArrowUpRight, CheckCircle } from 'lucide-react';
+import { SectionHeader } from '../shared';
 import {
   useGetFeeConfigQuery,
   useUpdateFeeConfigEntryMutation,
-  useUpdateViewingFeeMutation,
-  useUpdateBoostPackageMutation,
 } from '../../../features/Api/AdminApi';
 
 const AdminFeesTab: React.FC = () => {
   const { data, isLoading } = useGetFeeConfigQuery();
   const [updateConfig] = useUpdateFeeConfigEntryMutation();
-  const [updateViewing] = useUpdateViewingFeeMutation();
-  const [updateBoost] = useUpdateBoostPackageMutation();
-  
   const [editingValues, setEditingValues] = useState<Record<string, number>>({});
   const [savedKey, setSavedKey] = useState<string | null>(null);
 

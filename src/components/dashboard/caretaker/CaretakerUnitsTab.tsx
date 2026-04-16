@@ -1,6 +1,6 @@
 // components/dashboard/caretaker/CaretakerUnitsTab.tsx
 import React from 'react';
-import { Building2, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { SectionHeader, Badge } from '../shared';
 
 const MOCK_UNITS = [

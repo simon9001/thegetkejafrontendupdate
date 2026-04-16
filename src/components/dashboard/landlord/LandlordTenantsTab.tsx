@@ -1,6 +1,5 @@
 // components/dashboard/landlord/LandlordTenantsTab.tsx
 import React from 'react';
-import { Key } from 'lucide-react';
 import { SectionHeader, Badge } from '../shared';
 
 const MOCK_TENANTS = [

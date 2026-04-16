@@ -1,6 +1,6 @@
 // components/dashboard/developer/DeveloperUnitsTab.tsx
 import React from 'react';
-import { Layers, HardHat, Key, Building2 } from 'lucide-react';
+import { Layers, HardHat } from 'lucide-react';
 import { SectionHeader } from '../shared';
 
 const DeveloperUnitsTab: React.FC = () => (

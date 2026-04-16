@@ -1,6 +1,6 @@
 // components/dashboard/landlord/AddTeamMemberModal.tsx
 import React, { useState, useEffect } from 'react';
-import { X, Search, UserPlus, Check, Loader2, Shield, Info } from 'lucide-react';
+import { X, Search, UserPlus, Plus, Loader2, Shield, Info } from 'lucide-react';
 import { useSearchProfessionalsQuery, useAssignTeamMemberMutation } from '../../../features/Api/LandlordApi';
 import { toast } from 'react-hot-toast';
 

@@ -7,11 +7,11 @@ import PropertyChat from '../../components/property/PropertyChat';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
-    Heart, Share2, Star, MapPin, Camera, Video, Grid,
-    Home, Ruler, Users, Calendar, Clock, Zap, Music, Mic,
+    Heart, Share2, MapPin, Camera, Video, Grid,
+    Home, Ruler, Users, Calendar, Clock, Music, Mic,
     Shield, Eye, Award, BadgeCheck, Moon, ParkingCircle,
     DoorOpen, Building2, AlertTriangle, Volume2, GlassWater,
-    Sparkles, Key, Ban, MessageCircle, User, Navigation2,
+    Sparkles, MessageCircle, User, Navigation2,
     ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
@@ -308,7 +308,7 @@ const CommercialPropertyDetails: React.FC = () => {
                                 </p>
                             </div>
                             <img
-                                src={property.host.avatar}
+                                src={property.host.avatar ?? undefined}
                                 alt={property.host.name}
                                 className="w-14 h-14 rounded-full object-cover shrink-0"
                             />
