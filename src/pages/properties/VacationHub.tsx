@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Sparkles, MapPin, ArrowRight, Search, SlidersHorizontal, X } from 'lucide-react';
+import { Sparkles, SlidersHorizontal, X, ArrowRight } from 'lucide-react';
+import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Layout from '../../components/layout/Layout.js';
 import StatusPreview from '../../components/property/StatusPreview.js';
 import SearchResults from '../../components/Search/SearchResults.js';
 import { useGetPublicPropertiesQuery } from '../../features/Api/PropertiesApi.js';
-
 import { statusData } from '../../data/statusData.js';
-import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
+import SubscribeModal from '../../components/subscriptions/SubscribeModal.js';
 import HeartButton from '../../components/ui/HeartButton.js';
 import { useSearchParams } from 'react-router-dom';
 
@@ -93,7 +93,8 @@ const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void }
 const VacationHub: React.FC = () => {
   const navigate  = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters]   = useState(false);
+  const [showSubscribe, setShowSubscribe] = useState(false);
 
   // Read active filters from URL so the filter bar and SearchResults stay in sync
   const activeCategory = searchParams.get('listing_category') ?? '';
@@ -101,9 +102,9 @@ const VacationHub: React.FC = () => {
   const activeMinPrice = searchParams.get('min_price')        ?? '';
   const activeMaxPrice = searchParams.get('max_price')        ?? '';
   const activeArea     = searchParams.get('area')             ?? '';
-  const heroQ          = searchParams.get('q')                ?? '';
+  const activeQ        = searchParams.get('q')                ?? '';
 
-  const hasFilters = !!(activeCategory || activeBedrooms || activeMinPrice || activeMaxPrice || activeArea || heroQ);
+  const hasFilters = !!(activeCategory || activeBedrooms || activeMinPrice || activeMaxPrice || activeArea || activeQ);
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);
@@ -113,13 +114,6 @@ const VacationHub: React.FC = () => {
   };
 
   const clearAll = () => setSearchParams({});
-
-  // Hero search
-  const handleHeroSearch = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const input = (e?.target as HTMLFormElement)?.querySelector('input')?.value?.trim();
-    if (input) setParam('q', input);
-  };
 
   // Default listing (no filters active) — use public properties endpoint
   const { data: defaultData, isFetching: defaultLoading } = useGetPublicPropertiesQuery(
@@ -136,11 +130,20 @@ const VacationHub: React.FC = () => {
     <Layout showSearch={true}>
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
-      <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden">
+      {/* pt-11 on mobile gives ~44px clearance for the floating navbar search pill */}
+      <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden pt-11 md:pt-0">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-64 h-64 bg-[#C5A373] rounded-full filter blur-3xl" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C5A373] rounded-full filter blur-3xl" />
         </div>
+
+        {/* Decorative grid lines */}
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: 'linear-gradient(#C5A373 1px, transparent 1px), linear-gradient(90deg, #C5A373 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 relative z-10">
           <motion.div
@@ -163,46 +166,43 @@ const VacationHub: React.FC = () => {
                 Browse thousands of verified rentals, homes for sale, and commercial spaces across Kenya.
               </p>
 
-              {/* Hero search bar */}
-              <form
-                onSubmit={handleHeroSearch}
-                className="bg-white rounded-full p-1.5 max-w-2xl mx-auto lg:mx-0 shadow-2xl"
-              >
-                <div className="flex items-center">
-                  <div className="flex-1 flex items-center gap-2 px-4">
-                    <MapPin className="w-5 h-5 text-[#C5A373]" />
-                    <input
-                      type="text"
-                      defaultValue={heroQ}
-                      placeholder="Try: '2 bedroom in Kilimani under 30k'"
-                      className="w-full py-2 text-[#1B2430] placeholder-gray-400 focus:outline-none text-sm"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-[#C5A373] hover:bg-[#8B6E4E] transition-colors text-white px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 group"
-                  >
-                    <Search className="w-4 h-4" />
-                    <span>Search</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </form>
+              {/* ── Subscribe CTA ── */}
+              <div className="mb-8 flex flex-col sm:flex-row items-center lg:items-start gap-4 justify-center lg:justify-start">
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setShowSubscribe(true)}
+                  className="
+                    group flex items-center gap-3
+                    bg-[#C5A373] hover:bg-[#8B6E4E]
+                    text-white font-bold px-7 py-3.5 rounded-full
+                    shadow-lg shadow-[#C5A373]/40
+                    transition-colors duration-200
+                    text-sm
+                  "
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Subscribe for a Seamless Experience
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+
+                <p className="text-white/50 text-xs text-center lg:text-left leading-relaxed max-w-xs">
+                  Unlock property viewings, AI picks &amp; priority support — from KES 0/mo
+                </p>
+              </div>
 
               {/* Quick stats */}
-              <div className="flex items-center gap-8 mt-8 justify-center lg:justify-start">
-                <div>
-                  <div className="text-2xl font-black text-[#C5A373]">500+</div>
-                  <div className="text-xs text-white/60">Verified Properties</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-black text-[#C5A373]">50k+</div>
-                  <div className="text-xs text-white/60">Happy Guests</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-black text-[#C5A373]">100+</div>
-                  <div className="text-xs text-white/60">Destinations</div>
-                </div>
+              <div className="flex items-center gap-8 justify-center lg:justify-start">
+                {[
+                  { value: '500+', label: 'Verified Properties' },
+                  { value: '50k+', label: 'Happy Tenants' },
+                  { value: '100+', label: 'Destinations' },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center lg:text-left">
+                    <div className="text-2xl font-black text-[#C5A373]">{stat.value}</div>
+                    <div className="text-xs text-white/60">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -385,6 +385,8 @@ const VacationHub: React.FC = () => {
           )}
         </div>
       </div>
+
+      <SubscribeModal isOpen={showSubscribe} onClose={() => setShowSubscribe(false)} />
     </Layout>
   );
 };

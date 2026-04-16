@@ -102,6 +102,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const textColor   = elevated || !transparent ? 'text-[#222222]' : 'text-white';
 
   return (
+    <>
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg} ${shadowClass}`}
     >
@@ -136,20 +137,18 @@ const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onSearchToggle}
               className={`
-                hidden md:flex items-center h-12 rounded-full border px-2
-                shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px,rgba(0,0,0,0.08)_0px_4px_8px]
-                hover:shadow-[rgba(0,0,0,0.08)_0px_4px_12px]
+                hidden md:flex items-center h-9 rounded-full border px-1.5 gap-0
+                shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_4px]
+                hover:shadow-[rgba(0,0,0,0.08)_0px_3px_10px]
                 bg-white border-[#e5e5e5] transition-shadow duration-200
                 ${elevated ? '' : 'border-white/40'}
               `}
             >
-              <span className="px-4 text-sm font-semibold text-[#222222]">Where is your next keja?</span>
-              <span className="w-px h-5 bg-[#c1c1c1]" />
-              <span className="px-4 text-sm font-semibold text-[#222222]">what is your budget?</span>
-              <span className="w-px h-5 bg-[#c1c1c1]" />
-              <span className="px-4 text-sm text-[#6a6a6a]">Where exactly?</span>
-              <span className="ml-1 w-8 h-8 flex items-center justify-center bg-[#ff385c] rounded-full shrink-0">
-                <Search className="w-3.5 h-3.5 text-white" />
+              <span className="px-3 text-xs font-semibold text-[#222222] whitespace-nowrap">Find your keja</span>
+              <span className="w-px h-4 bg-[#c1c1c1]" />
+              <span className="px-3 text-xs text-[#6a6a6a] whitespace-nowrap">Any budget</span>
+              <span className="ml-1 w-6 h-6 flex items-center justify-center bg-[#ff385c] rounded-full shrink-0">
+                <Search className="w-3 h-3 text-white" />
               </span>
             </button>
           )}
@@ -337,27 +336,37 @@ const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* ── Mobile search button ─────────────────────────────────────────── */}
-        {showSearch && (
-          <div className="md:hidden pb-3">
-            <button
-              onClick={onSearchToggle}
-              className="
-                w-full flex items-center gap-3 bg-white border border-[#e5e5e5] rounded-full
-                px-4 py-3
-                shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px]
-              "
-            >
-              <Search className="w-4 h-4 text-[#ff385c] shrink-0" />
-              <div className="flex-1 text-left">
-                <p className="text-sm font-semibold text-[#222222] leading-tight">Anywhere</p>
-                <p className="text-xs text-[#6a6a6a] leading-tight">Any week · Add guests</p>
-              </div>
-            </button>
-          </div>
-        )}
       </div>
     </nav>
+
+    {/* ── Mobile floating search pill ──────────────────────────────────────── */}
+    {showSearch && (
+      <div
+        className={`
+          md:hidden fixed left-4 right-4 z-40
+          transition-all duration-300 ease-in-out
+          ${isScrolled ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'}
+        `}
+        style={{ top: '88px' }}
+      >
+        <button
+          onClick={onSearchToggle}
+          className="
+            w-full flex items-center gap-3
+            bg-white/60 backdrop-blur-md
+            border border-white/50 rounded-full
+            px-4 py-2.5
+            shadow-[rgba(0,0,0,0.06)_0px_2px_12px]
+          "
+        >
+          <Search className="w-4 h-4 text-[#ff385c] shrink-0" />
+          <span className="flex-1 text-left text-sm font-medium text-[#222222]/80">Find your keja…</span>
+          <span className="flex-1 text-left text-sm font-medium text-[#222222]/80">any budget</span>
+          <span className="flex-1 text-left text-sm font-medium text-[#222222]/80">Anywhere</span>
+        </button>
+      </div>
+    )}
+    </>
   );
 };
 
