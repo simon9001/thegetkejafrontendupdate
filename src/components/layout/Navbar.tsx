@@ -21,6 +21,7 @@ import type { RootState } from '../../store/store';
 import { clearCredentials, selectCurrentUser, selectIsAuthenticated } from '../../features/Slice/AuthSlice';
 import { useLogoutMutation } from '../../features/Api/AuthApi';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../../assets/logo.png';
 
 interface NavbarProps {
   transparent?:    boolean;
@@ -115,21 +116,18 @@ const Navbar: React.FC<NavbarProps> = ({
             className="flex-shrink-0 flex items-center gap-0.5 select-none"
             aria-label="GetKeja home"
           >
-            {/* Airbnb-style logo: brand-coloured icon + wordmark */}
-            <svg
-              viewBox="0 0 24 24"
-              className="w-8 h-8 text-[#ff385c]"
-              fill="currentColor"
-              aria-hidden
-            >
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
+            {/* Amy coooking */}
+           <img
+              src={logo} 
+              alt="GetKeja logo"
+              className="w-8 h-8 object-contain"
+            />
             <span
               className={`text-xl font-bold tracking-tight ${
                 elevated || !transparent ? 'text-[#ff385c]' : 'text-white'
               }`}
             >
-              getkeja
+              Getkeja
             </span>
           </Link>
 
@@ -145,11 +143,11 @@ const Navbar: React.FC<NavbarProps> = ({
                 ${elevated ? '' : 'border-white/40'}
               `}
             >
-              <span className="px-4 text-sm font-semibold text-[#222222]">Anywhere</span>
+              <span className="px-4 text-sm font-semibold text-[#222222]">Where is your next keja?</span>
               <span className="w-px h-5 bg-[#c1c1c1]" />
-              <span className="px-4 text-sm font-semibold text-[#222222]">Any week</span>
+              <span className="px-4 text-sm font-semibold text-[#222222]">what is your budget?</span>
               <span className="w-px h-5 bg-[#c1c1c1]" />
-              <span className="px-4 text-sm text-[#6a6a6a]">Add guests</span>
+              <span className="px-4 text-sm text-[#6a6a6a]">Where exactly?</span>
               <span className="ml-1 w-8 h-8 flex items-center justify-center bg-[#ff385c] rounded-full shrink-0">
                 <Search className="w-3.5 h-3.5 text-white" />
               </span>
