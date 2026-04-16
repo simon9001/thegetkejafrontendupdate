@@ -23,6 +23,10 @@ import Profile from './pages/Auth/Profile';
 import Messages from './pages/Chat/Messages';
 import DashboardRedirect from './components/auth/DashboardRedirect';
 import BecomeHost from './pages/BecomeHost';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
+import Blog from './pages/Blog';
+import Affiliate from './pages/Affiliate';
 import './App.css';
 
 function App() {
@@ -163,6 +167,12 @@ function App() {
 
         {/* Become a host — no auth required so any user can start the application */}
         <Route path="/become-host" element={<BecomeHost />} />
+
+        {/* Public informational pages */}
+        <Route path="/about"     element={<AboutUs />} />
+        <Route path="/blog"      element={<Blog />} />
+        <Route path="/contact"   element={<ContactUs />} />
+        <Route path="/affiliate" element={<Affiliate />} />
 
         {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

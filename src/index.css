@@ -15,7 +15,7 @@
   --color-plus:         #92174d;   /* plus tier                                */
 
   /* ── Text scale ────────────────────────────── */
-  --color-text-primary:    #222222; /* near-black — warm, not cold              */
+  --color-text-primary:    #ffe2e2; /* near-black — warm, not cold              */
   --color-text-secondary:  #6a6a6a; /* descriptions, meta                      */
   --color-text-disabled:   rgba(0, 0, 0, 0.24);
   --color-text-link:       #428bff; /* legal / informational links              */
@@ -451,7 +451,7 @@ a, button, input, select, textarea,
 /* ─── Tailwind layer overrides for DaisyUI ───────────────────────────────── */
 /* Keep DaisyUI working but normalise primary colour to Rausch Red */
 :root {
-  --p:  #ff385c;
+  --p:  #ff6d88;
   --pf: #e00b41;
   --pc: #ffffff;
 }

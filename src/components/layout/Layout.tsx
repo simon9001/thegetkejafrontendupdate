@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from './Navbar';
+import Footer from './Footer';
 import SearchModal from '../Search/SearchModal';
 import { useDispatch } from 'react-redux';
 import { setMapCenter, setMapRadius, setMapFilters } from '../../features/Slice/PropertiesSlice';
@@ -40,15 +41,16 @@ const Layout: React.FC<LayoutProps> = ({
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white flex flex-col">
             <Navbar
                 transparent={transparentNav}
                 showSearch={showSearch}
                 onSearchToggle={() => setIsSearchOpen(true)}
             />
-            <main className="pt-20">
+            <main className="pt-20 flex-1">
                 {children}
             </main>
+            <Footer />
 
             <SearchModal
                 isOpen={isSearchOpen}

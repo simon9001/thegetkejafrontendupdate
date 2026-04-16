@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Sparkles, SlidersHorizontal, X, ArrowRight } from 'lucide-react';
 import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Layout from '../../components/layout/Layout.js';
 import StatusPreview from '../../components/property/StatusPreview.js';
+import StatusViewerModal from '../../components/property/StatusViewerModal.js';
 import SearchResults from '../../components/Search/SearchResults.js';
 import { useGetPublicPropertiesQuery } from '../../features/Api/PropertiesApi.js';
 import { statusData } from '../../data/statusData.js';
 import SubscribeModal from '../../components/subscriptions/SubscribeModal.js';
 import HeartButton from '../../components/ui/HeartButton.js';
 import { useSearchParams } from 'react-router-dom';
+import { useGetPlatformStatsQuery } from '../../features/Api/StatsApi.js';
 
 // ── Category tabs matching actual DB enum values ──────────────────────────────
 const CATEGORIES = [
@@ -93,8 +95,16 @@ const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void }
 const VacationHub: React.FC = () => {
   const navigate  = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [showFilters, setShowFilters]   = useState(false);
+  const [showFilters, setShowFilters]     = useState(false);
   const [showSubscribe, setShowSubscribe] = useState(false);
+
+  // Status viewer state
+  const [viewerOpen, setViewerOpen]       = useState(false);
+  const [viewerIndex, setViewerIndex]     = useState(0);
+  const [statuses, setStatuses]           = useState(statusData);
+
+  // Live platform stats — falls back to hardcoded values while loading or on error
+  const { data: platformStats } = useGetPlatformStatsQuery();
 
   // Read active filters from URL so the filter bar and SearchResults stay in sync
   const activeCategory = searchParams.get('listing_category') ?? '';
@@ -122,15 +132,23 @@ const VacationHub: React.FC = () => {
   );
 
 
-  const handleStatusClick = (_index: number) => {
-    // TODO: status preview modal not yet implemented
+  const handleStatusClick = (index: number) => {
+    setViewerIndex(index);
+    setViewerOpen(true);
   };
+
+  const handleStatusViewed = useCallback((statusId: number) => {
+    setStatuses((prev) =>
+      prev.map((s) => s.id === statusId ? { ...s, hasUnviewed: false } : s)
+    );
+  }, []);
 
   return (
     <Layout showSearch={true}>
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       {/* pt-11 on mobile gives ~44px clearance for the floating navbar search pill */}
+      
       <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden pt-11 md:pt-0">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-64 h-64 bg-[#C5A373] rounded-full filter blur-3xl" />
@@ -187,22 +205,38 @@ const VacationHub: React.FC = () => {
                 </motion.button>
 
                 <p className="text-white/50 text-xs text-center lg:text-left leading-relaxed max-w-xs">
-                  Unlock property viewings, AI picks &amp; priority support — from KES 0/mo
+                  Unlock property viewings, AI picks &amp; priority support from KES 0/mo
                 </p>
               </div>
 
-              {/* Quick stats */}
+              {/* Quick stats — live from /api/stats */}
               <div className="flex items-center gap-8 justify-center lg:justify-start">
-                {[
-                  { value: '500+', label: 'Verified Properties' },
-                  { value: '50k+', label: 'Happy Tenants' },
-                  { value: '100+', label: 'Destinations' },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center lg:text-left">
-                    <div className="text-2xl font-black text-[#C5A373]">{stat.value}</div>
-                    <div className="text-xs text-white/60">{stat.label}</div>
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl font-black text-[#C5A373]">
+                    {platformStats
+                      ? platformStats.verified_properties >= 1000
+                        ? `${(platformStats.verified_properties / 1000).toFixed(1)}k+`
+                        : `${platformStats.verified_properties}+`
+                      : '500+'}
                   </div>
-                ))}
+                  <div className="text-xs text-white/60">Verified Properties</div>
+                </div>
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl font-black text-[#C5A373]">
+                    {platformStats
+                      ? platformStats.happy_tenants >= 1000
+                        ? `${Math.floor(platformStats.happy_tenants / 1000)}k+`
+                        : `${platformStats.happy_tenants}+`
+                      : '50k+'}
+                  </div>
+                  <div className="text-xs text-white/60">Happy Tenants</div>
+                </div>
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl font-black text-[#C5A373]">
+                    {platformStats ? `${platformStats.counties_covered}+` : '47+'}
+                  </div>
+                  <div className="text-xs text-white/60">Counties</div>
+                </div>
               </div>
             </div>
 
@@ -232,7 +266,7 @@ const VacationHub: React.FC = () => {
 
         {/* Status stories */}
         <div className="py-6 lg:py-8 border-b border-gray-100">
-          <StatusPreview statuses={statusData} onStatusClick={handleStatusClick} />
+          <StatusPreview statuses={statuses} onStatusClick={handleStatusClick} />
         </div>
 
         {/* ── Filter bar ──────────────────────────────────────────────── */}
@@ -387,6 +421,15 @@ const VacationHub: React.FC = () => {
       </div>
 
       <SubscribeModal isOpen={showSubscribe} onClose={() => setShowSubscribe(false)} />
+
+      {viewerOpen && (
+        <StatusViewerModal
+          statuses={statuses}
+          initialIndex={viewerIndex}
+          onClose={() => setViewerOpen(false)}
+          onViewed={handleStatusViewed}
+        />
+      )}
     </Layout>
   );
 };

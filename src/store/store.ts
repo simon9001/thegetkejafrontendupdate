@@ -11,6 +11,7 @@ import { LandlordApi }          from '../features/Api/LandlordApi';
 import { SavedPropertiesApi }   from '../features/Api/SavedPropertiesApi';
 import { ShortStayApi }         from '../features/Api/ShortStayApi';
 import { subscriptionsApi }    from '../features/Api/SubscriptionsApi';
+import { statsApi }            from '../features/Api/StatsApi';
 import authReducer           from '../features/Slice/AuthSlice';
 import propertiesReducer     from '../features/Slice/PropertiesSlice';
 import savedPropertiesReducer from '../features/Slice/SavedPropertiesSlice';
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   [SavedPropertiesApi.reducerPath]: SavedPropertiesApi.reducer,
   [ShortStayApi.reducerPath]:       ShortStayApi.reducer,
   [subscriptionsApi.reducerPath]:   subscriptionsApi.reducer,
+  [statsApi.reducerPath]:           statsApi.reducer,
   // Feature slices
   auth:            persistedAuthReducer,
   properties:      propertiesReducer,
@@ -65,7 +67,8 @@ export const store = configureStore({
       .concat(LandlordApi.middleware)
       .concat(SavedPropertiesApi.middleware)
       .concat(ShortStayApi.middleware)
-      .concat(subscriptionsApi.middleware),
+      .concat(subscriptionsApi.middleware)
+      .concat(statsApi.middleware),
 });
 
 export const persistor = persistStore(store);
