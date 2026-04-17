@@ -9,14 +9,14 @@
 
 :root {
   /* ── Brand ─────────────────────────────────── */
-  --color-rausch:       #ff385c;   /* primary CTA / brand accent               */
-  --color-rausch-dark:  #e00b41;   /* pressed / hover state                    */
+  --color-rausch:       #f5f5f5;   /* primary CTA / brand accent               */
+  --color-rausch-dark:  #f51168;   /* pressed / hover state                    */
   --color-luxe:         #460479;   /* premium tier                             */
-  --color-plus:         #92174d;   /* plus tier                                */
+  --color-plus:         #000000;   /* plus tier                                */
 
   /* ── Text scale ────────────────────────────── */
-  --color-text-primary:    #ffe2e2; /* near-black — warm, not cold              */
-  --color-text-secondary:  #6a6a6a; /* descriptions, meta                      */
+  --color-text-primary:    #f51168; /* near-black — warm, not cold              */
+  --color-text-secondary:  #000000; /* descriptions, meta                      */
   --color-text-disabled:   rgba(0, 0, 0, 0.24);
   --color-text-link:       #428bff; /* legal / informational links              */
 
@@ -37,7 +37,7 @@
     rgba(0, 0, 0, 0.04) 0px 2px 6px,
     rgba(0, 0, 0, 0.10) 0px 4px 8px;
   --shadow-hover:  rgba(0, 0, 0, 0.08) 0px 4px 12px;
-  --shadow-focus:  rgb(255, 255, 255) 0px 0px 0px 4px, rgba(0, 0, 0, 0.18) 0px 0px 0px 6px;
+  --shadow-focus:  rgb(255, 255, 255) 0px 0px 0px 4px, rgb(240, 240, 240) 0px 0px 0px 6px;
 
   /* ── Border radius scale ────────────────────── */
   --radius-subtle:  4px;   /* small links                                      */

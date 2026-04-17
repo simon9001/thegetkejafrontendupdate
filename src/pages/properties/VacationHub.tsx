@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Sparkles, SlidersHorizontal, X, ArrowRight } from 'lucide-react';
+import { Sparkles, SlidersHorizontal, X, ArrowRight, Home, Building2, CalendarDays, Briefcase, LayoutGrid } from 'lucide-react';
 import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -16,11 +16,11 @@ import { useGetPlatformStatsQuery } from '../../features/Api/StatsApi.js';
 
 // ── Category tabs matching actual DB enum values ──────────────────────────────
 const CATEGORIES = [
-  { value: '',                label: 'All',        },
-  { value: 'long_term_rent',  label: 'Long Rent',  },
-  { value: 'for_sale',        label: 'For Sale',   },
-  { value: 'short_term_rent', label: 'Short Stay', },
-  { value: 'commercial',      label: 'Commercial', },
+  { value: '',                label: 'All',        icon: <LayoutGrid  className="w-4 h-4" />, color: 'text-[#ff385c]'  },
+  { value: 'long_term_rent',  label: 'Long Rent',  icon: <Home        className="w-4 h-4" />, color: 'text-blue-500'   },
+  { value: 'for_sale',        label: 'For Sale',   icon: <Building2   className="w-4 h-4" />, color: 'text-emerald-500'},
+  { value: 'short_term_rent', label: 'Short Stay', icon: <CalendarDays className="w-4 h-4" />, color: 'text-orange-500' },
+  { value: 'commercial',      label: 'Commercial', icon: <Briefcase   className="w-4 h-4" />, color: 'text-purple-500' },
 ];
 
 
@@ -125,9 +125,9 @@ const VacationHub: React.FC = () => {
 
   const clearAll = () => setSearchParams({});
 
-  // Default listing (no filters active) — use public properties endpoint
+  // Default listing (no filters active) — fetch more so we can show category sections
   const { data: defaultData, isFetching: defaultLoading } = useGetPublicPropertiesQuery(
-    { limit: 20 },
+    { limit: 60 },
     { skip: hasFilters }
   );
 
@@ -275,21 +275,25 @@ const VacationHub: React.FC = () => {
           {/* Row: scrollable category pills + single filter button */}
           <div className="flex items-center gap-2 px-4 sm:px-0 py-3">
 
-            {/* Horizontally scrollable category pills — no wrap on mobile */}
-            <div className="flex gap-2 overflow-x-auto no-scrollbar flex-1 min-w-0">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.value}
-                  onClick={() => setParam('listing_category', cat.value)}
-                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${
-                    activeCategory === cat.value
-                      ? 'bg-[#ff385c] border-[#ff385c] text-white'
-                      : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
+            {/* Horizontally scrollable category pills — Airbnb-style with icons */}
+            <div className="flex gap-1 overflow-x-auto no-scrollbar flex-1 min-w-0">
+              {CATEGORIES.map((cat) => {
+                const isActive = activeCategory === cat.value;
+                return (
+                  <button
+                    key={cat.value}
+                    onClick={() => setParam('listing_category', cat.value)}
+                    className={`flex-shrink-0 flex flex-col items-center gap-1 px-4 pt-2 pb-2.5 text-xs font-semibold border-b-2 transition-all whitespace-nowrap ${
+                      isActive
+                        ? 'border-[#222] text-[#222]'
+                        : 'border-transparent text-gray-400 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <span className={isActive ? 'text-[#222]' : cat.color}>{cat.icon}</span>
+                    {cat.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Single filter button — shows active-filter dot when filters applied */}
@@ -384,38 +388,61 @@ const VacationHub: React.FC = () => {
         {/* ── Property content ─────────────────────────────────────────── */}
         <div className="py-8">
           {hasFilters ? (
-            // When the user has applied any filter/search — delegate to SearchResults
-            // which uses useSearchPropertiesQuery and reads from URL params
+            // Filtered view — delegate to SearchResults (reads URL params)
             <SearchResults />
+          ) : defaultLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <div className="w-12 h-12 border-4 border-[#C5A373] border-t-transparent rounded-full animate-spin" />
+              <p className="text-gray-500 font-medium animate-pulse">Loading properties...</p>
+            </div>
+          ) : (defaultData?.properties ?? []).length === 0 ? (
+            <div className="text-center py-24 text-gray-400">
+              <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-200" />
+              <p className="text-lg font-medium">No properties available yet.</p>
+              <p className="text-sm mt-1">Check back soon — new listings are added daily.</p>
+            </div>
           ) : (
-            // Default homepage view — all approved properties via useGetPublicPropertiesQuery
-            defaultLoading ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4">
-                <div className="w-12 h-12 border-4 border-[#C5A373] border-t-transparent rounded-full animate-spin" />
-                <p className="text-gray-500 font-medium animate-pulse">Loading properties...</p>
-              </div>
-            ) : (defaultData?.properties ?? []).length === 0 ? (
-              <div className="text-center py-24 text-gray-400">
-                <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-200" />
-                <p className="text-lg font-medium">No properties available yet.</p>
-                <p className="text-sm mt-1">Check back soon — new listings are added daily.</p>
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm text-gray-500 mb-5">
-                  <span className="font-semibold text-gray-800">{defaultData?.total ?? 0}</span> properties available
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                  {(defaultData?.properties ?? []).map((p: any) => (
-                    <PropertyCard
-                      key={p.id}
-                      property={p}
-                      onNavigate={(id) => navigate(`/property/${id}`)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )
+            // "All" default view — categorized sections like Airbnb
+            <div className="space-y-12">
+              {CATEGORIES.filter((c) => c.value !== '').map((cat) => {
+                const props = (defaultData?.properties ?? []).filter(
+                  (p: any) => p.listing_category === cat.value,
+                );
+                if (props.length === 0) return null;
+                return (
+                  <section key={cat.value}>
+                    {/* Section header */}
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex items-center gap-2">
+                        <span className={cat.color}>{cat.icon}</span>
+                        <h2 className="text-lg font-bold text-[#222]">{cat.label}</h2>
+                        <span className="text-sm text-gray-400 font-normal">
+                          ({props.length} listing{props.length !== 1 ? 's' : ''})
+                        </span>
+                      </div>
+                      {props.length > 4 && (
+                        <button
+                          onClick={() => setParam('listing_category', cat.value)}
+                          className="flex items-center gap-1 text-sm font-semibold text-[#ff385c] hover:underline"
+                        >
+                          See all <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                    {/* Property grid — 4 cards max */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                      {props.slice(0, 4).map((p: any) => (
+                        <PropertyCard
+                          key={p.id}
+                          property={p}
+                          onNavigate={(id) => navigate(`/property/${id}`)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>

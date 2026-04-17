@@ -1,11 +1,12 @@
 // components/layout/Footer.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   MapPin, Mail, Phone, Facebook, Twitter, Instagram,
-  Linkedin, Youtube, Heart, ArrowRight, ExternalLink,
+  Linkedin, Youtube, Heart, ArrowRight, ExternalLink, CheckCircle, Loader2,
 } from 'lucide-react';
 import logo from '../../assets/logo.png';
+import { apiDomain } from '../../apiDomain/ApiDomain';
 
 // ── Social link ───────────────────────────────────────────────────────────────
 const Social: React.FC<{
@@ -57,6 +58,66 @@ const ExtLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, 
   </li>
 );
 
+// ── Newsletter form ───────────────────────────────────────────────────────────
+const NewsletterForm: React.FC = () => {
+  const [email, setEmail]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const [done, setDone]       = useState(false);
+  const [err, setErr]         = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setLoading(true);
+    setErr('');
+    try {
+      const res = await fetch(`${apiDomain}/contact/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setDone(true);
+    } catch {
+      setErr('Could not subscribe. Try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col w-full sm:w-auto gap-2">
+      {done ? (
+        <div className="flex items-center gap-2 text-emerald-400 text-sm font-semibold">
+          <CheckCircle className="w-4 h-4" /> Subscribed! Check your inbox.
+        </div>
+      ) : (
+        <>
+          <div className="flex gap-2">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="flex-1 sm:w-64 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/50 focus:border-[#ff385c]"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-5 py-2.5 bg-[#ff385c] hover:bg-[#e00b41] disabled:opacity-60 text-white font-bold rounded-xl text-sm transition-colors shrink-0 flex items-center gap-1.5"
+            >
+              {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+              Subscribe
+            </button>
+          </div>
+          {err && <p className="text-red-400 text-xs">{err}</p>}
+        </>
+      )}
+    </form>
+  );
+};
+
 // ── Main Footer ───────────────────────────────────────────────────────────────
 const Footer: React.FC = () => {
   const year = new Date().getFullYear();
@@ -72,22 +133,7 @@ const Footer: React.FC = () => {
               <h3 className="font-black text-lg text-white">Get the latest listings straight to your inbox</h3>
               <p className="text-white/50 text-sm mt-1">New properties, market insights, tips — weekly.</p>
             </div>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex w-full sm:w-auto gap-2"
-            >
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className="flex-1 sm:w-64 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/50 focus:border-[#ff385c]"
-              />
-              <button
-                type="submit"
-                className="px-5 py-2.5 bg-[#ff385c] hover:bg-[#e00b41] text-white font-bold rounded-xl text-sm transition-colors shrink-0"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
       </div>

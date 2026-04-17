@@ -1,8 +1,9 @@
 // pages/ContactUs.tsx
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, MessageCircle, Clock, Send, Loader2, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageCircle, Clock, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import Layout from '../components/layout/Layout';
 import { motion } from 'framer-motion';
+import { apiDomain } from '../apiDomain/ApiDomain';
 
 const TOPICS = ['General Enquiry', 'Property Listing Issue', 'Payment & Billing', 'Technical Support', 'Partnership / Affiliate', 'Media & Press', 'Other'];
 
@@ -24,18 +25,34 @@ const ContactCard: React.FC<{ icon: React.ReactNode; title: string; detail: stri
 );
 
 const ContactUs: React.FC = () => {
-  const [form, setForm]       = useState({ name: '', email: '', phone: '', topic: '', message: '' });
+  const [form, setForm]   = useState({ name: '', email: '', phone: '', topic: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [sent, setSent]       = useState(false);
+  const [error, setError]     = useState('');
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate submit — replace with real API call
-    setTimeout(() => { setLoading(false); setSent(true); }, 1500);
+    setError('');
+    try {
+      const res = await fetch(`${apiDomain}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message ?? 'Failed to send message');
+      }
+      setSent(true);
+    } catch (err: any) {
+      setError(err.message ?? 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -201,6 +218,12 @@ const ContactUs: React.FC = () => {
                       />
                     </div>
 
+                    {error && (
+                      <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        {error}
+                      </div>
+                    )}
                     <button
                       type="submit"
                       disabled={loading}

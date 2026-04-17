@@ -27,6 +27,7 @@ import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import Blog from './pages/Blog';
 import Affiliate from './pages/Affiliate';
+import { PrivacyPolicy, TermsOfService, CookiePolicy, SafetyTips, HelpCenter, Sitemap } from './pages/legal/LegalPages';
 import './App.css';
 
 function App() {
@@ -173,6 +174,14 @@ function App() {
         <Route path="/blog"      element={<Blog />} />
         <Route path="/contact"   element={<ContactUs />} />
         <Route path="/affiliate" element={<Affiliate />} />
+
+        {/* Legal & support pages */}
+        <Route path="/privacy"  element={<PrivacyPolicy />} />
+        <Route path="/terms"    element={<TermsOfService />} />
+        <Route path="/cookies"  element={<CookiePolicy />} />
+        <Route path="/safety"   element={<SafetyTips />} />
+        <Route path="/help"     element={<HelpCenter />} />
+        <Route path="/sitemap"  element={<Sitemap />} />
 
         {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
