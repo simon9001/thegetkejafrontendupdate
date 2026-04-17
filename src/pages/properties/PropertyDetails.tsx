@@ -17,6 +17,7 @@ import {
   useGetPropertyReviewsQuery
 } from '../../features/Api/ShortStayApi';
 import { useSavePropertyMutation, useRemoveSavedPropertyMutation, useGetSavedPropertiesQuery } from '../../features/Api/SavedPropertiesApi';
+import { useStartConversationMutation } from '../../features/Api/ChatApi';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import CommercialPropertyDetails from './CommercialPropertyDetails';
@@ -67,6 +68,7 @@ const PropertyDetails: React.FC = () => {
     const [checkOut, setCheckOut] = useState('');
     const [guests, setGuests] = useState(1);
     const [isBooking, setIsBooking] = useState(false);
+    const [viewingDate, setViewingDate] = useState('');
 
     const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.auth);
 
@@ -79,6 +81,7 @@ const PropertyDetails: React.FC = () => {
     const [saveProp] = useSavePropertyMutation();
     const [removeSaved] = useRemoveSavedPropertyMutation();
     const [createBooking] = useCreateBookingMutation();
+    const [startConversation] = useStartConversationMutation();
 
     const isSaved = useMemo(() => savedProps?.some(p => p.id === Number(id)), [savedProps, id]);
 
@@ -230,6 +233,36 @@ const PropertyDetails: React.FC = () => {
             // Potentially redirect to booking detail or chat
         } catch (err: any) {
             toast.error(err?.data?.message || 'Booking failed. Try again.');
+        } finally {
+            setIsBooking(false);
+        }
+    };
+
+    const handleScheduleViewing = async () => {
+        if (!isAuthenticated) return toast.error('Please login to schedule a viewing');
+        if (!viewingDate) return toast.error('Please select a preferred viewing date');
+        if (!fullName.trim()) return toast.error('Please enter your full name');
+        if (!phoneNumber.trim()) return toast.error('Please enter your phone number');
+        const hostId = realProperty?.owner?.id;
+        if (!hostId) return toast.error('Owner information unavailable');
+
+        const dateLabel = new Date(viewingDate).toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const message = `Hi, I'd like to schedule a viewing for this property on ${dateLabel}. My name is ${fullName.trim()} and my phone number is ${phoneNumber.trim()}.`;
+
+        setIsBooking(true);
+        try {
+            await startConversation({
+                property_id: id,
+                recipient_id: hostId,
+                initial_message: message,
+                type: 'property_enquiry',
+            }).unwrap();
+            toast.success('Viewing request sent! Check your messages for the owner\'s reply.');
+            setViewingDate('');
+            setFullName('');
+            setPhoneNumber('');
+        } catch (err: any) {
+            toast.error(err?.data?.message || 'Failed to send viewing request. Try again.');
         } finally {
             setIsBooking(false);
         }
@@ -781,8 +814,14 @@ const PropertyDetails: React.FC = () => {
                                         <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
                                             placeholder="Phone number"
                                             className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]" />
+                                        <div className="relative">
+                                            <label className="block text-xs text-[#6a6a6a] mb-1 font-medium">Preferred viewing date</label>
+                                            <input type="date" value={viewingDate} onChange={e => setViewingDate(e.target.value)}
+                                                min={new Date().toISOString().split('T')[0]}
+                                                className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] focus:outline-none focus:border-[#222222]" />
+                                        </div>
                                     </div>
-                                    <button onClick={handleReserve} disabled={isBooking}
+                                    <button onClick={handleScheduleViewing} disabled={isBooking}
                                         className="w-full py-3 bg-[#ff385c] hover:bg-[#e00b41] disabled:bg-gray-400 text-white font-semibold rounded-[8px] transition-colors mb-2 flex items-center justify-center gap-2">
                                         {isBooking ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Schedule Viewing'}
                                     </button>
@@ -815,8 +854,14 @@ const PropertyDetails: React.FC = () => {
                                         <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
                                             placeholder="Phone number"
                                             className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]" />
+                                        <div className="relative">
+                                            <label className="block text-xs text-[#6a6a6a] mb-1 font-medium">Preferred viewing date</label>
+                                            <input type="date" value={viewingDate} onChange={e => setViewingDate(e.target.value)}
+                                                min={new Date().toISOString().split('T')[0]}
+                                                className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] focus:outline-none focus:border-[#222222]" />
+                                        </div>
                                     </div>
-                                    <button onClick={handleReserve} disabled={isBooking}
+                                    <button onClick={handleScheduleViewing} disabled={isBooking}
                                         className="w-full py-3 bg-[#ff385c] hover:bg-[#e00b41] disabled:bg-gray-400 text-white font-semibold rounded-[8px] transition-colors mb-2 flex items-center justify-center gap-2">
                                         {isBooking ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Request Viewing'}
                                     </button>

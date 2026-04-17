@@ -27,70 +27,88 @@ const baseQuery = fetchBaseQuery({
 let refreshPromise: Promise<boolean> | null = null;
 
 // ---------------------------------------------------------------------------
-// Wrapper — silent token refresh on 401, then retry once
+// Decode JWT exp claim without a library (base64url → JSON).
+// Returns expiry in ms, or 0 if the token is unparseable.
+// ---------------------------------------------------------------------------
+function getTokenExpiry(token: string): number {
+  try {
+    const payload = token.split('.')[1];
+    const json = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    return typeof json.exp === 'number' ? json.exp * 1000 : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function isExpiringSoon(token: string, thresholdMs = 60_000): boolean {
+  const expiry = getTokenExpiry(token);
+  return expiry > 0 && Date.now() >= expiry - thresholdMs;
+}
+
+// ---------------------------------------------------------------------------
+// Shared refresh helper — called both proactively and reactively.
+// ---------------------------------------------------------------------------
+async function doRefresh(
+  refreshToken: string,
+  api: Parameters<BaseQueryFn>[1],
+  extraOptions: Parameters<BaseQueryFn>[2],
+): Promise<boolean> {
+  if (!refreshPromise) {
+    refreshPromise = baseQuery(
+      { url: 'auth/refresh-token', method: 'POST', body: { refreshToken } },
+      api,
+      extraOptions,
+    )
+      .then((refreshResult) => {
+        if (refreshResult.data) {
+          const { accessToken, refreshToken: newRefreshToken } =
+            refreshResult.data as { accessToken: string; refreshToken: string };
+          api.dispatch(updateTokens({ accessToken, refreshToken: newRefreshToken }));
+          return true;
+        }
+        api.dispatch(clearCredentials());
+        return false;
+      })
+      .catch(() => {
+        api.dispatch(clearCredentials());
+        return false;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+}
+
+// ---------------------------------------------------------------------------
+// Wrapper — proactive refresh when token is about to expire, reactive on 401
 // ---------------------------------------------------------------------------
 export const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
+  const state = api.getState() as RootState;
+  const accessToken  = state?.auth?.tokens?.accessToken;
+  const refreshToken = state?.auth?.tokens?.refreshToken;
+
+  // Proactively refresh if token expires within 60 s — avoids unnecessary 401s
+  if (accessToken && refreshToken && isExpiringSoon(accessToken)) {
+    await doRefresh(refreshToken, api, extraOptions);
+  }
+
   let result = await baseQuery(args, api, extraOptions);
 
+  // Reactive refresh on 401 (e.g. clock skew, or token invalidated server-side)
   if (result.error?.status === 401) {
-    const refreshToken = (api.getState() as RootState)?.auth?.tokens?.refreshToken;
+    const currentRefreshToken = (api.getState() as RootState)?.auth?.tokens?.refreshToken;
 
-    if (refreshToken) {
-      // Prevent multiple refresh calls at the same time
-      if (!refreshPromise) {
-        refreshPromise = Promise.resolve(
-          baseQuery(
-            {
-              url: 'auth/refresh-token', // ⚠️ DO NOT prefix with /api
-              method: 'POST',
-              body: { refreshToken },
-            },
-            api,
-            extraOptions
-          )
-        )
-          .then((refreshResult) => {
-            if (refreshResult.data) {
-              const { accessToken, refreshToken: newRefreshToken } =
-                refreshResult.data as {
-                  accessToken: string;
-                  refreshToken: string;
-                };
-
-              api.dispatch(
-                updateTokens({
-                  accessToken,
-                  refreshToken: newRefreshToken,
-                })
-              );
-
-              return true;
-            }
-
-            api.dispatch(clearCredentials());
-            return false;
-          })
-          .catch(() => {
-            api.dispatch(clearCredentials());
-            return false;
-          })
-          .finally(() => {
-            refreshPromise = null;
-          });
-      }
-
-      const refreshed = await refreshPromise;
-
+    if (currentRefreshToken) {
+      const refreshed = await doRefresh(currentRefreshToken, api, extraOptions);
       if (refreshed) {
-        // Retry original request with new token
         result = await baseQuery(args, api, extraOptions);
       }
     } else {
-      // No refresh token → logout
       api.dispatch(clearCredentials());
     }
   }

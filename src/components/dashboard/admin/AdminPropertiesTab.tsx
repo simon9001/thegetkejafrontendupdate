@@ -170,8 +170,8 @@ const AdminPropertiesTab: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {(top?.listings ?? []).map((p: any) => (
-                <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
+              {(top?.listings ?? []).map((p: any, i: number) => (
+                <tr key={p.id ?? `row-${i}`} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-4 py-3"><p className="font-semibold text-[#222222]">{p.title}</p></td>
                   <td className="px-4 py-3"><span className="text-xs text-[#6a6a6a] capitalize">{(p.property_type ?? '').replace(/_/g, ' ')}</span></td>
                   <td className="px-4 py-3"><Badge status={p.status ?? 'active'} /></td>
