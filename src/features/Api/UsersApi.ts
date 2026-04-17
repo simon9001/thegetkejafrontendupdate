@@ -41,6 +41,11 @@ export interface UpdateProfileRequest {
   county?:            string;
   whatsapp_number?:   string;
   preferred_language?: string;
+  notification_prefs?: {
+    sms?:   boolean;
+    email?: boolean;
+    push?:  boolean;
+  };
 }
 
 export const UsersApi = createApi({

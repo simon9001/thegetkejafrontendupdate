@@ -28,10 +28,12 @@ import ContactUs from './pages/ContactUs';
 import Blog from './pages/Blog';
 import Affiliate from './pages/Affiliate';
 import { PrivacyPolicy, TermsOfService, CookiePolicy, SafetyTips, HelpCenter, Sitemap } from './pages/legal/LegalPages';
+import { LanguageProvider } from './context/LanguageContext';
 import './App.css';
 
 function App() {
   return (
+    <LanguageProvider>
     <Router>
       <Routes>
         {/* Auth routes */}
@@ -200,6 +202,7 @@ function App() {
         }}
       />
     </Router>
+    </LanguageProvider>
   );
 }
 

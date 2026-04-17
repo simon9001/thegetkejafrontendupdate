@@ -13,28 +13,30 @@ import SubscribeModal from '../../components/subscriptions/SubscribeModal.js';
 import HeartButton from '../../components/ui/HeartButton.js';
 import { useSearchParams } from 'react-router-dom';
 import { useGetPlatformStatsQuery } from '../../features/Api/StatsApi.js';
+import { useLanguage } from '../../context/LanguageContext.js';
 
-// ── Category tabs matching actual DB enum values ──────────────────────────────
-const CATEGORIES = [
-  { value: '',                label: 'All',        icon: <LayoutGrid  className="w-4 h-4" />, color: 'text-[#ff385c]'  },
-  { value: 'long_term_rent',  label: 'Long Rent',  icon: <Home        className="w-4 h-4" />, color: 'text-blue-500'   },
-  { value: 'for_sale',        label: 'For Sale',   icon: <Building2   className="w-4 h-4" />, color: 'text-emerald-500'},
-  { value: 'short_term_rent', label: 'Short Stay', icon: <CalendarDays className="w-4 h-4" />, color: 'text-orange-500' },
-  { value: 'commercial',      label: 'Commercial', icon: <Briefcase   className="w-4 h-4" />, color: 'text-purple-500' },
+// ── Category tabs — labels are resolved at render time via t() ─────────────────
+const CATEGORY_DEFS = [
+  { value: '',                labelKey: 'all'       as const, icon: <LayoutGrid   className="w-4 h-4" />, color: 'text-[#ff385c]'  },
+  { value: 'long_term_rent',  labelKey: 'longRent'  as const, icon: <Home         className="w-4 h-4" />, color: 'text-blue-500'   },
+  { value: 'for_sale',        labelKey: 'forSale'   as const, icon: <Building2    className="w-4 h-4" />, color: 'text-emerald-500'},
+  { value: 'short_term_rent', labelKey: 'shortStay' as const, icon: <CalendarDays className="w-4 h-4" />, color: 'text-orange-500' },
+  { value: 'commercial',      labelKey: 'commercial'as const, icon: <Briefcase    className="w-4 h-4" />, color: 'text-purple-500' },
 ];
 
 
+// labelKey = null means it's a literal string (bed count)
 const BEDROOM_OPTIONS = [
-  { value: '',  label: 'Any' },
-  { value: '0', label: 'Bedsitter' },
-  { value: '1', label: '1 bd' },
-  { value: '2', label: '2 bd' },
-  { value: '3', label: '3 bd' },
-  { value: '4', label: '4+ bd' },
+  { value: '',  labelKey: 'any' as const,      literal: null },
+  { value: '0', labelKey: 'bedsitter' as const, literal: null },
+  { value: '1', labelKey: null, literal: '1 bd' },
+  { value: '2', labelKey: null, literal: '2 bd' },
+  { value: '3', labelKey: null, literal: '3 bd' },
+  { value: '4', labelKey: null, literal: '4+ bd' },
 ];
 
 // ── Property card (same logic as SearchResults.tsx) ───────────────────────────
-const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void }> = ({ property: p, onNavigate }) => {
+const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void; priceOnRequest: string }> = ({ property: p, onNavigate, priceOnRequest }) => {
   const cover =
     (p.media ?? []).find((m: any) => m.is_cover)?.url ??
     p.media?.[0]?.url ??
@@ -84,7 +86,7 @@ const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void }
           )}
         </div>
         <p className="text-[#ff385c] font-bold text-sm">
-          {amount ? `${currency} ${Number(amount).toLocaleString()}` : 'Price on request'}
+          {amount ? `${currency} ${Number(amount).toLocaleString()}` : priceOnRequest}
         </p>
       </div>
     </div>
@@ -94,7 +96,11 @@ const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void }
 // ── Main page ─────────────────────────────────────────────────────────────────
 const VacationHub: React.FC = () => {
   const navigate  = useNavigate();
+  const { t }     = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Resolve category labels using current language
+  const CATEGORIES = CATEGORY_DEFS.map((c) => ({ ...c, label: t(c.labelKey) }));
   const [showFilters, setShowFilters]     = useState(false);
   const [showSubscribe, setShowSubscribe] = useState(false);
 
@@ -125,9 +131,9 @@ const VacationHub: React.FC = () => {
 
   const clearAll = () => setSearchParams({});
 
-  // Default listing (no filters active) — fetch more so we can show category sections
+  // Default listing (no filters active) — fetch enough for category sections (4 per section × 4 sections)
   const { data: defaultData, isFetching: defaultLoading } = useGetPublicPropertiesQuery(
-    { limit: 60 },
+    { limit: 32 },
     { skip: hasFilters }
   );
 
@@ -173,15 +179,15 @@ const VacationHub: React.FC = () => {
             <div className="lg:w-2/3">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
                 <Sparkles className="w-4 h-4 text-[#C5A373]" />
-                <span className="text-xs font-semibold uppercase tracking-wider">Welcome to GetKeja</span>
+                <span className="text-xs font-semibold uppercase tracking-wider">{t('welcomeBadge')}</span>
               </div>
 
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black mb-4 leading-tight">
-                Find Your <span className="text-[#C5A373]">Perfect</span><br />Property in Kenya
+                {t('heroTitle1')} <span className="text-[#C5A373]">{t('heroTitle2')}</span><br />{t('heroTitle3')}
               </h1>
 
               <p className="text-lg lg:text-xl text-white/80 mb-8 max-w-2xl lg:mx-0 mx-auto">
-                Browse thousands of verified rentals, homes for sale, and commercial spaces across Kenya.
+                {t('heroSub')}
               </p>
 
               {/* ── Subscribe CTA ── */}
@@ -200,12 +206,12 @@ const VacationHub: React.FC = () => {
                   "
                 >
                   <Sparkles className="w-4 h-4" />
-                  Subscribe for a Seamless Experience
+                  {t('subscribeBtn')}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
 
                 <p className="text-white/50 text-xs text-center lg:text-left leading-relaxed max-w-xs">
-                  Unlock property viewings, AI picks &amp; priority support from KES 0/mo
+                  {t('subscribeSub')}
                 </p>
               </div>
 
@@ -219,7 +225,7 @@ const VacationHub: React.FC = () => {
                         : `${platformStats.verified_properties}+`
                       : '500+'}
                   </div>
-                  <div className="text-xs text-white/60">Verified Properties</div>
+                  <div className="text-xs text-white/60">{t('verifiedProps')}</div>
                 </div>
                 <div className="text-center lg:text-left">
                   <div className="text-2xl font-black text-[#C5A373]">
@@ -229,13 +235,13 @@ const VacationHub: React.FC = () => {
                         : `${platformStats.happy_tenants}+`
                       : '50k+'}
                   </div>
-                  <div className="text-xs text-white/60">Happy Tenants</div>
+                  <div className="text-xs text-white/60">{t('happyTenants')}</div>
                 </div>
                 <div className="text-center lg:text-left">
                   <div className="text-2xl font-black text-[#C5A373]">
                     {platformStats ? `${platformStats.counties_covered}+` : '47+'}
                   </div>
-                  <div className="text-xs text-white/60">Counties</div>
+                  <div className="text-xs text-white/60">{t('counties')}</div>
                 </div>
               </div>
             </div>
@@ -306,7 +312,7 @@ const VacationHub: React.FC = () => {
               }`}
             >
               <SlidersHorizontal className="w-4 h-4" />
-              <span className="hidden sm:inline">Filters</span>
+              <span className="hidden sm:inline">{t('filters')}</span>
               {/* Active indicator dot */}
               {!!(activeBedrooms || activeMinPrice || activeMaxPrice || activeArea) && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff385c] border-2 border-white" />
@@ -320,7 +326,7 @@ const VacationHub: React.FC = () => {
                 className="flex-shrink-0 flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Clear</span>
+                <span className="hidden sm:inline">{t('clear')}</span>
               </button>
             )}
           </div>
@@ -329,7 +335,7 @@ const VacationHub: React.FC = () => {
           {showFilters && (
             <div className="border-t border-gray-100 px-4 sm:px-0 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Bedrooms</label>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('bedrooms')}</label>
                 <div className="flex flex-wrap gap-1.5">
                   {BEDROOM_OPTIONS.map((opt) => (
                     <button
@@ -341,14 +347,14 @@ const VacationHub: React.FC = () => {
                           : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-400'
                       }`}
                     >
-                      {opt.label}
+                      {opt.labelKey ? t(opt.labelKey) : opt.literal}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Area / Location</label>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('areaLabel')}</label>
                 <input
                   type="text"
                   value={activeArea}
@@ -359,7 +365,7 @@ const VacationHub: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Min Price (KES)</label>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('minPrice')}</label>
                 <input
                   type="number"
                   min={0}
@@ -371,7 +377,7 @@ const VacationHub: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Max Price (KES)</label>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">{t('maxPrice')}</label>
                 <input
                   type="number"
                   min={0}
@@ -393,13 +399,13 @@ const VacationHub: React.FC = () => {
           ) : defaultLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <div className="w-12 h-12 border-4 border-[#C5A373] border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-500 font-medium animate-pulse">Loading properties...</p>
+              <p className="text-gray-500 font-medium animate-pulse">{t('loading')}</p>
             </div>
           ) : (defaultData?.properties ?? []).length === 0 ? (
             <div className="text-center py-24 text-gray-400">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-200" />
-              <p className="text-lg font-medium">No properties available yet.</p>
-              <p className="text-sm mt-1">Check back soon — new listings are added daily.</p>
+              <p className="text-lg font-medium">{t('noProperties')}</p>
+              <p className="text-sm mt-1">{t('checkBack')}</p>
             </div>
           ) : (
             // "All" default view — categorized sections like Airbnb
@@ -417,7 +423,7 @@ const VacationHub: React.FC = () => {
                         <span className={cat.color}>{cat.icon}</span>
                         <h2 className="text-lg font-bold text-[#222]">{cat.label}</h2>
                         <span className="text-sm text-gray-400 font-normal">
-                          ({props.length} listing{props.length !== 1 ? 's' : ''})
+                          ({props.length} {props.length !== 1 ? t('listingsPlural') : t('listings')})
                         </span>
                       </div>
                       {props.length > 4 && (
@@ -425,7 +431,7 @@ const VacationHub: React.FC = () => {
                           onClick={() => setParam('listing_category', cat.value)}
                           className="flex items-center gap-1 text-sm font-semibold text-[#ff385c] hover:underline"
                         >
-                          See all <ArrowRight className="w-3.5 h-3.5" />
+                          {t('seeAll')} <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       )}
                     </div>
@@ -435,6 +441,7 @@ const VacationHub: React.FC = () => {
                         <PropertyCard
                           key={p.id}
                           property={p}
+                          priceOnRequest={t('priceOnRequest')}
                           onNavigate={(id) => navigate(`/property/${id}`)}
                         />
                       ))}

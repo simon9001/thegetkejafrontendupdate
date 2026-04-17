@@ -9,33 +9,45 @@ import { useSearchPropertiesQuery, type Property } from '../../features/Api/Prop
 
 // ─── Price formatter ──────────────────────────────────────────────────────────
 function formatPrice(p: Property): string {
-  const pricing = (p as any).property_pricing?.[0] ?? p.pricing;
-  const amount = pricing?.monthly_rent ?? pricing?.asking_price ?? p.price_per_month ?? p.price_per_night ?? p.price ?? 0;
-  const currency = pricing?.currency ?? p.currency ?? 'KES';
+  const pricingRaw = (p as any).property_pricing ?? p.pricing;
+  const pricing    = Array.isArray(pricingRaw) ? pricingRaw[0] : pricingRaw;
+  // Short stays: price_per_night lives in short_term_config
+  const shortStay  = (p as any).short_term_config;
+  const stConfig   = Array.isArray(shortStay) ? shortStay[0] : shortStay;
+  const amount     = pricing?.monthly_rent ?? pricing?.asking_price
+    ?? stConfig?.price_per_night
+    ?? p.price_per_month ?? p.price_per_night ?? p.price ?? 0;
+  const currency   = pricing?.currency ?? p.currency ?? 'KES';
   if (!amount) return 'Price on request';
-  return `${currency} ${Number(amount).toLocaleString()}`;
+  const suffix     = stConfig?.price_per_night && !pricing?.monthly_rent ? '/night' : '';
+  return `${currency} ${Number(amount).toLocaleString()}${suffix}`;
 }
 
 // ─── Single card ─────────────────────────────────────────────────────────────
 const PropertyCard: React.FC<{ property: Property }> = ({ property: p }) => {
   const navigate = useNavigate();
+  // Search API returns 'property_media'; public API returns 'media' — handle both
+  const mediaArr: any[] = (p as any).property_media ?? p.media ?? [];
   const cover =
-    (p.media ?? []).find((m) => m.is_cover)?.url ??
-    p.media?.[0]?.url ??
+    mediaArr.find((m: any) => m.is_cover)?.url ??
+    mediaArr[0]?.url ??
     (p as any).cover_url ??
     null;
 
+  // Search API returns 'property_locations' (array); public API returns 'location'
+  const locRaw = (p as any).property_locations ?? (p as any).location;
+  const loc    = Array.isArray(locRaw) ? locRaw[0] : locRaw;
   const locationText = [
-    (p.location as any)?.estate_name,
-    (p.location as any)?.area,
-    (p.location as any)?.town,
+    loc?.estate_name,
+    loc?.area,
+    loc?.county,
   ]
     .filter(Boolean)
     .join(', ');
 
   return (
     <div
-      onClick={() => navigate(`/properties/${p.id}`)}
+      onClick={() => navigate(`/property/${p.id}`)}
       className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md cursor-pointer transition-shadow border border-gray-100 group"
     >
       {/* Image */}
