@@ -47,7 +47,7 @@ const isPasswordValid = (pw: string) => PASSWORD_RULES.every((r) => r.test(pw));
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => {
+const Register: React.FC<RegisterProps> = ({ onToggle }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     full_name: '',

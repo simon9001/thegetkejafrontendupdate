@@ -54,10 +54,12 @@ async function doRefresh(
   extraOptions: Parameters<BaseQueryFn>[2],
 ): Promise<boolean> {
   if (!refreshPromise) {
-    refreshPromise = baseQuery(
-      { url: 'auth/refresh-token', method: 'POST', body: { refreshToken } },
-      api,
-      extraOptions,
+    refreshPromise = Promise.resolve(
+      baseQuery(
+        { url: 'auth/refresh-token', method: 'POST', body: { refreshToken } },
+        api,
+        extraOptions,
+      ),
     )
       .then((refreshResult) => {
         if (refreshResult.data) {
@@ -77,7 +79,7 @@ async function doRefresh(
         refreshPromise = null;
       });
   }
-  return refreshPromise;
+  return refreshPromise!;
 }
 
 // ---------------------------------------------------------------------------

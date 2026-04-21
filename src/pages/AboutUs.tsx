@@ -1,30 +1,83 @@
 // pages/AboutUs.tsx
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Shield, Users, MapPin, TrendingUp, Heart, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import { motion } from 'framer-motion';
 
-const STATS = [
-  { value: '500+', label: 'Verified Properties' },
-  { value: '50k+', label: 'Happy Tenants' },
-  { value: '100+', label: 'Locations in Kenya' },
-  { value: '98%',  label: 'Satisfaction Rate' },
-];
+// ── Count-up hook ─────────────────────────────────────────────────────────────
+function useCountUp(target: number, duration = 1800, enabled = true) {
+  const [value, setValue] = useState(0);
+  const raf = useRef<number>(0);
+  useEffect(() => {
+    if (!enabled || target === 0) { setValue(target); return; }
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      setValue(Math.round(eased * target));
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [target, duration, enabled]);
+  return value;
+}
 
+// Fires only when scrolled into view; each stat staggers via `delay` (ms)
+const StatCounter: React.FC<{
+  target: number;
+  format: (n: number) => string;
+  label: string;
+  delay?: number;
+}> = ({ target, format, label, delay = 0 }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [started, setStarted] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setStarted(true), delay);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [delay]);
+  const counted = useCountUp(target, 1800, started);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: delay / 1000 }}
+      className="text-center"
+    >
+      <p className="text-4xl font-black text-[#ff385c] tabular-nums">{format(counted)}</p>
+      <p className="text-sm text-gray-500 mt-1 font-medium">{label}</p>
+    </motion.div>
+  );
+};
+
+// ── Static data ───────────────────────────────────────────────────────────────
 const VALUES = [
-  { icon: Shield,    title: 'Trust & Safety',    desc: 'Every property is verified by our team before going live. We protect both landlords and tenants.'  },
-  { icon: Users,     title: 'Community First',   desc: 'We build relationships — not just transactions. Our platform connects real people to real homes.'   },
-  { icon: TrendingUp,title: 'Transparency',      desc: 'No hidden fees, no surprises. Pricing, availability, and landlord info are always clear and honest.' },
-  { icon: MapPin,    title: 'Local Expertise',   desc: 'Born and built in Kenya. We understand the local market, neighborhoods, and what renters need.'      },
-  { icon: Heart,     title: 'Genuine Care',      desc: 'A home is personal. We take that seriously and work hard to match people with places they love.'      },
-  { icon: Award,     title: 'Quality Listings',  desc: 'We reject low-quality or fraudulent listings. Every unit meets our standards before it\'s published.' },
+  { icon: Shield,     title: 'Trust & Safety',   desc: 'Every property is verified by our team before going live. We protect both landlords and tenants.'  },
+  { icon: Users,      title: 'Community First',  desc: 'We build relationships — not just transactions. Our platform connects real people to real homes.'   },
+  { icon: TrendingUp, title: 'Transparency',     desc: 'No hidden fees, no surprises. Pricing, availability, and landlord info are always clear and honest.' },
+  { icon: MapPin,     title: 'Local Expertise',  desc: 'Born and built in Kenya. We understand the local market, neighborhoods, and what renters need.'      },
+  { icon: Heart,      title: 'Genuine Care',     desc: 'A home is personal. We take that seriously and work hard to match people with places they love.'      },
+  { icon: Award,      title: 'Quality Listings', desc: "We reject low-quality or fraudulent listings. Every unit meets our standards before it's published." },
 ];
 
 const TEAM = [
-  { name: 'Emanuel Miyu',   role: 'CEO & Co-founder',       initials: 'EM', color: 'bg-[#ff385c]'  },
-  { name: 'Duncun Mainya',    role: 'Head of Operations',     initials: 'DM', color: 'bg-[#C5A373]'  },
-  { name: 'Simon Gatungo',   role: 'Lead Engineer',          initials: 'SG', color: 'bg-[#1B2430]'  },
+  { name: 'Emanuel Miyu',  role: 'CEO & Co-founder',     initials: 'EM', color: 'bg-[#ff385c]' },
+  { name: 'Duncun Mainya', role: 'Head of Operations',   initials: 'DM', color: 'bg-[#C5A373]' },
+  { name: 'Simon Gatungo', role: 'Lead Engineer',        initials: 'SG', color: 'bg-[#1B2430]' },
 ];
 
 const fade = (delay = 0) => ({
@@ -34,6 +87,7 @@ const fade = (delay = 0) => ({
   transition: { duration: 0.5, delay },
 });
 
+// ── Page ─────────────────────────────────────────────────────────────────────
 const AboutUs: React.FC = () => (
   <Layout showSearch={false}>
 
@@ -59,16 +113,14 @@ const AboutUs: React.FC = () => (
       </div>
     </div>
 
-    {/* ── Stats ── */}
+    {/* ── Stats with count-up ── */}
     <div className="bg-white border-b border-gray-100">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {STATS.map((s, i) => (
-            <motion.div key={s.label} {...fade(i * 0.1)} className="text-center">
-              <p className="text-4xl font-black text-[#ff385c]">{s.value}</p>
-              <p className="text-sm text-gray-500 mt-1 font-medium">{s.label}</p>
-            </motion.div>
-          ))}
+          <StatCounter target={500}   format={(n) => `${n}+`}                    label="Verified Properties" delay={0}   />
+          <StatCounter target={50000} format={(n) => `${Math.floor(n / 1000)}k+`} label="Happy Tenants"       delay={120} />
+          <StatCounter target={100}   format={(n) => `${n}+`}                    label="Locations in Kenya"  delay={240} />
+          <StatCounter target={98}    format={(n) => `${n}%`}                    label="Satisfaction Rate"   delay={360} />
         </div>
       </div>
     </div>
@@ -135,7 +187,7 @@ const AboutUs: React.FC = () => (
         <h2 className="text-3xl font-black text-[#1B2430] mb-3">Meet the team</h2>
         <p className="text-gray-400 max-w-xl mx-auto">The people behind Getkeja — passionate about housing and built for Kenya.</p>
       </motion.div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
         {TEAM.map((m, i) => (
           <motion.div key={m.name} {...fade(i * 0.1)} className="text-center">
             <div className={`w-20 h-20 ${m.color} rounded-full flex items-center justify-center text-white text-2xl font-black mx-auto mb-3`}>
@@ -154,7 +206,7 @@ const AboutUs: React.FC = () => (
         <h2 className="text-3xl font-black mb-4">Ready to find your keja?</h2>
         <p className="text-white/80 mb-8">Browse thousands of verified listings across Kenya today.</p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link to="/"             className="px-6 py-3 bg-white text-[#ff385c] font-bold rounded-full hover:bg-gray-100 transition-colors">Browse Properties</Link>
+          <Link to="/"            className="px-6 py-3 bg-white text-[#ff385c] font-bold rounded-full hover:bg-gray-100 transition-colors">Browse Properties</Link>
           <Link to="/become-host" className="px-6 py-3 bg-white/20 text-white font-bold rounded-full hover:bg-white/30 transition-colors">List Your Property</Link>
         </div>
       </div>
