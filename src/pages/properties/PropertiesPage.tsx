@@ -110,7 +110,7 @@ const PropertiesPage: React.FC = () => {
             >
               <SlidersHorizontal className="w-4 h-4" />
               Filters
-              {hasFilters && <span className="w-1.5 h-1.5 rounded-full bg-[#ff385c] ml-0.5" />}
+              {hasFilters && <span className="w-1.5 h-1.5 rounded-full bg-[#000000] ml-0.5" />}
             </button>
 
             {hasFilters && (
@@ -156,7 +156,7 @@ const PropertiesPage: React.FC = () => {
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                         bedrooms === opt.value
                           ? 'bg-[#ff385c] border-[#ff385c] text-white'
-                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-400'
+                          : 'bg-gray-50 border-gray-200 text-#000000-600 hover:border-gray-400'
                       }`}
                     >
                       {opt.label}

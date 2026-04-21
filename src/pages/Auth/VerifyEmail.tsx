@@ -19,12 +19,24 @@ const VerifyEmail: React.FC = () => {
     
     const [triggerVerify, { isLoading: isVerifying }] = useLazyVerifyEmailQuery();
     const [resendVerification, { isLoading: isResending }] = useResendVerificationMutation();
+    const [autoSent, setAutoSent] = useState(false);
 
     useEffect(() => {
         if (token) {
             verifyEmail(token);
         }
     }, [token]);
+
+    // Auto-send verification email when user lands here after registration
+    useEffect(() => {
+        if (!token && email && !autoSent) {
+            setAutoSent(true);
+            resendVerification({ email })
+                .unwrap()
+                .then(() => setResendSuccess(true))
+                .catch(() => {/* silently ignore — backend may enforce cooldown */});
+        }
+    }, []);
 
     const verifyEmail = async (verificationToken: string) => {
         try {
@@ -108,9 +120,9 @@ const VerifyEmail: React.FC = () => {
                                             initial={{ opacity: 0, y: -5 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0 }}
-                                            className="mb-3 p-2 bg-green-50 border border-green-200 rounded-lg text-green-700 text-[10px] text-center"
+                                            className="mb-3 p-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm text-center font-medium"
                                         >
-                                            Verification email sent! Check your inbox.
+                                            Verification email sent — check your inbox (and spam).
                                         </motion.div>
                                     )}
                                     {error && (
@@ -118,7 +130,7 @@ const VerifyEmail: React.FC = () => {
                                             initial={{ opacity: 0, y: -5 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0 }}
-                                            className="mb-3 p-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-[10px] text-center"
+                                            className="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm text-center font-medium"
                                         >
                                             {error}
                                         </motion.div>
@@ -129,12 +141,12 @@ const VerifyEmail: React.FC = () => {
                                     // Verifying with token
                                     <div className="text-center">
                                         <h2 className="text-lg font-bold text-[#1B2430] mb-2">
-                                            {isVerifying ? 'Verifying...' : 'Verification Failed'}
+                                            {isVerifying ? 'Verifying your email…' : 'Verification Failed'}
                                         </h2>
                                         {!isVerifying && error && (
                                             <>
                                                 <p className="text-xs text-gray-500 mb-4">
-                                                    The verification link may be expired or invalid.
+                                                    The verification link may be expired or invalid. Enter your email below to get a new one.
                                                 </p>
                                                 <div className="space-y-3">
                                                     <input
@@ -142,46 +154,51 @@ const VerifyEmail: React.FC = () => {
                                                         placeholder="your@email.com"
                                                         value={resendEmail}
                                                         onChange={(e) => setResendEmail(e.target.value)}
-                                                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] text-xs"
+                                                        className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#C5A373] text-sm"
                                                     />
                                                     <button
                                                         onClick={handleResend}
                                                         disabled={isResending}
-                                                        className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all text-xs uppercase tracking-wider"
+                                                        className="w-full py-2.5 bg-[#1B2430] text-white font-bold rounded-xl hover:bg-[#243447] transition-all text-sm"
                                                     >
-                                                        {isResending ? 'Sending...' : 'Resend Verification'}
+                                                        {isResending ? 'Sending…' : 'Send New Link'}
                                                     </button>
                                                 </div>
                                             </>
                                         )}
                                     </div>
                                 ) : (
-                                    // No token - show resend form
+                                    // No token — email was auto-sent on mount
                                     <>
-                                        <h2 className="text-lg font-bold text-[#1B2430] text-center mb-2">Check your email</h2>
-                                        <p className="text-xs text-gray-500 text-center mb-4">
-                                            We've sent a verification link to your email address.
+                                        <h2 className="text-lg font-bold text-[#1B2430] text-center mb-2">Check your inbox</h2>
+                                        <p className="text-xs text-gray-500 text-center mb-1">
+                                            We've sent a verification link to:
                                         </p>
-
+                                        {resendEmail && (
+                                            <p className="text-sm font-bold text-[#1B2430] text-center mb-4 break-all">{resendEmail}</p>
+                                        )}
+                                        <p className="text-xs text-gray-400 text-center mb-4">
+                                            Click the link in the email to activate your account. Check your spam folder if you don't see it within a minute.
+                                        </p>
                                         <div className="space-y-3">
                                             <div>
-                                                <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
-                                                    Email Address
+                                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                                    Wrong address? Update it here:
                                                 </label>
                                                 <input
                                                     type="email"
-                                                    placeholder="name@getkeja.com"
+                                                    placeholder="your@email.com"
                                                     value={resendEmail}
                                                     onChange={(e) => setResendEmail(e.target.value)}
-                                                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] text-xs"
+                                                    className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#C5A373] text-sm"
                                                 />
                                             </div>
                                             <button
                                                 onClick={handleResend}
                                                 disabled={isResending || !resendEmail}
-                                                className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all disabled:opacity-50 text-xs uppercase tracking-wider"
+                                                className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-xl hover:bg-[#8B6E4E] transition-all disabled:opacity-50 text-sm"
                                             >
-                                                {isResending ? 'Sending...' : 'Resend Email'}
+                                                {isResending ? 'Sending…' : 'Resend Email'}
                                             </button>
                                         </div>
                                     </>

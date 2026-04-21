@@ -29,12 +29,14 @@ import Blog from './pages/Blog';
 import Affiliate from './pages/Affiliate';
 import { PrivacyPolicy, TermsOfService, CookiePolicy, SafetyTips, HelpCenter, Sitemap } from './pages/legal/LegalPages';
 import { LanguageProvider } from './context/LanguageContext';
+import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
 function App() {
   return (
     <LanguageProvider>
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* Auth routes */}
         <Route path="/login" element={<AuthContainer />} />

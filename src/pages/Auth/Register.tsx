@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Twitter, Facebook, ArrowLeft, Eye, EyeOff, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useRegisterMutation } from '../../features/Api/AuthApi';
 
 interface RegisterProps {
@@ -62,6 +62,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
   const [showPassword, setShowPassword]               = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordFocused, setPasswordFocused]         = useState(false);
+  const [termsAccepted, setTermsAccepted]             = useState(false);
 
   const [register, { isLoading }] = useRegisterMutation();
 
@@ -117,6 +118,10 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
       errors.confirmPassword = 'Passwords do not match';
     }
 
+    if (!termsAccepted) {
+      errors.terms = 'You must accept the Terms & Conditions to continue';
+    }
+
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -138,13 +143,9 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
 
       setSuccess('Account created! Check your email to verify.');
 
-      if (isEmbedded) {
-        setTimeout(() => onToggle?.(), 3000);
-      } else {
-        setTimeout(() => {
-          navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-        }, 2000);
-      }
+      setTimeout(() => {
+        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+      }, 2000);
     } catch (err: any) {
       // Surface Zod issues from the backend if any slip past client validation
       const issues = err?.data?.errors as Array<{ message: string }> | undefined;
@@ -307,6 +308,38 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
           )}
         </div>
 
+        {/* Terms & Conditions acceptance */}
+        <div className="mt-1">
+          <label className={`flex items-start gap-2 cursor-pointer ${fieldErrors.terms ? 'text-red-600' : 'text-gray-500'}`}>
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => {
+                setTermsAccepted(e.target.checked);
+                if (e.target.checked && fieldErrors.terms) {
+                  setFieldErrors((prev) => { const next = { ...prev }; delete next.terms; return next; });
+                }
+              }}
+              disabled={isLoading}
+              className="mt-0.5 accent-[#C5A373] shrink-0"
+            />
+            <span className="text-[10px] leading-relaxed">
+              I have read and agree to the{' '}
+              <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-[#C5A373] font-semibold hover:text-[#8B6E4E] underline underline-offset-2">
+                Terms & Conditions
+              </Link>
+              {' '}and{' '}
+              <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#C5A373] font-semibold hover:text-[#8B6E4E] underline underline-offset-2">
+                Privacy Policy
+              </Link>
+              . I confirm I am at least 18 years old and legally capable of entering contracts in Kenya.
+            </span>
+          </label>
+          {fieldErrors.terms && (
+            <p className="text-[10px] text-red-600 mt-1">{fieldErrors.terms}</p>
+          )}
+        </div>
+
         {/* Messages */}
         <AnimatePresence mode="wait">
           {success && (
@@ -326,7 +359,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle, isEmbedded = false }) => 
         {/* Submit */}
         <button
           type="submit"
-          disabled={isLoading || !!success}
+          disabled={isLoading || !!success || !termsAccepted}
           className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all shadow-sm shadow-[#C5A373]/30 active:scale-[0.98] disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2 mt-1"
         >
           {isLoading && <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />}

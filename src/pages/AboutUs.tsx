@@ -22,10 +22,9 @@ const VALUES = [
 ];
 
 const TEAM = [
-  { name: 'Simon Mwangi',   role: 'CEO & Co-founder',       initials: 'SM', color: 'bg-[#ff385c]'  },
-  { name: 'Aisha Kamau',    role: 'Head of Operations',     initials: 'AK', color: 'bg-[#C5A373]'  },
-  { name: 'Brian Otieno',   role: 'Lead Engineer',          initials: 'BO', color: 'bg-[#1B2430]'  },
-  { name: 'Fatuma Hassan',  role: 'Head of Partnerships',   initials: 'FH', color: 'bg-purple-500' },
+  { name: 'Emanuel Miyu',   role: 'CEO & Co-founder',       initials: 'EM', color: 'bg-[#ff385c]'  },
+  { name: 'Duncun Mainya',    role: 'Head of Operations',     initials: 'DM', color: 'bg-[#C5A373]'  },
+  { name: 'Simon Gatungo',   role: 'Lead Engineer',          initials: 'SG', color: 'bg-[#1B2430]'  },
 ];
 
 const fade = (delay = 0) => ({

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Sparkles, SlidersHorizontal, X, ArrowRight, Home, Building2, CalendarDays, Briefcase, LayoutGrid } from 'lucide-react';
 import { MapPin as MapPinIcon, BedDouble, Bath, Maximize2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,54 @@ import HeartButton from '../../components/ui/HeartButton.js';
 import { useSearchParams } from 'react-router-dom';
 import { useGetPlatformStatsQuery } from '../../features/Api/StatsApi.js';
 import { useLanguage } from '../../context/LanguageContext.js';
+
+// ── Count-up hook ─────────────────────────────────────────────────────────────
+function useCountUp(target: number, duration = 1600, enabled = true) {
+  const [value, setValue] = useState(0);
+  const raf = useRef<number>(0);
+
+  useEffect(() => {
+    if (!enabled || target === 0) { setValue(target); return; }
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - p, 3);
+      setValue(Math.round(eased * target));
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [target, duration, enabled]);
+
+  return value;
+}
+
+// Fires count-up only when the element scrolls into view
+const StatCounter: React.FC<{ value: number; label: string; format: (n: number) => string }> = ({ value, label, format }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const counted = useCountUp(value, 1800, started);
+
+  return (
+    <div ref={ref} className="text-center lg:text-left">
+      <div className="text-2xl font-black text-[#C5A373]">{format(counted)}</div>
+      <div className="text-xs text-white/60">{label}</div>
+    </div>
+  );
+};
 
 // ── Category tabs — labels are resolved at render time via t() ─────────────────
 const CATEGORY_DEFS = [
@@ -158,13 +206,13 @@ const VacationHub: React.FC = () => {
       <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden pt-11 md:pt-0">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-64 h-64 bg-[#C5A373] rounded-full filter blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#C5A373] rounded-full filter blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[ #1E4A3D] rounded-full filter blur-3xl" />
         </div>
 
         {/* Decorative grid lines */}
         <div className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: 'linear-gradient(#C5A373 1px, transparent 1px), linear-gradient(90deg, #C5A373 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient( #1E4A3D 1px, transparent 1px), linear-gradient(90deg, #1E4A3D 1px, transparent 1px)',
             backgroundSize: '48px 48px',
           }}
         />
@@ -198,9 +246,9 @@ const VacationHub: React.FC = () => {
                   onClick={() => setShowSubscribe(true)}
                   className="
                     group flex items-center gap-3
-                    bg-[#C5A373] hover:bg-[#8B6E4E]
+                    bg-[#1E4A3D] hover:bg-[#C5A373]
                     text-white font-bold px-7 py-3.5 rounded-full
-                    shadow-lg shadow-[#C5A373]/40
+                    shadow-lg shadow-[#1E4A3D]/40
                     transition-colors duration-200
                     text-sm
                   "
@@ -217,38 +265,31 @@ const VacationHub: React.FC = () => {
 
               {/* Quick stats — live from /api/stats */}
               <div className="flex items-center gap-8 justify-center lg:justify-start">
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-black text-[#C5A373]">
-                    {platformStats
-                      ? platformStats.verified_properties >= 1000
-                        ? `${(platformStats.verified_properties / 1000).toFixed(1)}k+`
-                        : `${platformStats.verified_properties}+`
-                      : '500+'}
-                  </div>
-                  <div className="text-xs text-white/60">{t('verifiedProps')}</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-black text-[#C5A373]">
-                    {platformStats
-                      ? platformStats.happy_tenants >= 1000
-                        ? `${Math.floor(platformStats.happy_tenants / 1000)}k+`
-                        : `${platformStats.happy_tenants}+`
-                      : '50k+'}
-                  </div>
-                  <div className="text-xs text-white/60">{t('happyTenants')}</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-black text-[#C5A373]">
-                    {platformStats ? `${platformStats.counties_covered}+` : '47+'}
-                  </div>
-                  <div className="text-xs text-white/60">{t('counties')}</div>
-                </div>
+                <StatCounter
+                  value={platformStats?.verified_properties ?? 500}
+                  label={t('verifiedProps')}
+                  format={(n) =>
+                    n >= 1000 ? `${(n / 1000).toFixed(1)}k+` : `${n}+`
+                  }
+                />
+                <StatCounter
+                  value={platformStats?.happy_tenants ?? 50000}
+                  label={t('happyTenants')}
+                  format={(n) =>
+                    n >= 1000 ? `${Math.floor(n / 1000)}k+` : `${n}+`
+                  }
+                />
+                <StatCounter
+                  value={platformStats?.counties_covered ?? 47}
+                  label={t('counties')}
+                  format={(n) => `${n}+`}
+                />
               </div>
             </div>
 
             <div className="hidden lg:block lg:w-1/3">
               <div className="relative">
-                <div className="absolute -inset-4 bg-[#C5A373]/20 rounded-full filter blur-2xl" />
+                <div className="absolute -inset-4 bg-[#1E4A3D]/20 rounded-full filter blur-0xl" />
                 <img
                   src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
                   alt="Luxury property"
@@ -295,7 +336,7 @@ const VacationHub: React.FC = () => {
                         : 'border-transparent text-gray-400 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    <span className={isActive ? 'text-[#222]' : cat.color}>{cat.icon}</span>
+                    <span className={isActive ? 'text-[#000000]' : cat.color}>{cat.icon}</span>
                     {cat.label}
                   </button>
                 );
@@ -384,7 +425,7 @@ const VacationHub: React.FC = () => {
                   value={activeMaxPrice}
                   onChange={(e) => setParam('max_price', e.target.value)}
                   placeholder="e.g. 50000"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]"
                 />
               </div>
             </div>
@@ -421,19 +462,20 @@ const VacationHub: React.FC = () => {
                     <div className="flex items-center justify-between mb-5">
                       <div className="flex items-center gap-2">
                         <span className={cat.color}>{cat.icon}</span>
-                        <h2 className="text-lg font-bold text-[#222]">{cat.label}</h2>
+                        <h2 className="text-lg font-bold text-[#000000]">{cat.label}</h2>
                         <span className="text-sm text-gray-400 font-normal">
                           ({props.length} {props.length !== 1 ? t('listingsPlural') : t('listings')})
                         </span>
                       </div>
-                      {props.length > 4 && (
-                        <button
-                          onClick={() => setParam('listing_category', cat.value)}
-                          className="flex items-center gap-1 text-sm font-semibold text-[#ff385c] hover:underline"
-                        >
-                          {t('seeAll')} <ArrowRight className="w-3.5 h-3.5" />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => navigate(`/properties?listing_category=${cat.value}`)}
+                        className="group flex items-center gap-1.5 text-sm font-semibold text-[#222] hover:text-[#ff385c] transition-colors"
+                      >
+                        <span className="underline underline-offset-2 group-hover:no-underline">
+                          {t('seeAll')}
+                        </span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-150" />
+                      </button>
                     </div>
                     {/* Property grid — 4 cards max */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

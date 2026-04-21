@@ -26,7 +26,6 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
-  // Auto-clear messages
   React.useEffect(() => {
     if (!error) return;
     const t = setTimeout(() => setError(''), 5000);
@@ -45,10 +44,8 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
     setSuccess('');
 
     try {
-      // On success (200) the backend returns { message, code, user, accessToken, refreshToken }
       const result = await login({ email, password }).unwrap();
 
-      // Store tokens + user in Redux / localStorage
       dispatch(
         setCredentials({
           user: {
@@ -66,16 +63,13 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
       setSuccess('Login successful! Redirecting…');
       setTimeout(() => navigate(from, { replace: true }), 1500);
     } catch (err: any) {
-      // RTK Query surfaces 4xx/5xx as rejected promises with err.data
       const code    = err?.data?.code as string | undefined;
       const message = err?.data?.message as string | undefined;
 
       if (code === 'EMAIL_NOT_VERIFIED') {
-        // Backend returns 403 with optional userId + canResend
         setError('Please verify your email before logging in.');
         const userId = err?.data?.userId as string | undefined;
         setTimeout(() => {
-          // Redirect to verify-email page; pass email so resend pre-fills
           navigate(
             `/verify-email?email=${encodeURIComponent(email)}${userId ? `&userId=${userId}` : ''}`,
           );
@@ -202,7 +196,6 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
         {/* Social */}
         <div className="pt-3">
           <div className="flex items-center justify-center gap-2.5">
-            {/* Google */}
             <a
               href="/api/auth/google"
               className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all"
