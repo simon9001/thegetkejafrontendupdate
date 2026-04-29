@@ -54,11 +54,11 @@ const AdminDashboard: React.FC = () => {
 
   if (!user || !isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f7f7f7]">
+      <div className="min-h-screen flex items-center justify-center bg-[#EAEAEA]">
         <div className="text-center">
-          <h2 className="text-xl font-bold text-[#222222]">Access Denied</h2>
-          <p className="text-sm text-[#6a6a6a] mt-1">You need admin privileges to view this page.</p>
-          <button onClick={() => window.location.href = '/'} className="mt-4 px-4 py-2 bg-[#ff385c] text-white rounded-lg text-sm font-medium hover:bg-[#e00b41] transition">Go Home</button>
+          <h2 className="text-xl font-bold text-[#50757A]">Access Denied</h2>
+          <p className="text-sm text-[#50757A] mt-1">You need admin privileges to view this page.</p>
+          <button onClick={() => window.location.href = '/'} className="mt-4 px-4 py-2 bg-[#DD6E42] text-white rounded-lg text-sm font-medium hover:bg-[#C4623B] transition">Go Home</button>
         </div>
       </div>
     );

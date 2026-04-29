@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
     Heart, Share2, Star, MapPin,
     Wifi, Car, Home, Ruler, Bed, Bath, Building2,
@@ -7,6 +7,7 @@ import {
     BadgeCheck, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
     Layers, Navigation2, Monitor, Wind, Utensils,
     UserCircle, Droplets, Mountain, Sparkles, Camera,
+    Truck, Users,
 } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import { useGetPublicPropertyByIdQuery } from '../../features/Api/PropertiesApi';
@@ -24,6 +25,10 @@ import CommercialPropertyDetails from './CommercialPropertyDetails';
 import PropertyChat from '../../components/property/PropertyChat';
 import { useGetMySubscriptionQuery } from '../../features/Api/SubscriptionsApi';
 import { toast } from 'react-hot-toast';
+import { PropertyShareModal } from '../../components/property/PropertyShareModal';
+import { ImageProtection, ProtectionDisclaimer } from '../../components/property/ImageProtection';
+import { TenantTypeBadge } from '../../components/property/TenantTypePicker';
+import { UtilitiesBreakdownCard } from '../../components/property/UtilitiesBreakdownCard';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -39,7 +44,7 @@ const customMarkerIcon = new L.Icon({
 });
 
 const MemoizedMapView = React.memo(({ lat, lng, propertyTitle }: { lat: number; lng: number; propertyTitle: string }) => (
-    <div className="h-[280px] w-full rounded-[14px] overflow-hidden border border-[#e5e5e5]">
+    <div className="h-[280px] w-full rounded-[14px] overflow-hidden border border-[#EAEAEA]">
         <MapContainer center={[lat, lng]} zoom={15} scrollWheelZoom={false} className="h-full w-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -69,6 +74,7 @@ const PropertyDetails: React.FC = () => {
     const [guests, setGuests] = useState(1);
     const [isBooking, setIsBooking] = useState(false);
     const [viewingDate, setViewingDate] = useState('');
+    const [showShareModal, setShowShareModal] = useState(false);
 
     const { isAuthenticated, user: currentUser } = useSelector((state: RootState) => state.auth);
 
@@ -174,7 +180,7 @@ const PropertyDetails: React.FC = () => {
         return (
             <Layout showSearch={false}>
                 <div className="flex items-center justify-center min-h-[60vh]">
-                    <div className="w-10 h-10 border-[3px] border-[#ff385c] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-10 h-10 border-[3px] border-[#DD6E42] border-t-transparent rounded-full animate-spin" />
                 </div>
             </Layout>
         );
@@ -184,8 +190,8 @@ const PropertyDetails: React.FC = () => {
         return (
             <Layout showSearch={false}>
                 <div className="text-center py-24">
-                    <h2 className="text-2xl font-semibold text-[#222222]">Property not found</h2>
-                    <p className="text-[#6a6a6a] mt-2 text-sm">This listing may have been removed or doesn't exist.</p>
+                    <h2 className="text-2xl font-semibold text-[#50757A]">Property not found</h2>
+                    <p className="text-[#50757A] mt-2 text-sm">This listing may have been removed or doesn't exist.</p>
                 </div>
             </Layout>
         );
@@ -269,39 +275,43 @@ const PropertyDetails: React.FC = () => {
     };
 
     return (
+        <>
         <Layout showSearch={false}>
             <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
 
                 {/* ── Title row ─────────────────────────────────────────────── */}
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                     <div>
-                        <h1 className="text-[26px] font-semibold text-[#222222] tracking-[-0.44px]">
+                        <h1 className="text-[26px] font-semibold text-[#50757A] tracking-[-0.44px]">
                             {propertyData.title}
                         </h1>
-                        <div className="flex flex-wrap items-center gap-2 mt-1.5 text-sm text-[#222222]">
+                        <div className="flex flex-wrap items-center gap-2 mt-1.5 text-sm text-[#50757A]">
                             {propertyData.status.verifiedProperty && (
                                 <>
-                                    <span className="text-[#6a6a6a]">·</span>
-                                    <BadgeCheck className="w-4 h-4 text-[#ff385c]" />
-                                    <span className="text-[#ff385c] font-medium">Verified</span>
+                                    <span className="text-[#50757A]">·</span>
+                                    <BadgeCheck className="w-4 h-4 text-[#DD6E42]" />
+                                    <span className="text-[#DD6E42] font-medium">Verified</span>
                                 </>
                             )}
-                            <span className="text-[#6a6a6a]">·</span>
+                            <span className="text-[#50757A]">·</span>
                             <div className="flex items-center gap-1">
-                                <MapPin className="w-3.5 h-3.5 text-[#6a6a6a]" />
-                                <span className="underline cursor-pointer hover:text-[#222222]">{propertyData.fullAddress || propertyData.location}</span>
+                                <MapPin className="w-3.5 h-3.5 text-[#50757A]" />
+                                <span className="underline cursor-pointer hover:text-[#50757A]">{propertyData.fullAddress || propertyData.location}</span>
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#f2f2f2] transition-colors text-sm font-semibold text-[#222222]">
+                        <button
+                            onClick={() => setShowShareModal(true)}
+                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#EAEAEA] transition-colors text-sm font-semibold text-[#50757A]"
+                        >
                             <Share2 className="w-4 h-4" />
                             Share
                         </button>
                         <button 
                             onClick={handleSaveToggle}
                             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors text-sm font-semibold ${
-                                isSaved ? 'bg-red-50 text-[#ff385c]' : 'hover:bg-[#f2f2f2] text-[#222222]'
+                                isSaved ? 'bg-red-50 text-[#DD6E42]' : 'hover:bg-[#EAEAEA] text-[#50757A]'
                             }`}
                         >
                             <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
@@ -311,7 +321,7 @@ const PropertyDetails: React.FC = () => {
                 </div>
 
                 {/* ── Airbnb-style image gallery ────────────────────────────── */}
-                <div className="mb-8 relative">
+                <ImageProtection showBadge className="mb-2 relative">
                     {propertyData.images.length === 1 ? (
                         <div className="aspect-[16/9] rounded-[14px] overflow-hidden">
                             <img src={propertyData.images[0]} alt={propertyData.title} className="w-full h-full object-cover" />
@@ -356,17 +366,17 @@ const PropertyDetails: React.FC = () => {
                                     onClick={() => setActiveImageIndex(i => Math.max(0, i - 1))}
                                     className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow hover:bg-white transition"
                                 >
-                                    <ChevronLeft className="w-4 h-4 text-[#222222]" />
+                                    <ChevronLeft className="w-4 h-4 text-[#50757A]" />
                                 </button>
                                 <button
                                     onClick={() => setActiveImageIndex(i => Math.min(propertyData.images.length - 1, i + 1))}
                                     className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow hover:bg-white transition"
                                 >
-                                    <ChevronRight className="w-4 h-4 text-[#222222]" />
+                                    <ChevronRight className="w-4 h-4 text-[#50757A]" />
                                 </button>
                             </>
                         )}
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#50757A] rounded-lg text-sm font-semibold shadow transition">
                             <Camera className="w-4 h-4" />
                             Show all photos ({propertyData.images.length})
                         </button>
@@ -376,7 +386,8 @@ const PropertyDetails: React.FC = () => {
                     <div className="absolute bottom-4 left-4 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
                         {activeImageIndex + 1} / {propertyData.images.length}
                     </div>
-                </div>
+                </ImageProtection>
+                <ProtectionDisclaimer />
 
                 {/* ── Main 2-col layout ─────────────────────────────────────── */}
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12">
@@ -385,12 +396,12 @@ const PropertyDetails: React.FC = () => {
                     <div className="space-y-8 min-w-0">
 
                         {/* Host row */}
-                        <div className="flex items-center justify-between pb-6 border-b border-[#e5e5e5]">
+                        <div className="flex items-center justify-between pb-6 border-b border-[#EAEAEA]">
                             <div>
-                                <h2 className="text-xl font-semibold text-[#222222]">
+                                <h2 className="text-xl font-semibold text-[#50757A]">
                                     Hosted by {propertyData.host.name}
                                 </h2>
-                                <p className="text-[#6a6a6a] text-sm mt-0.5">
+                                <p className="text-[#50757A] text-sm mt-0.5">
                                     {propertyData.bedrooms} bed · {propertyData.bathrooms} bath · {propertyData.type}
                                 </p>
                             </div>
@@ -402,37 +413,37 @@ const PropertyDetails: React.FC = () => {
                                         className="w-14 h-14 rounded-full object-cover"
                                     />
                                 ) : (
-                                    <div className="w-14 h-14 rounded-full bg-[#f2f2f2] flex items-center justify-center">
-                                        <UserCircle className="w-8 h-8 text-[#6a6a6a]" />
+                                    <div className="w-14 h-14 rounded-full bg-[#EAEAEA] flex items-center justify-center">
+                                        <UserCircle className="w-8 h-8 text-[#50757A]" />
                                     </div>
                                 )}
                                 {propertyData.host.verified && (
-                                    <BadgeCheck className="w-4 h-4 text-[#ff385c] absolute bottom-0 right-0" />
+                                    <BadgeCheck className="w-4 h-4 text-[#DD6E42] absolute bottom-0 right-0" />
                                 )}
                             </div>
                         </div>
 
                         {/* Host highlights */}
-                        <div className="space-y-4 pb-6 border-b border-[#e5e5e5]">
+                        <div className="space-y-4 pb-6 border-b border-[#EAEAEA]">
                             <div className="flex items-center gap-4">
-                                <BadgeCheck className="w-6 h-6 text-[#222222] shrink-0" />
+                                <BadgeCheck className="w-6 h-6 text-[#50757A] shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">{propertyData.host.name} is a Superhost</p>
-                                    <p className="text-sm text-[#6a6a6a]">Superhosts are experienced, highly rated hosts who are committed to providing great stays.</p>
+                                    <p className="text-sm font-semibold text-[#50757A]">{propertyData.host.name} is a Superhost</p>
+                                    <p className="text-sm text-[#50757A]">Superhosts are experienced, highly rated hosts who are committed to providing great stays.</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <MapPin className="w-6 h-6 text-[#222222] shrink-0" />
+                                <MapPin className="w-6 h-6 text-[#50757A] shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">Great location</p>
-                                    <p className="text-sm text-[#6a6a6a]">{propertyData.communityVibe}</p>
+                                    <p className="text-sm font-semibold text-[#50757A]">Great location</p>
+                                    <p className="text-sm text-[#50757A]">{propertyData.communityVibe}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <Eye className="w-6 h-6 text-[#222222] shrink-0" />
+                                <Eye className="w-6 h-6 text-[#50757A] shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">{propertyData.status.views} views</p>
-                                    <p className="text-sm text-[#6a6a6a]">
+                                    <p className="text-sm font-semibold text-[#50757A]">{propertyData.status.views} views</p>
+                                    <p className="text-sm text-[#50757A]">
                                         Listed {new Date(propertyData.status.dateListed).toLocaleDateString()}
                                     </p>
                                 </div>
@@ -441,14 +452,14 @@ const PropertyDetails: React.FC = () => {
 
                         {/* Description */}
                         {propertyData.description && (
-                            <div className="pb-6 border-b border-[#e5e5e5]">
-                                <p className="text-[#222222] text-sm leading-relaxed">{propertyData.description}</p>
+                            <div className="pb-6 border-b border-[#EAEAEA]">
+                                <p className="text-[#50757A] text-sm leading-relaxed">{propertyData.description}</p>
                             </div>
                         )}
 
                         {/* Property facts grid — fields adapt to listing category & type */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
-                            <h3 className="text-xl font-semibold text-[#222222] mb-4">Property details</h3>
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <h3 className="text-xl font-semibold text-[#50757A] mb-4">Property details</h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {(() => {
                                     const cat  = realProperty.listing_category;
@@ -520,10 +531,10 @@ const PropertyDetails: React.FC = () => {
                                         { icon: Car,         label: 'Parking',          value: (realProperty as any).parking_spaces ? `${(realProperty as any).parking_spaces} slot(s)` : 'None' },
                                     ];
                                 })().map(({ icon: Icon, label, value }) => (
-                                    <div key={label} className="p-3 rounded-[14px] border border-[#e5e5e5]">
-                                        <Icon className="w-4 h-4 text-[#6a6a6a] mb-2" />
-                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
-                                        <p className="text-sm font-medium text-[#222222] truncate capitalize">{String(value)}</p>
+                                    <div key={label} className="p-3 rounded-[14px] border border-[#EAEAEA]">
+                                        <Icon className="w-4 h-4 text-[#50757A] mb-2" />
+                                        <p className="text-xs text-[#50757A]">{label}</p>
+                                        <p className="text-sm font-medium text-[#50757A] truncate capitalize">{String(value)}</p>
                                     </div>
                                 ))}
                             </div>
@@ -541,9 +552,9 @@ const PropertyDetails: React.FC = () => {
                                         realProperty.pricing?.electricity_bill_type && { label: 'Electricity', value: String(realProperty.pricing.electricity_bill_type).replace(/_/g, ' ') },
                                         realProperty.pricing?.negotiable != null && { label: 'Negotiable',  value: realProperty.pricing.negotiable ? 'Yes' : 'No' },
                                     ].filter(Boolean).map((item: any) => (
-                                        <div key={item.label} className="p-3 bg-[#fafafa] rounded-xl">
-                                            <p className="text-xs text-[#6a6a6a]">{item.label}</p>
-                                            <p className="text-sm font-medium text-[#222222] capitalize">{item.value}</p>
+                                        <div key={item.label} className="p-3 bg-[#EAEAEA] rounded-xl">
+                                            <p className="text-xs text-[#50757A]">{item.label}</p>
+                                            <p className="text-sm font-medium text-[#50757A] capitalize">{item.value}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -557,17 +568,17 @@ const PropertyDetails: React.FC = () => {
                                         realProperty.short_term_config.damage_deposit && { label: 'Damage deposit', value: `KES ${Number(realProperty.short_term_config.damage_deposit).toLocaleString()}` },
                                         (realProperty.short_term_config as any)?.instant_book != null && { label: 'Instant book', value: (realProperty.short_term_config as any)?.instant_book ? 'Yes' : 'No' },
                                     ].filter(Boolean).map((item: any) => (
-                                        <div key={item.label} className="p-3 bg-[#fafafa] rounded-xl">
-                                            <p className="text-xs text-[#6a6a6a]">{item.label}</p>
-                                            <p className="text-sm font-medium text-[#222222]">{item.value}</p>
+                                        <div key={item.label} className="p-3 bg-[#EAEAEA] rounded-xl">
+                                            <p className="text-xs text-[#50757A]">{item.label}</p>
+                                            <p className="text-sm font-medium text-[#50757A]">{item.value}</p>
                                         </div>
                                     ))}
                                     {(realProperty.short_term_config?.rules ?? []).length > 0 && (
                                         <div className="col-span-full">
-                                            <p className="text-xs text-[#6a6a6a] mb-1.5">House rules</p>
+                                            <p className="text-xs text-[#50757A] mb-1.5">House rules</p>
                                             <ul className="flex flex-wrap gap-2">
                                                 {realProperty.short_term_config?.rules?.map((r: string, i: number) => (
-                                                    <li key={i} className="text-xs bg-white border border-[#e5e5e5] rounded-full px-3 py-1 text-[#222222]">{r}</li>
+                                                    <li key={i} className="text-xs bg-white border border-[#EAEAEA] rounded-full px-3 py-1 text-[#50757A]">{r}</li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -576,19 +587,47 @@ const PropertyDetails: React.FC = () => {
                             )}
                         </div>
 
+                        {/* Utilities breakdown */}
+                        {(realProperty as any).utilities_config && (
+                            <div className="pb-6 border-b border-[#EAEAEA]">
+                                <h3 className="text-xl font-semibold text-[#50757A] mb-4">Utilities &amp; Bills</h3>
+                                <UtilitiesBreakdownCard
+                                    utilities={(realProperty as any).utilities_config}
+                                    monthlyRent={Number(realProperty.pricing?.monthly_rent ?? 0)}
+                                />
+                            </div>
+                        )}
+
+                        {/* Tenant targeting badges */}
+                        {(realProperty as any).tenant_targeting?.types?.length > 0 && (
+                            <div className="pb-6 border-b border-[#EAEAEA]">
+                                <h3 className="text-xl font-semibold text-[#50757A] mb-3">Ideal for</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {((realProperty as any).tenant_targeting.types as string[]).map(type => (
+                                        <TenantTypeBadge key={type} type={type as any} />
+                                    ))}
+                                </div>
+                                {(realProperty as any).tenant_targeting.notes && (
+                                    <p className="text-sm text-[#50757A] mt-2 italic">
+                                        {(realProperty as any).tenant_targeting.notes}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
                         {/* Amenities */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
-                            <h3 className="text-xl font-semibold text-[#222222] mb-4">What this place offers</h3>
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <h3 className="text-xl font-semibold text-[#50757A] mb-4">What this place offers</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {(showAllAmenities ? propertyData.amenities : propertyData.amenities.slice(0, 6)).map(
                                     (amenity: any, i: number) => {
                                         const Icon = typeof amenity.icon === 'string' ? getIconByName(amenity.icon) : amenity.icon;
                                         return (
                                             <div key={i} className="flex items-center gap-3 py-2">
-                                                <Icon className="w-5 h-5 text-[#222222]" />
+                                                <Icon className="w-5 h-5 text-[#50757A]" />
                                                 <div>
-                                                    <span className="text-sm text-[#222222]">{amenity.name}</span>
-                                                    {amenity.details && <p className="text-xs text-[#6a6a6a]">{amenity.details}</p>}
+                                                    <span className="text-sm text-[#50757A]">{amenity.name}</span>
+                                                    {amenity.details && <p className="text-xs text-[#50757A]">{amenity.details}</p>}
                                                 </div>
                                             </div>
                                         );
@@ -598,7 +637,7 @@ const PropertyDetails: React.FC = () => {
                             {propertyData.amenities.length > 6 && (
                                 <button
                                     onClick={() => setShowAllAmenities(!showAllAmenities)}
-                                    className="mt-4 flex items-center gap-1 px-4 py-2 border border-[#222222] rounded-lg text-sm font-semibold text-[#222222] hover:bg-[#f2f2f2] transition-colors"
+                                    className="mt-4 flex items-center gap-1 px-4 py-2 border border-[#50757A] rounded-lg text-sm font-semibold text-[#50757A] hover:bg-[#EAEAEA] transition-colors"
                                 >
                                     {showAllAmenities
                                         ? <>Show less <ChevronUp className="w-4 h-4" /></>
@@ -608,38 +647,82 @@ const PropertyDetails: React.FC = () => {
                         </div>
 
                         {/* House rules & vibe */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
-                            <h3 className="text-xl font-semibold text-[#222222] mb-4">The Vibe</h3>
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <h3 className="text-xl font-semibold text-[#50757A] mb-4">The Vibe</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222] mb-2">House rules</p>
+                                    <p className="text-sm font-semibold text-[#50757A] mb-2">House rules</p>
                                     <ul className="space-y-1.5">
                                         {propertyData.houseRules.map((rule: string, i: number) => (
-                                            <li key={i} className="text-sm text-[#6a6a6a] flex items-start gap-2">
-                                                <span className="mt-1.5 w-1 h-1 rounded-full bg-[#6a6a6a] shrink-0" />
+                                            <li key={i} className="text-sm text-[#50757A] flex items-start gap-2">
+                                                <span className="mt-1.5 w-1 h-1 rounded-full bg-[#50757A] shrink-0" />
                                                 {rule}
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
-                                <p className="text-sm text-[#6a6a6a]">{propertyData.lightExposure}</p>
+                                <p className="text-sm text-[#50757A]">{propertyData.lightExposure}</p>
                             </div>
                         </div>
 
                         {/* Map */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
-                            <h3 className="text-xl font-semibold text-[#222222] mb-1">Where you'll be</h3>
-                            <p className="text-sm text-[#6a6a6a] mb-4">{propertyData.location}</p>
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <h3 className="text-xl font-semibold text-[#50757A] mb-1">Where you'll be</h3>
+                            <p className="text-sm text-[#50757A] mb-4">{propertyData.location}</p>
                             <MemoizedMapView lat={lat} lng={lng} propertyTitle={propertyData.title} />
                             <a
                                 href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors"
+                                className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[#50757A] underline hover:text-[#DD6E42] transition-colors"
                             >
                                 <Navigation2 className="w-4 h-4" />
                                 Get directions
                             </a>
+                        </div>
+
+                        {/* Moving services CTA */}
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <div className="flex items-center justify-between flex-wrap gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#50757A] to-[#3D5A5E]">
+                                <div>
+                                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                                        <Truck className="w-5 h-5 text-[#DD6E42]" />
+                                        Need help moving in?
+                                    </h3>
+                                    <p className="text-sm text-[#C0D6DF] mt-0.5">
+                                        Browse verified moving companies, compare quotes, and book your move.
+                                    </p>
+                                </div>
+                                <Link
+                                    to="/moving-services"
+                                    className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-[#DD6E42] text-[#50757A] text-sm font-bold rounded-xl hover:bg-[#C4623B] transition-colors"
+                                >
+                                    <Truck className="w-4 h-4" />
+                                    Find Movers
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Roommate finder section */}
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <div className="flex items-center justify-between flex-wrap gap-4 p-5 rounded-2xl border-2 border-[#EAEAEA]">
+                                <div>
+                                    <h3 className="text-base font-bold text-[#50757A] flex items-center gap-2">
+                                        <Users className="w-5 h-5 text-[#DD6E42]" />
+                                        Looking for a roommate?
+                                    </h3>
+                                    <p className="text-sm text-[#50757A] mt-0.5">
+                                        Connect with people searching for rent-sharing partners in {propertyData.location}.
+                                    </p>
+                                </div>
+                                <Link
+                                    to="/roommates"
+                                    className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 border-2 border-[#50757A] text-[#50757A] text-sm font-bold rounded-xl hover:bg-[#EAEAEA] transition-colors"
+                                >
+                                    <Users className="w-4 h-4" />
+                                    Browse Roommates
+                                </Link>
+                            </div>
                         </div>
 
                         {/* Chat */}
@@ -652,10 +735,10 @@ const PropertyDetails: React.FC = () => {
                         />
 
                         {/* Reviews */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
-                            <h3 className="text-xl font-semibold text-[#222222] mb-4">Reviews</h3>
+                        <div className="pb-6 border-b border-[#EAEAEA]">
+                            <h3 className="text-xl font-semibold text-[#50757A] mb-4">Reviews</h3>
                             {!reviewsData || reviewsData.reviews.length === 0 ? (
-                                <p className="text-sm text-[#6a6a6a]">No reviews yet for this property.</p>
+                                <p className="text-sm text-[#50757A]">No reviews yet for this property.</p>
                             ) : (
                                 <div className="space-y-6">
                                     {reviewsData.reviews.map((rev: any, i: number) => (
@@ -665,8 +748,8 @@ const PropertyDetails: React.FC = () => {
                                                     {rev.guest_name?.[0] || 'G'}
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-bold text-[#222222]">{rev.guest_name}</p>
-                                                    <p className="text-xs text-[#6a6a6a]">{new Date(rev.created_at).toLocaleDateString()}</p>
+                                                    <p className="text-sm font-bold text-[#50757A]">{rev.guest_name}</p>
+                                                    <p className="text-xs text-[#50757A]">{new Date(rev.created_at).toLocaleDateString()}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-1">
@@ -674,7 +757,7 @@ const PropertyDetails: React.FC = () => {
                                                     <Star key={idx} className={`w-3 h-3 ${idx < rev.rating ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} />
                                                 ))}
                                             </div>
-                                            <p className="text-sm text-[#222222] leading-relaxed">{rev.comment}</p>
+                                            <p className="text-sm text-[#50757A] leading-relaxed">{rev.comment}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -687,7 +770,7 @@ const PropertyDetails: React.FC = () => {
                         <div className="sticky top-24">
                             <div
                                 className="
-                                    bg-white border border-[#e5e5e5] rounded-[20px] p-6
+                                    bg-white border border-[#EAEAEA] rounded-[20px] p-6
                                     shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px,rgba(0,0,0,0.1)_0px_4px_8px]
                                 "
                             >
@@ -707,15 +790,15 @@ const PropertyDetails: React.FC = () => {
                                     return (
                                         <div className="flex items-center justify-between mb-4">
                                             <div>
-                                                <span className="text-2xl font-semibold text-[#222222]">
+                                                <span className="text-2xl font-semibold text-[#50757A]">
                                                     {propertyData.currency} {Number(displayPrice).toLocaleString()}
                                                 </span>
-                                                <span className="text-[#6a6a6a] text-sm">{priceLabel}</span>
+                                                <span className="text-[#50757A] text-sm">{priceLabel}</span>
                                             </div>
                                             {propertyData.status.verifiedProperty && (
                                                 <div className="flex items-center gap-1">
-                                                    <BadgeCheck className="w-4 h-4 text-[#ff385c]" />
-                                                    <span className="text-xs text-[#ff385c] font-medium">Verified</span>
+                                                    <BadgeCheck className="w-4 h-4 text-[#DD6E42]" />
+                                                    <span className="text-xs text-[#DD6E42] font-medium">Verified</span>
                                                 </div>
                                             )}
                                         </div>
@@ -724,45 +807,45 @@ const PropertyDetails: React.FC = () => {
 
                                 {/* ── Short-term rent: date picker + reserve ── */}
                                 {realProperty.listing_category === 'short_term_rent' && (<>
-                                    <div className="border border-[#c1c1c1] rounded-[8px] overflow-hidden mb-3">
-                                        <div className="grid grid-cols-2 divide-x divide-[#c1c1c1]">
+                                    <div className="border border-[#EAEAEA] rounded-[8px] overflow-hidden mb-3">
+                                        <div className="grid grid-cols-2 divide-x divide-[#EAEAEA]">
                                             <div className="p-3">
-                                                <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Check-in</p>
+                                                <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">Check-in</p>
                                                 <input type="date" value={checkIn} onChange={e => setCheckIn(e.target.value)}
-                                                    className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent" />
+                                                    className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent" />
                                             </div>
                                             <div className="p-3">
-                                                <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Check-out</p>
+                                                <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">Check-out</p>
                                                 <input type="date" value={checkOut} onChange={e => setCheckOut(e.target.value)}
-                                                    className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent" />
+                                                    className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent" />
                                             </div>
                                         </div>
-                                        <div className="border-t border-[#c1c1c1] p-3">
-                                            <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Guests</p>
+                                        <div className="border-t border-[#EAEAEA] p-3">
+                                            <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">Guests</p>
                                             <select value={guests} onChange={e => setGuests(Number(e.target.value))}
-                                                className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent">
+                                                className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent">
                                                 {[1,2,3,4,5].map(n => <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>)}
                                             </select>
                                         </div>
                                     </div>
                                     <button onClick={handleReserve} disabled={isBooking || (!!checkIn && !!checkOut && availData?.available === false)}
                                         className={`w-full py-3 text-white font-semibold rounded-[8px] transition-colors mb-3 flex items-center justify-center gap-2 ${
-                                            isBooking || (checkIn && checkOut && availData?.available === false) ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#ff385c] hover:bg-[#e00b41]'}`}>
+                                            isBooking || (checkIn && checkOut && availData?.available === false) ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#DD6E42] hover:bg-[#C4623B]'}`}>
                                         {isBooking ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> :
                                             availData?.available === false ? 'Dates Unavailable' : 'Reserve'}
                                     </button>
-                                    <p className="text-xs text-[#6a6a6a] text-center mb-4">
+                                    <p className="text-xs text-[#50757A] text-center mb-4">
                                         {availData?.available === false ? availData.reason : "You won't be charged yet"}
                                     </p>
-                                    <div className="space-y-2 border-t border-[#e5e5e5] pt-4">
+                                    <div className="space-y-2 border-t border-[#EAEAEA] pt-4">
                                         {(realProperty.short_term_config?.cleaning_fee ?? 0) > 0 && (
-                                            <div className="flex justify-between text-sm text-[#222222]">
+                                            <div className="flex justify-between text-sm text-[#50757A]">
                                                 <span className="underline">Cleaning fee</span>
                                                 <span>{propertyData.currency} {Number(realProperty.short_term_config?.cleaning_fee).toLocaleString()}</span>
                                             </div>
                                         )}
                                         {(realProperty.short_term_config?.damage_deposit ?? 0) > 0 && (
-                                            <div className="flex justify-between text-sm text-[#6a6a6a]">
+                                            <div className="flex justify-between text-sm text-[#50757A]">
                                                 <span>Damage deposit (refundable)</span>
                                                 <span>{propertyData.currency} {Number(realProperty.short_term_config?.damage_deposit).toLocaleString()}</span>
                                             </div>
@@ -772,32 +855,32 @@ const PropertyDetails: React.FC = () => {
 
                                 {/* ── Long-term rent: deposit breakdown + schedule viewing ── */}
                                 {realProperty.listing_category === 'long_term_rent' && (<>
-                                    <div className="space-y-2 mb-4 bg-[#fafafa] rounded-[8px] p-4 text-sm">
+                                    <div className="space-y-2 mb-4 bg-[#EAEAEA] rounded-[8px] p-4 text-sm">
                                         {(realProperty.pricing?.deposit_months ?? 0) > 0 && (
-                                            <div className="flex justify-between text-[#222222]">
-                                                <span className="text-[#6a6a6a]">Deposit</span>
+                                            <div className="flex justify-between text-[#50757A]">
+                                                <span className="text-[#50757A]">Deposit</span>
                                                 <span className="font-medium">{realProperty.pricing?.deposit_months} month(s)</span>
                                             </div>
                                         )}
                                         {(realProperty.pricing?.deposit_amount ?? 0) > 0 && (
-                                            <div className="flex justify-between text-[#222222]">
-                                                <span className="text-[#6a6a6a]">Deposit amount</span>
+                                            <div className="flex justify-between text-[#50757A]">
+                                                <span className="text-[#50757A]">Deposit amount</span>
                                                 <span className="font-medium">KES {Number(realProperty.pricing?.deposit_amount).toLocaleString()}</span>
                                             </div>
                                         )}
                                         {(realProperty.pricing?.service_charge ?? 0) > 0 && (
-                                            <div className="flex justify-between text-[#222222]">
-                                                <span className="text-[#6a6a6a]">Service charge</span>
+                                            <div className="flex justify-between text-[#50757A]">
+                                                <span className="text-[#50757A]">Service charge</span>
                                                 <span className="font-medium">KES {Number(realProperty.pricing?.service_charge).toLocaleString()}/mo</span>
                                             </div>
                                         )}
                                         {(realProperty.pricing?.garbage_fee ?? 0) > 0 && (
-                                            <div className="flex justify-between text-[#222222]">
-                                                <span className="text-[#6a6a6a]">Garbage fee</span>
+                                            <div className="flex justify-between text-[#50757A]">
+                                                <span className="text-[#50757A]">Garbage fee</span>
                                                 <span className="font-medium">KES {Number(realProperty.pricing?.garbage_fee).toLocaleString()}/mo</span>
                                             </div>
                                         )}
-                                        <div className="flex justify-between font-semibold text-[#222222] pt-2 border-t border-[#e5e5e5]">
+                                        <div className="flex justify-between font-semibold text-[#50757A] pt-2 border-t border-[#EAEAEA]">
                                             <span>Move-in estimate</span>
                                             <span>KES {(
                                                 Number(realProperty.pricing?.monthly_rent ?? 0) +
@@ -810,36 +893,36 @@ const PropertyDetails: React.FC = () => {
                                     <div className="space-y-2 mb-3">
                                         <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                                             placeholder="Your full name"
-                                            className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]" />
+                                            className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]" />
                                         <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
                                             placeholder="Phone number"
-                                            className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]" />
+                                            className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]" />
                                         <div className="relative">
-                                            <label className="block text-xs text-[#6a6a6a] mb-1 font-medium">Preferred viewing date</label>
+                                            <label className="block text-xs text-[#50757A] mb-1 font-medium">Preferred viewing date</label>
                                             <input type="date" value={viewingDate} onChange={e => setViewingDate(e.target.value)}
                                                 min={new Date().toISOString().split('T')[0]}
-                                                className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] focus:outline-none focus:border-[#222222]" />
+                                                className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] focus:outline-none focus:border-[#50757A]" />
                                         </div>
                                     </div>
                                     <button onClick={handleScheduleViewing} disabled={isBooking}
-                                        className="w-full py-3 bg-[#ff385c] hover:bg-[#e00b41] disabled:bg-gray-400 text-white font-semibold rounded-[8px] transition-colors mb-2 flex items-center justify-center gap-2">
+                                        className="w-full py-3 bg-[#DD6E42] hover:bg-[#C4623B] disabled:bg-gray-400 text-white font-semibold rounded-[8px] transition-colors mb-2 flex items-center justify-center gap-2">
                                         {isBooking ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Schedule Viewing'}
                                     </button>
-                                    <p className="text-xs text-[#6a6a6a] text-center">Free viewing — no commitment required</p>
+                                    <p className="text-xs text-[#50757A] text-center">Free viewing — no commitment required</p>
                                 </>)}
 
                                 {/* ── For sale: asking price breakdown + schedule viewing ── */}
                                 {realProperty.listing_category === 'for_sale' && (<>
-                                    <div className="space-y-2 mb-4 bg-[#fafafa] rounded-[8px] p-4 text-sm">
+                                    <div className="space-y-2 mb-4 bg-[#EAEAEA] rounded-[8px] p-4 text-sm">
                                         {(realProperty.pricing?.goodwill_fee ?? 0) > 0 && (
-                                            <div className="flex justify-between text-[#222222]">
-                                                <span className="text-[#6a6a6a]">Goodwill / caution</span>
+                                            <div className="flex justify-between text-[#50757A]">
+                                                <span className="text-[#50757A]">Goodwill / caution</span>
                                                 <span className="font-medium">KES {Number(realProperty.pricing?.goodwill_fee).toLocaleString()}</span>
                                             </div>
                                         )}
                                         {realProperty.pricing?.agent_commission_pct && (
-                                            <div className="flex justify-between text-[#222222]">
-                                                <span className="text-[#6a6a6a]">Agent commission</span>
+                                            <div className="flex justify-between text-[#50757A]">
+                                                <span className="text-[#50757A]">Agent commission</span>
                                                 <span className="font-medium">{realProperty.pricing.agent_commission_pct}%</span>
                                             </div>
                                         )}
@@ -850,33 +933,33 @@ const PropertyDetails: React.FC = () => {
                                     <div className="space-y-2 mb-3">
                                         <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
                                             placeholder="Your full name"
-                                            className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]" />
+                                            className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]" />
                                         <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
                                             placeholder="Phone number"
-                                            className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]" />
+                                            className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]" />
                                         <div className="relative">
-                                            <label className="block text-xs text-[#6a6a6a] mb-1 font-medium">Preferred viewing date</label>
+                                            <label className="block text-xs text-[#50757A] mb-1 font-medium">Preferred viewing date</label>
                                             <input type="date" value={viewingDate} onChange={e => setViewingDate(e.target.value)}
                                                 min={new Date().toISOString().split('T')[0]}
-                                                className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] focus:outline-none focus:border-[#222222]" />
+                                                className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] focus:outline-none focus:border-[#50757A]" />
                                         </div>
                                     </div>
                                     <button onClick={handleScheduleViewing} disabled={isBooking}
-                                        className="w-full py-3 bg-[#ff385c] hover:bg-[#e00b41] disabled:bg-gray-400 text-white font-semibold rounded-[8px] transition-colors mb-2 flex items-center justify-center gap-2">
+                                        className="w-full py-3 bg-[#DD6E42] hover:bg-[#C4623B] disabled:bg-gray-400 text-white font-semibold rounded-[8px] transition-colors mb-2 flex items-center justify-center gap-2">
                                         {isBooking ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Request Viewing'}
                                     </button>
-                                    <p className="text-xs text-[#6a6a6a] text-center">The seller's agent will contact you to arrange a visit</p>
+                                    <p className="text-xs text-[#50757A] text-center">The seller's agent will contact you to arrange a visit</p>
                                 </>)}
 
                                 {/* Trust badges */}
-                                <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-[#f2f2f2]">
+                                <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-[#EAEAEA]">
                                     <div className="flex items-center gap-1">
-                                        <Shield className="w-4 h-4 text-[#6a6a6a]" />
-                                        <span className="text-xs text-[#6a6a6a]">Secure payment</span>
+                                        <Shield className="w-4 h-4 text-[#50757A]" />
+                                        <span className="text-xs text-[#50757A]">Secure payment</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <Award className="w-4 h-4 text-[#6a6a6a]" />
-                                        <span className="text-xs text-[#6a6a6a]">Verified property</span>
+                                        <Award className="w-4 h-4 text-[#50757A]" />
+                                        <span className="text-xs text-[#50757A]">Verified property</span>
                                     </div>
                                 </div>
                             </div>
@@ -887,7 +970,7 @@ const PropertyDetails: React.FC = () => {
                                     href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors flex items-center justify-center gap-1"
+                                    className="text-sm font-semibold text-[#50757A] underline hover:text-[#DD6E42] transition-colors flex items-center justify-center gap-1"
                                 >
                                     <Navigation2 className="w-4 h-4" />
                                     Get directions on Google Maps
@@ -898,6 +981,22 @@ const PropertyDetails: React.FC = () => {
                 </div>
             </div>
         </Layout>
+
+        {showShareModal && (
+            <PropertyShareModal
+                isOpen={showShareModal}
+                onClose={() => setShowShareModal(false)}
+                property={{
+                    id: propertyData.id,
+                    title: propertyData.title,
+                    price: propertyData.price,
+                    currency: propertyData.currency,
+                    location: propertyData.location,
+                    category: propertyData.category,
+                }}
+            />
+        )}
+        </>
     );
 };
 

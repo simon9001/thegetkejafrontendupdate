@@ -27,7 +27,7 @@ const StatusPreview: React.FC<StatusPreviewProps> = ({ statuses, onStatusClick }
                 >
                     <div className="relative">
                         <div className={`w-14 h-14 rounded-full p-0.5 ${status.hasUnviewed
-                                ? 'bg-gradient-to-r from-[#D4A373] to-[#E6B17E]'
+                                ? 'bg-gradient-to-r from-[#DD6E42] to-[#E8DAB2]'
                                 : 'bg-gray-300'
                             }`}>
                             <div className="w-full h-full rounded-full overflow-hidden border-2 border-white">
@@ -40,7 +40,7 @@ const StatusPreview: React.FC<StatusPreviewProps> = ({ statuses, onStatusClick }
                         </div>
                         {/* Multiple media indicator */}
                         {status.media.length > 1 && (
-                            <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#D4A373] text-white text-xs rounded-full flex items-center justify-center border-2 border-white">
+                            <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#DD6E42] text-white text-xs rounded-full flex items-center justify-center border-2 border-white">
                                 {status.media.length}
                             </span>
                         )}

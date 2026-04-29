@@ -219,7 +219,7 @@ const StatusViewerModal: React.FC<Props> = ({ statuses, initialIndex, onClose, o
                   className="w-10 h-10 rounded-full object-cover border-2 border-white/80"
                 />
                 {currentStatus.owner.verified && (
-                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#C5A373] rounded-full flex items-center justify-center">
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#C0D6DF] rounded-full flex items-center justify-center">
                     <span className="text-white text-[8px] font-black">✓</span>
                   </div>
                 )}
@@ -236,7 +236,7 @@ const StatusViewerModal: React.FC<Props> = ({ statuses, initialIndex, onClose, o
                 <p className="text-white/60 text-[10px]">{timeAgo(currentStatus.postedAt)}</p>
               </div>
               {currentStatus.isBoosted && (
-                <span className="flex items-center gap-0.5 bg-[#C5A373] text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
+                <span className="flex items-center gap-0.5 bg-[#C0D6DF] text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
                   <Zap className="w-2.5 h-2.5" /> Boosted
                 </span>
               )}
@@ -289,7 +289,7 @@ const StatusViewerModal: React.FC<Props> = ({ statuses, initialIndex, onClose, o
             {pd && (
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
                 {pd.priceLabel && (
-                  <span className="text-[#C5A373] font-extrabold text-sm leading-none">
+                  <span className="text-[#C0D6DF] font-extrabold text-sm leading-none">
                     {pd.priceLabel}
                   </span>
                 )}
@@ -336,7 +336,7 @@ const StatusViewerModal: React.FC<Props> = ({ statuses, initialIndex, onClose, o
                   onClose();
                   navigate(`/properties/${currentStatus.propertyId}`);
                 }}
-                className="flex items-center gap-1.5 bg-[#ff385c] text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-[#e00b41] transition-colors"
+                className="flex items-center gap-1.5 bg-[#DD6E42] text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-[#C4623B] transition-colors"
               >
                 <ExternalLink className="w-3 h-3" /> View Property
               </button>

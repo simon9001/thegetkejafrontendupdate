@@ -39,7 +39,7 @@ const AdminAuditTab: React.FC = () => {
         <SectionHeader title="Security Audit Log" sub="System-wide activity and security event tracking" />
         <button 
           onClick={handleExport}
-          className="flex items-center gap-2 bg-[#222222] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm self-start md:self-auto"
+          className="flex items-center gap-2 bg-[#50757A] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm self-start md:self-auto"
         >
           <Download className="w-3.5 h-3.5" /> Export CSV
         </button>
@@ -48,15 +48,15 @@ const AdminAuditTab: React.FC = () => {
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         <div className="md:col-span-2 relative text-sm">
-           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6a6a6a]" />
+           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#50757A]" />
            <input type="text" placeholder="Filter by User ID or Email…" value={userSearch} onChange={e => { setUserSearch(e.target.value); setPage(1); }}
-             className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#ff385c]/30" />
+             className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-[#DD6E42]/30" />
         </div>
         <input type="text" placeholder="Event Type (e.g. login)" value={eventType} onChange={e => { setEventType(e.target.value); setPage(1); }}
-          className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#ff385c]/30" />
+          className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#DD6E42]/30" />
         
         <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2">
-          <Calendar className="w-3.5 h-3.5 text-[#6a6a6a]" />
+          <Calendar className="w-3.5 h-3.5 text-[#50757A]" />
           <input 
             type="date" 
             value={dateRange.from} 
@@ -75,7 +75,7 @@ const AdminAuditTab: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/50 text-[#6a6a6a] text-xs font-semibold uppercase tracking-wider">
+                <tr className="border-b border-gray-100 bg-gray-50/50 text-[#50757A] text-xs font-semibold uppercase tracking-wider">
                   <th className="px-4 py-3">Event</th>
                   <th className="px-4 py-3">User / Actor</th>
                   <th className="px-4 py-3">IP Address</th>
@@ -91,23 +91,23 @@ const AdminAuditTab: React.FC = () => {
                         <div className={`p-1 rounded ${e.event_type?.includes('fail') || e.event_type?.includes('denied') ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
                            <Shield className="w-3.5 h-3.5" />
                         </div>
-                        <span className="font-bold text-[#222222] capitalize">{e.event_type?.replace(/_/g, ' ')}</span>
+                        <span className="font-bold text-[#50757A] capitalize">{e.event_type?.replace(/_/g, ' ')}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-xs">
-                      <p className="font-semibold text-[#222222]">{e.performer_email ?? e.user_email ?? 'System'}</p>
-                      <p className="text-[#6a6a6a] opacity-60">ID: {(String(e.user_id ?? 'N/A')).slice(0, 8)}</p>
+                      <p className="font-semibold text-[#50757A]">{e.performer_email ?? e.user_email ?? 'System'}</p>
+                      <p className="text-[#50757A] opacity-60">ID: {(String(e.user_id ?? 'N/A')).slice(0, 8)}</p>
                     </td>
-                    <td className="px-4 py-3 text-xs text-[#6a6a6a] font-mono">{e.ip_address ?? '—'}</td>
-                    <td className="px-4 py-3 text-xs text-[#6a6a6a]">
+                    <td className="px-4 py-3 text-xs text-[#50757A] font-mono">{e.ip_address ?? '—'}</td>
+                    <td className="px-4 py-3 text-xs text-[#50757A]">
                       {new Date(e.created_at).toLocaleString()}
                     </td>
                     <td className="px-4 py-3 max-w-[200px]">
                       <div className="group relative">
-                        <div className="text-[10px] text-[#6a6a6a] truncate font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 cursor-help">
+                        <div className="text-[10px] text-[#50757A] truncate font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100 cursor-help">
                           {JSON.stringify(e.metadata ?? {})}
                         </div>
-                        <div className="absolute z-20 left-0 bottom-full mb-2 hidden group-hover:block bg-[#222222] text-white p-2 rounded text-[10px] max-w-xs break-all shadow-xl">
+                        <div className="absolute z-20 left-0 bottom-full mb-2 hidden group-hover:block bg-[#50757A] text-white p-2 rounded text-[10px] max-w-xs break-all shadow-xl">
                           {JSON.stringify(e.metadata ?? {}, null, 2)}
                         </div>
                       </div>

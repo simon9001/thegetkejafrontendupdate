@@ -44,7 +44,7 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-[#0F172A] flex flex-col overflow-hidden font-sans">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-[#50757A] flex flex-col overflow-hidden font-sans">
             <Navbar />
             <div className="flex flex-1 pt-16 overflow-hidden">
                 {/* Mobile Sidebar Overlay */}
@@ -65,7 +65,7 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     initial={false}
                     animate={{ x: isSidebarOpen ? 0 : 0 }} // Managed by CSS translating for breakpoints mostly, but we can animate explicitly if needed
                     className={`
-                    fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-[#1B2430] border-r border-gray-200 dark:border-white/5 
+                    fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-[#50757A] border-r border-gray-200 dark:border-white/5 
                     transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto
                     ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
                     flex flex-col h-screen
@@ -75,8 +75,8 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     <div className="p-6 border-b border-gray-200 dark:border-white/5">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4A373] to-[#E6B17E] flex items-center justify-center shadow-lg shadow-[#D4A373]/30">
-                                    <SidebarIcon className="w-5 h-5 text-[#1B2430]" />
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#DD6E42] to-[#E8DAB2] flex items-center justify-center shadow-lg shadow-[#DD6E42]/30">
+                                    <SidebarIcon className="w-5 h-5 text-[#50757A]" />
                                 </div>
                                 <div>
                                     <h2 className="font-bold text-gray-900 dark:text-white">{sidebarTitle}</h2>
@@ -95,8 +95,8 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                     {/* User Info */}
                     <div className="p-4 border-b border-gray-200 dark:border-white/5">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4A373]/20 to-[#E6B17E]/20 flex items-center justify-center border border-[#D4A373]/30">
-                                <span className="text-lg font-bold text-[#D4A373]">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#DD6E42]/20 to-[#E8DAB2]/20 flex items-center justify-center border border-[#DD6E42]/30">
+                                <span className="text-lg font-bold text-[#DD6E42]">
                                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                                 </span>
                             </div>
@@ -120,7 +120,7 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                                 className={`
                                 w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
                                 ${activeTab === item.id
-                                        ? 'bg-gradient-to-r from-[#D4A373]/10 to-[#E6B17E]/5 dark:from-[#D4A373]/20 dark:to-[#D4A373]/5 text-[#D4A373] shadow-sm font-bold border border-[#D4A373]/20'
+                                        ? 'bg-gradient-to-r from-[#DD6E42]/10 to-[#E8DAB2]/5 dark:from-[#DD6E42]/20 dark:to-[#DD6E42]/5 text-[#DD6E42] shadow-sm font-bold border border-[#DD6E42]/20'
                                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium'
                                     }
                             `}
@@ -151,7 +151,7 @@ const ModernDashboardLayout: React.FC<ModernDashboardLayoutProps> = ({
                 {/* Main Content */}
                 <main className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
                     {/* Mobile toggle - since we removed Header */}
-                    <div className="lg:hidden p-4 flex items-center bg-white/80 dark:bg-[#1B2430]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 sticky top-0 z-30 shrink-0">
+                    <div className="lg:hidden p-4 flex items-center bg-white/80 dark:bg-[#50757A]/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 sticky top-0 z-30 shrink-0">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
                             className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors shadow-sm"

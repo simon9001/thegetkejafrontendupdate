@@ -6,8 +6,7 @@ import {
   LayoutDashboard, Building2, Calendar, Users, Key, DollarSign, TrendingUp, MessageSquare, Settings
 } from 'lucide-react';
 import { selectCurrentUser } from '../../features/Slice/AuthSlice';
-import { useGetMyPropertiesQuery } from '../../features/Api/PropertiesApi';
-import { useGetMyHostBookingsQuery } from '../../features/Api/ShortStayApi';
+import { useGetLandlordDashboardQuery } from '../../features/Api/DashboardApi';
 import { DashboardShell } from '../../components/dashboard/shared';
 import type { NavItem } from '../../components/dashboard/shared';
 
@@ -42,21 +41,8 @@ const LandlordDashboard: React.FC = () => {
 
   const isLandlord = !!user?.roles.includes('landlord');
 
-  // Stitch real data from working endpoints
-  const { data: propertiesData } = useGetMyPropertiesQuery(undefined,          { skip: !isLandlord });
-  const { data: hostBookings }   = useGetMyHostBookingsQuery({ status: 'confirmed' }, { skip: !isLandlord });
-
-  // Build a LandlordKpi-shaped object from real data (unknown fields default to 0)
-  const dashboardData = {
-    properties:  { total: propertiesData?.total ?? 0 },
-    tenancies:   { active: 0, pending_applications: 0 },
-    visits:      { pending: 0 },
-    earnings:    { total_kes: 0 },
-    messages:    { unread: 0 },
-    short_stay:  { upcoming_bookings: hostBookings?.total ?? 0 },
-    boosts:      { active: 0 },
-    generated_at: new Date().toISOString(),
-  };
+  const { data: dashboardData, isLoading: isDashboardLoading } =
+    useGetLandlordDashboardQuery(undefined, { skip: !isLandlord });
 
   if (!user) return <div className="p-20 text-center">Please login to view your dashboard.</div>;
 

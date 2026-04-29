@@ -18,7 +18,7 @@ const CaretakerUnitsTab: React.FC = () => (
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-[11px] text-[#6a6a6a] font-semibold uppercase border-b border-gray-100 bg-gray-50">
+            <tr className="text-[11px] text-[#50757A] font-semibold uppercase border-b border-gray-100 bg-gray-50">
               <th className="text-left px-5 py-3.5">Unit</th>
               <th className="text-left px-5 py-3.5">Type</th>
               <th className="text-left px-5 py-3.5">Tenant</th>
@@ -30,20 +30,20 @@ const CaretakerUnitsTab: React.FC = () => (
           <tbody className="divide-y divide-gray-50">
             {MOCK_UNITS.map(u => (
               <tr key={u.number} className="hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-4 font-bold text-[#222222]">{u.number}</td>
-                <td className="px-5 py-4 text-[#6a6a6a]">{u.type} · Floor {u.floor}</td>
+                <td className="px-5 py-4 font-bold text-[#50757A]">{u.number}</td>
+                <td className="px-5 py-4 text-[#50757A]">{u.type} · Floor {u.floor}</td>
                 <td className="px-5 py-4">
                   {u.tenant ? (
                     <div>
-                      <p className="font-semibold text-[#222222]">{u.tenant}</p>
-                      <p className="text-[11px] text-[#6a6a6a]">{u.phone}</p>
+                      <p className="font-semibold text-[#50757A]">{u.tenant}</p>
+                      <p className="text-[11px] text-[#50757A]">{u.phone}</p>
                     </div>
-                  ) : <span className="text-[#6a6a6a] italic">None</span>}
+                  ) : <span className="text-[#50757A] italic">None</span>}
                 </td>
-                <td className="px-5 py-4 text-right font-bold text-[#222222]">KES {u.rent.toLocaleString()}</td>
+                <td className="px-5 py-4 text-right font-bold text-[#50757A]">KES {u.rent.toLocaleString()}</td>
                 <td className="px-5 py-4 text-right"><Badge status={u.status} /></td>
                 <td className="px-5 py-4 text-right">
-                  <button className="p-2 bg-gray-50 rounded-lg hover:bg-gray-100 border border-gray-200"><Phone className="w-3.5 h-3.5 text-[#6a6a6a]" /></button>
+                  <button className="p-2 bg-gray-50 rounded-lg hover:bg-gray-100 border border-gray-200"><Phone className="w-3.5 h-3.5 text-[#50757A]" /></button>
                 </td>
               </tr>
             ))}

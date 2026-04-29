@@ -28,8 +28,8 @@ interface Props {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const ACCENTS = [
   { border: 'border-gray-200',  badge: 'bg-gray-100 text-gray-600',  cardBg: 'bg-gray-50',      glow: '' },
-  { border: 'border-[#ff385c]', badge: 'bg-[#ff385c] text-white',    cardBg: 'bg-[#fff5f6]',    glow: 'shadow-[0_0_0_3px_rgba(255,56,92,0.12)]' },
-  { border: 'border-[#C5A373]', badge: 'bg-[#C5A373] text-white',    cardBg: 'bg-[#fdf8f3]',    glow: 'shadow-[0_0_0_3px_rgba(197,163,115,0.15)]' },
+  { border: 'border-[#DD6E42]', badge: 'bg-[#DD6E42] text-white',    cardBg: 'bg-[#fff5f6]',    glow: 'shadow-[0_0_0_3px_rgba(255,56,92,0.12)]' },
+  { border: 'border-[#C0D6DF]', badge: 'bg-[#C0D6DF] text-white',    cardBg: 'bg-[#E8DAB2]',    glow: 'shadow-[0_0_0_3px_rgba(197,163,115,0.15)]' },
 ];
 const planAccent = (i: number) => ACCENTS[i % ACCENTS.length];
 
@@ -234,7 +234,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     <ChevronLeft className="w-4 h-4 text-gray-500" />
                   </button>
                 )}
-                <Sparkles className="w-5 h-5 text-[#C5A373]" />
+                <Sparkles className="w-5 h-5 text-[#C0D6DF]" />
                 <h2 className="text-lg font-black text-[#222]">
                   {step === 'plans' ? 'Choose Your Plan' : 'Complete Your Subscription'}
                 </h2>
@@ -289,7 +289,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     {/* Plan cards */}
                     {plansLoading ? (
                       <div className="flex items-center justify-center py-16">
-                        <Loader2 className="w-8 h-8 animate-spin text-[#C5A373]" />
+                        <Loader2 className="w-8 h-8 animate-spin text-[#C0D6DF]" />
                       </div>
                     ) : safeArray.length === 0 ? (
                       <p className="text-center text-gray-400 py-12">No plans available right now.</p>
@@ -388,7 +388,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         <button
                           onClick={() => isFree(selectedPlan) ? handleContinue() : setStep('checkout')}
                           disabled={processing}
-                          className="w-full py-3.5 bg-[#ff385c] hover:bg-[#e00b41] disabled:opacity-60 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2"
+                          className="w-full py-3.5 bg-[#DD6E42] hover:bg-[#C4623B] disabled:opacity-60 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2"
                         >
                           {processing ? (
                             <><Loader2 className="w-4 h-4 animate-spin" /> Activating…</>
@@ -410,7 +410,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     <div className="max-w-sm mx-auto">
 
                       {/* Order summary card */}
-                      <div className="bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white rounded-2xl p-5 mb-6">
+                      <div className="bg-gradient-to-br from-[#50757A] to-[#50757A] text-white rounded-2xl p-5 mb-6">
                         <p className="text-xs text-white/60 uppercase tracking-wider mb-3 font-semibold">Order Summary</p>
                         <div className="flex items-start justify-between mb-4">
                           <div>
@@ -418,7 +418,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                             <p className="text-white/60 text-sm capitalize">{billing} billing</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-black text-xl text-[#C5A373]">
+                            <p className="font-black text-xl text-[#C0D6DF]">
                               {fmt(billing === 'annual' && selectedPlan.price_annual_kes
                                 ? selectedPlan.price_annual_kes
                                 : priceForPlan(selectedPlan))}
@@ -454,9 +454,9 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       {/* Payment method */}
                       <div className="mb-5">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Payment via</p>
-                        <div className="flex items-center gap-3 border-2 border-[#ff385c] bg-[#fff5f6] rounded-2xl px-4 py-3">
+                        <div className="flex items-center gap-3 border-2 border-[#DD6E42] bg-[#fff5f6] rounded-2xl px-4 py-3">
                           <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm shrink-0">
-                            <CreditCard className="w-5 h-5 text-[#ff385c]" />
+                            <CreditCard className="w-5 h-5 text-[#DD6E42]" />
                           </div>
                           <div>
                             <p className="text-sm font-bold text-[#222]">Paystack</p>
@@ -487,7 +487,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         </div>
                         <div className="border-t border-gray-200 pt-2 flex justify-between font-black text-[#222]">
                           <span>Total today</span>
-                          <span className="text-[#ff385c]">
+                          <span className="text-[#DD6E42]">
                             {fmt(billing === 'annual' && selectedPlan.price_annual_kes
                               ? selectedPlan.price_annual_kes
                               : priceForPlan(selectedPlan))}
@@ -499,7 +499,7 @@ const SubscribeModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       <button
                         onClick={handleContinue}
                         disabled={processing}
-                        className="w-full py-4 bg-[#ff385c] hover:bg-[#e00b41] disabled:opacity-60 text-white font-black rounded-2xl transition-colors flex items-center justify-center gap-2 text-base"
+                        className="w-full py-4 bg-[#DD6E42] hover:bg-[#C4623B] disabled:opacity-60 text-white font-black rounded-2xl transition-colors flex items-center justify-center gap-2 text-base"
                       >
                         {processing ? (
                           <><Loader2 className="w-5 h-5 animate-spin" /> Opening payment…</>

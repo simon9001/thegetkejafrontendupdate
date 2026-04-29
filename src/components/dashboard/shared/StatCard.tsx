@@ -54,13 +54,13 @@ const StatCard: React.FC<StatCardProps> = ({
       <>
         <p
           className={`text-2xl font-bold tracking-tight ${
-            urgent && Number(value) > 0 ? 'text-red-600' : 'text-[#222222]'
+            urgent && Number(value) > 0 ? 'text-red-600' : 'text-[#50757A]'
           }`}
         >
           {value}
         </p>
-        <p className="text-xs text-[#6a6a6a] mt-0.5">{label}</p>
-        {sub && <p className="text-[11px] text-[#6a6a6a] mt-1 font-medium">{sub}</p>}
+        <p className="text-xs text-[#50757A] mt-0.5">{label}</p>
+        {sub && <p className="text-[11px] text-[#50757A] mt-1 font-medium">{sub}</p>}
       </>
     )}
   </div>

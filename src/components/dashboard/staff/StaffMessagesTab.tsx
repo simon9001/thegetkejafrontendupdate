@@ -42,7 +42,7 @@ const StaffMessagesTab: React.FC = () => {
                    <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center"><Shield className="w-4 h-4" /></div>
                    <div>
                      <p className="text-xs font-bold text-red-600 uppercase tracking-tighter">Report Reason: {r.reason}</p>
-                     <p className="text-[10px] text-[#6a6a6a]">From: {r.sender_email} · Reported by: {r.reporter_email}</p>
+                     <p className="text-[10px] text-[#50757A]">From: {r.sender_email} · Reported by: {r.reporter_email}</p>
                    </div>
                 </div>
                 {!r.reviewed && (
@@ -53,7 +53,7 @@ const StaffMessagesTab: React.FC = () => {
                 )}
                 {r.reviewed && <Badge status="resolved" />}
               </div>
-              <div className="bg-gray-50 rounded-xl p-4 text-sm text-[#222222] border border-gray-100 line-clamp-3">
+              <div className="bg-gray-50 rounded-xl p-4 text-sm text-[#50757A] border border-gray-100 line-clamp-3">
                 {r.message_body ?? '[Content Removed]'}
               </div>
             </motion.div>

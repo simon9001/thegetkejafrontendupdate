@@ -31,15 +31,15 @@ const AdminReviewsTab: React.FC = () => {
 
       {/* Fraud Signals breakdown */}
       <div className="bg-white rounded-2xl p-5 border border-gray-100">
-        <h3 className="text-sm font-bold text-[#222222] mb-4">Fraud Signals by Type</h3>
+        <h3 className="text-sm font-bold text-[#50757A] mb-4">Fraud Signals by Type</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {Object.entries(stats?.fraud_signals_by_type ?? {}).map(([type, s]: [string, any]) => (
             <div key={type} className="bg-gray-50 rounded-xl p-3 border border-gray-100">
               <div className="flex justify-between items-center mb-1">
-                <p className="text-xs font-bold text-[#222222] capitalize">{type.replace(/_/g, ' ')}</p>
+                <p className="text-xs font-bold text-[#50757A] capitalize">{type.replace(/_/g, ' ')}</p>
                 <span className="text-[10px] font-bold text-red-600">{s.high} High Risk</span>
               </div>
-              <p className="text-lg font-bold text-[#222222]">{s.total}</p>
+              <p className="text-lg font-bold text-[#50757A]">{s.total}</p>
             </div>
           ))}
         </div>
@@ -61,8 +61,8 @@ const AdminReviewsTab: React.FC = () => {
                     <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-[#222222] text-sm">{r.property_title ?? 'Review'}</h4>
-                    <p className="text-xs text-[#6a6a6a]">{r.reviewer_email} · Overall: {r.rating_overall}/5</p>
+                    <h4 className="font-bold text-[#50757A] text-sm">{r.property_title ?? 'Review'}</h4>
+                    <p className="text-xs text-[#50757A]">{r.reviewer_email} · Overall: {r.rating_overall}/5</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -70,7 +70,7 @@ const AdminReviewsTab: React.FC = () => {
                   <button onClick={() => rejectReview({ reviewId: r.id, notes: 'Rejected by admin' })} className="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-xs font-bold hover:bg-red-100 border border-red-200 transition-all">Reject</button>
                 </div>
               </div>
-              <p className="text-sm text-[#222222] leading-relaxed mb-4 italic">"{r.review_text}"</p>
+              <p className="text-sm text-[#50757A] leading-relaxed mb-4 italic">"{r.review_text}"</p>
               <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-50">
                 {r.fraud_signals.map((s: any) => (
                   <span key={s.id} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${s.confidence === 'high' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>

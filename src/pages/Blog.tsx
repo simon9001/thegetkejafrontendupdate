@@ -95,7 +95,7 @@ const Blog: React.FC = () => {
     <Layout showSearch={false}>
 
       {/* ── Hero ── */}
-      <div className="bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white">
+      <div className="bg-gradient-to-br from-[#50757A] to-[#50757A] text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-5">
@@ -113,7 +113,7 @@ const Blog: React.FC = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search articles…"
-                className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-full text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#C5A373]/50"
+                className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-full text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#C0D6DF]/50"
               />
             </div>
           </motion.div>
@@ -130,7 +130,7 @@ const Blog: React.FC = () => {
               onClick={() => setActiveCategory(c)}
               className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                 activeCategory === c
-                  ? 'bg-[#ff385c] border-[#ff385c] text-white'
+                  ? 'bg-[#DD6E42] border-[#DD6E42] text-white'
                   : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
               }`}
             >
@@ -162,7 +162,7 @@ const Blog: React.FC = () => {
                   </span>
                 </div>
                 <div className="p-6">
-                  <h2 className="font-black text-lg text-[#222] mb-2 leading-snug group-hover:text-[#ff385c] transition-colors">
+                  <h2 className="font-black text-lg text-[#222] mb-2 leading-snug group-hover:text-[#DD6E42] transition-colors">
                     {post.title}
                   </h2>
                   <p className="text-sm text-gray-400 leading-relaxed mb-4">{post.excerpt}</p>
@@ -171,7 +171,7 @@ const Blog: React.FC = () => {
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{post.readTime}</span>
                       <span className="flex items-center gap-1"><Tag className="w-3 h-3" />{post.date}</span>
                     </div>
-                    <span className="flex items-center gap-1 text-xs font-bold text-[#ff385c] group-hover:gap-2 transition-all">
+                    <span className="flex items-center gap-1 text-xs font-bold text-[#DD6E42] group-hover:gap-2 transition-all">
                       Read <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -200,7 +200,7 @@ const Blog: React.FC = () => {
                   </span>
                 </div>
                 <div className="p-5">
-                  <h3 className="font-bold text-[#222] text-sm leading-snug mb-2 group-hover:text-[#ff385c] transition-colors line-clamp-2">
+                  <h3 className="font-bold text-[#222] text-sm leading-snug mb-2 group-hover:text-[#DD6E42] transition-colors line-clamp-2">
                     {post.title}
                   </h3>
                   <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed mb-3">{post.excerpt}</p>

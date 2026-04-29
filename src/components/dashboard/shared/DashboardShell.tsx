@@ -41,7 +41,7 @@ const DashboardShell: React.FC<DashboardShellProps> = ({
   const currentLabel = navItems.find(n => n.id === activeNav)?.label ?? 'Dashboard';
 
   return (
-    <div className="min-h-screen bg-[#f7f7f7] flex font-['DM_Sans',sans-serif]">
+    <div className="min-h-screen bg-[#EAEAEA] flex font-['DM_Sans',sans-serif]">
       <DashboardSidebar
         navItems={navItems}
         activeNav={activeNav}

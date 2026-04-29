@@ -16,12 +16,12 @@ import {
 const Avatar: React.FC<{ src?: string | null; name?: string | null; size?: string }> = ({
     src, name, size = 'w-12 h-12',
 }) => (
-    <div className={`${size} rounded-full flex-shrink-0 overflow-hidden bg-[#D4A373]/10 flex items-center justify-center`}>
+    <div className={`${size} rounded-full flex-shrink-0 overflow-hidden bg-[#DD6E42]/10 flex items-center justify-center`}>
         {src
             ? <img src={src} alt={name ?? ''} className="w-full h-full object-cover" />
             : name
-                ? <span className="text-[#D4A373] font-bold text-sm">{name.charAt(0).toUpperCase()}</span>
-                : <User className="w-4 h-4 text-[#D4A373]" />
+                ? <span className="text-[#DD6E42] font-bold text-sm">{name.charAt(0).toUpperCase()}</span>
+                : <User className="w-4 h-4 text-[#DD6E42]" />
         }
     </div>
 );
@@ -123,7 +123,7 @@ const Messages: React.FC = () => {
                     {/* ── Conversations sidebar ── */}
                     <div className={`${showConversationList ? 'flex' : 'hidden'} lg:flex flex-col w-full lg:w-96 border-r border-gray-100 h-full`}>
                         <div className="p-5 border-b border-gray-50">
-                            <h1 className="text-2xl font-black text-[#1B2430] mb-4">Messages</h1>
+                            <h1 className="text-2xl font-black text-[#50757A] mb-4">Messages</h1>
                             <div className="relative">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                 <input
@@ -131,7 +131,7 @@ const Messages: React.FC = () => {
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     placeholder="Search conversations…"
-                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373]/20 border border-gray-100"
+                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 border border-gray-100"
                                 />
                             </div>
                         </div>
@@ -139,7 +139,7 @@ const Messages: React.FC = () => {
                         <div className="flex-1 overflow-y-auto p-3 space-y-1">
                             {isConversationsLoading ? (
                                 <div className="flex justify-center py-10">
-                                    <Loader2 className="w-6 h-6 text-[#D4A373] animate-spin" />
+                                    <Loader2 className="w-6 h-6 text-[#DD6E42] animate-spin" />
                                 </div>
                             ) : filteredConvs.length > 0 ? (
                                 filteredConvs.map((conv: any) => {
@@ -152,21 +152,21 @@ const Messages: React.FC = () => {
                                             onClick={() => handleSelectConversation(conv.id)}
                                             className={`w-full flex items-center gap-3 p-3.5 rounded-2xl transition-all text-left ${
                                                 isActive
-                                                    ? 'bg-[#1B2430] text-white'
-                                                    : 'hover:bg-gray-50 text-[#1B2430]'
+                                                    ? 'bg-[#50757A] text-white'
+                                                    : 'hover:bg-gray-50 text-[#50757A]'
                                             }`}
                                         >
                                             <div className="relative flex-shrink-0">
                                                 <Avatar src={other.avatar_url} name={other.full_name} size="w-11 h-11" />
                                                 {unread > 0 && (
-                                                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#D4A373] text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white font-bold">
+                                                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#DD6E42] text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white font-bold">
                                                         {unread > 9 ? '9+' : unread}
                                                     </span>
                                                 )}
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex justify-between items-center mb-0.5">
-                                                    <span className={`font-bold text-sm truncate ${isActive ? 'text-white' : 'text-[#1B2430]'}`}>
+                                                    <span className={`font-bold text-sm truncate ${isActive ? 'text-white' : 'text-[#50757A]'}`}>
                                                         {other.full_name ?? 'Unknown'}
                                                     </span>
                                                     <span className={`text-[10px] flex-shrink-0 ml-2 ${isActive ? 'text-gray-300' : 'text-gray-400'}`}>
@@ -174,7 +174,7 @@ const Messages: React.FC = () => {
                                                     </span>
                                                 </div>
                                                 {conv.properties?.title && (
-                                                    <p className={`text-[10px] truncate mb-0.5 ${isActive ? 'text-gray-300' : 'text-[#D4A373]'}`}>
+                                                    <p className={`text-[10px] truncate mb-0.5 ${isActive ? 'text-gray-300' : 'text-[#DD6E42]'}`}>
                                                         {conv.properties.title}
                                                     </p>
                                                 )}
@@ -216,11 +216,11 @@ const Messages: React.FC = () => {
                                             size="w-10 h-10"
                                         />
                                         <div>
-                                            <h3 className="font-bold text-[#1B2430] text-sm">
+                                            <h3 className="font-bold text-[#50757A] text-sm">
                                                 {getOtherParticipant(selectedConversation).full_name ?? 'Unknown'}
                                             </h3>
                                             {selectedConversation.properties?.title && (
-                                                <p className="text-[10px] text-[#D4A373] truncate max-w-[200px]">
+                                                <p className="text-[10px] text-[#DD6E42] truncate max-w-[200px]">
                                                     {selectedConversation.properties.title}
                                                 </p>
                                             )}
@@ -236,7 +236,7 @@ const Messages: React.FC = () => {
                                 <div className="flex-1 overflow-y-auto p-5 space-y-3">
                                     {isMessagesLoading ? (
                                         <div className="flex justify-center py-10">
-                                            <Loader2 className="w-6 h-6 text-[#D4A373] animate-spin" />
+                                            <Loader2 className="w-6 h-6 text-[#DD6E42] animate-spin" />
                                         </div>
                                     ) : msgList.length > 0 ? (
                                         // Backend returns newest-first — reverse to show chronologically
@@ -254,8 +254,8 @@ const Messages: React.FC = () => {
                                                     <div className={`max-w-[72%] flex flex-col gap-0.5 ${isMe ? 'items-end' : 'items-start'}`}>
                                                         <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                                                             isMe
-                                                                ? 'bg-[#D4A373] text-white rounded-br-sm'
-                                                                : 'bg-white text-[#1B2430] border border-gray-100 rounded-bl-sm shadow-sm'
+                                                                ? 'bg-[#DD6E42] text-white rounded-br-sm'
+                                                                : 'bg-white text-[#50757A] border border-gray-100 rounded-bl-sm shadow-sm'
                                                         }`}>
                                                             {msg.is_deleted
                                                                 ? <span className="italic opacity-50">Message deleted</span>
@@ -287,12 +287,12 @@ const Messages: React.FC = () => {
                                             onChange={(e) => setNewMessage(e.target.value)}
                                             onKeyDown={handleKeyDown}
                                             placeholder="Type your message here…"
-                                            className="flex-1 px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373]/20"
+                                            className="flex-1 px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20"
                                         />
                                         <button
                                             type="submit"
                                             disabled={!newMessage.trim() || sending}
-                                            className="p-3 bg-[#D4A373] text-white rounded-2xl hover:bg-[#C5A373] transition shadow-lg shadow-[#D4A373]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="p-3 bg-[#DD6E42] text-white rounded-2xl hover:bg-[#C0D6DF] transition shadow-lg shadow-[#DD6E42]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {sending
                                                 ? <Loader2 className="w-5 h-5 animate-spin" />
@@ -304,10 +304,10 @@ const Messages: React.FC = () => {
                             </>
                         ) : (
                             <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
-                                <div className="w-20 h-20 bg-[#D4A373]/10 rounded-full flex items-center justify-center mb-6">
-                                    <MessageCircle className="w-10 h-10 text-[#D4A373]" />
+                                <div className="w-20 h-20 bg-[#DD6E42]/10 rounded-full flex items-center justify-center mb-6">
+                                    <MessageCircle className="w-10 h-10 text-[#DD6E42]" />
                                 </div>
-                                <h2 className="text-xl font-black text-[#1B2430] mb-2">Your messages</h2>
+                                <h2 className="text-xl font-black text-[#50757A] mb-2">Your messages</h2>
                                 <p className="text-gray-400 text-sm max-w-xs">
                                     Select a conversation or start one from a property page.
                                 </p>

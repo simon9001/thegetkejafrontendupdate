@@ -23,17 +23,21 @@ import Profile from './pages/Auth/Profile';
 import Messages from './pages/Chat/Messages';
 import DashboardRedirect from './components/auth/DashboardRedirect';
 import BecomeHost from './pages/BecomeHost';
+import RoommateFinder from './pages/RoommateFinder';
+import MovingServices from './pages/MovingServices';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import Blog from './pages/Blog';
 import Affiliate from './pages/Affiliate';
 import { PrivacyPolicy, TermsOfService, CookiePolicy, SafetyTips, HelpCenter, Sitemap } from './pages/legal/LegalPages';
 import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
 function App() {
   return (
+    <ThemeProvider>
     <LanguageProvider>
     <Router>
       <ScrollToTop />
@@ -173,6 +177,10 @@ function App() {
         {/* Become a host — no auth required so any user can start the application */}
         <Route path="/become-host" element={<BecomeHost />} />
 
+        {/* Community features — public pages */}
+        <Route path="/roommates"       element={<RoommateFinder />} />
+        <Route path="/moving-services" element={<MovingServices />} />
+
         {/* Public informational pages */}
         <Route path="/about"     element={<AboutUs />} />
         <Route path="/blog"      element={<Blog />} />
@@ -194,9 +202,9 @@ function App() {
         position="top-right"
         toastOptions={{
           style: {
-            background: '#1B2430',
+            background: '#50757A',
             color: '#fff',
-            border: '1px solid #2C3A4E',
+            border: '1px solid #50757A',
             borderRadius: '16px',
             fontSize: '14px',
             fontWeight: 'bold',
@@ -205,6 +213,7 @@ function App() {
       />
     </Router>
     </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

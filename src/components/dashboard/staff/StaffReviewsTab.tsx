@@ -47,8 +47,8 @@ const StaffReviewsTab: React.FC = () => {
                     <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-[#222222] text-sm">{r.property_title ?? 'Property Review'}</h4>
-                    <p className="text-xs text-[#6a6a6a]">{r.reviewer_email} · {r.rating_overall}/5 stars</p>
+                    <h4 className="font-bold text-[#50757A] text-sm">{r.property_title ?? 'Property Review'}</h4>
+                    <p className="text-xs text-[#50757A]">{r.reviewer_email} · {r.rating_overall}/5 stars</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -58,7 +58,7 @@ const StaffReviewsTab: React.FC = () => {
                 </div>
               </div>
 
-              <blockquote className="text-sm text-[#222222] italic bg-gray-50 px-4 py-3 rounded-xl border-l-4 border-red-400 mb-4">
+              <blockquote className="text-sm text-[#50757A] italic bg-gray-50 px-4 py-3 rounded-xl border-l-4 border-red-400 mb-4">
                 "{r.review_text}"
               </blockquote>
 

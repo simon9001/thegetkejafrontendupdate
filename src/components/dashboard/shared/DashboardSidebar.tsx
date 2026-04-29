@@ -27,7 +27,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 }) => (
   <>
     <aside className={`
-      fixed inset-y-0 left-0 z-40 w-56 bg-[#111827] flex flex-col
+      fixed inset-y-0 left-0 z-40 w-56 bg-[#50757A] flex flex-col
       transition-transform duration-300
       ${open ? 'translate-x-0' : '-translate-x-full'}
       lg:translate-x-0 lg:static lg:flex
@@ -35,8 +35,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/10">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[#ff385c] flex items-center justify-center">
-            <Home className="w-4 h-4 text-white" />
+          <div className="w-7 h-7 rounded-lg bg-[#DD6E42] flex items-center justify-center">
+            <Home className="w-4 h-4 text-[#50757A]" />
           </div>
           <div>
             <span className="text-white font-bold text-sm tracking-tight">GetKeja</span>
@@ -62,10 +62,10 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   : 'text-white/50 hover:text-white/80 hover:bg-white/5'}
               `}
             >
-              <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-[#ff385c]' : ''}`} />
+              <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-[#DD6E42]' : ''}`} />
               {label}
               {badge !== undefined && badge > 0 && (
-                <span className="ml-auto text-[10px] font-bold bg-[#ff385c] text-white px-1.5 py-0.5 rounded-full">
+                <span className="ml-auto text-[10px] font-bold bg-[#DD6E42] text-white px-1.5 py-0.5 rounded-full">
                   {badge}
                 </span>
               )}
@@ -77,8 +77,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       {/* User */}
       <div className="px-3 py-4 border-t border-white/10">
         <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-colors">
-          <div className="w-7 h-7 rounded-lg bg-[#ff385c]/20 flex items-center justify-center shrink-0">
-            <span className="text-[#ff385c] text-xs font-bold">
+          <div className="w-7 h-7 rounded-lg bg-[#DD6E42] flex items-center justify-center shrink-0">
+            <span className="text-[#50757A] text-xs font-bold">
               {(userName ?? 'U')[0].toUpperCase()}
             </span>
           </div>
@@ -86,7 +86,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <p className="text-white text-xs font-semibold truncate">{userName ?? 'User'}</p>
             <p className="text-white/40 text-[10px] capitalize">{userRole ?? roleLabel.toLowerCase()}</p>
           </div>
-          <button onClick={onLogout} className="text-white/30 hover:text-[#ff385c] transition-colors">
+          <button onClick={onLogout} className="text-white/30 hover:text-[#DD6E42] transition-colors">
             <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>

@@ -55,10 +55,10 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
       {/* Header section with greeting */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#222222]">Moderation Console</h1>
-          <p className="text-[#6a6a6a] mt-1">Maintaining platform integrity and user safety.</p>
+          <h1 className="text-2xl font-bold text-[#50757A]">Moderation Console</h1>
+          <p className="text-[#50757A] mt-1">Maintaining platform integrity and user safety.</p>
         </div>
-        <div className="flex gap-3 text-sm font-semibold text-[#222222]">
+        <div className="flex gap-3 text-sm font-semibold text-[#50757A]">
            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-gray-100 shadow-sm">
              <Clock className="w-4 h-4 text-amber-500" /> Avg Response: 1.4h
            </div>
@@ -73,7 +73,7 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:border-[#ff385c]/20 transition-all"
+            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:border-[#DD6E42]/20 transition-all"
           >
             <div className="flex items-start justify-between mb-4">
               <div className={`p-3 rounded-xl ${kpi.color}`}>
@@ -81,9 +81,9 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
               </div>
               <ArrowUpRight className="w-4 h-4 text-gray-300" />
             </div>
-            <p className="text-[#6a6a6a] text-xs font-bold uppercase tracking-wider">{kpi.label}</p>
-            <h3 className="text-2xl font-bold text-[#222222] mt-1">{kpi.value}</h3>
-            <p className="text-[11px] text-[#6a6a6a] mt-1 font-medium">{kpi.change}</p>
+            <p className="text-[#50757A] text-xs font-bold uppercase tracking-wider">{kpi.label}</p>
+            <h3 className="text-2xl font-bold text-[#50757A] mt-1">{kpi.value}</h3>
+            <p className="text-[11px] text-[#50757A] mt-1 font-medium">{kpi.change}</p>
           </motion.div>
         ))}
       </div>
@@ -92,7 +92,7 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
         {/* Verification Queue */}
         <div className="lg:col-span-2">
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h2 className="text-lg font-bold text-[#222222] mb-6">Recent Activity Queue</h2>
+            <h2 className="text-lg font-bold text-[#50757A] mb-6">Recent Activity Queue</h2>
             <div className="divide-y divide-gray-50">
               {recentTasks.map((task, i) => (
                 <div key={i} className="py-4 flex items-center justify-between group">
@@ -101,11 +101,11 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
                       {task.type.includes('ID') ? <UserCheck className="w-5 h-5" /> : task.type.includes('Property') ? <Search className="w-5 h-5" /> : <Scale className="w-5 h-5" />}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-[#222222]">{task.type}</p>
-                      <p className="text-xs text-[#6a6a6a]">{task.user} • {task.time}</p>
+                      <p className="text-sm font-bold text-[#50757A]">{task.type}</p>
+                      <p className="text-xs text-[#50757A]">{task.user} • {task.time}</p>
                     </div>
                   </div>
-                  <button className="px-3 py-1.5 bg-gray-50 text-[11px] font-bold text-[#222222] rounded-lg hover:bg-[#222222] hover:text-white transition-all">
+                  <button className="px-3 py-1.5 bg-gray-50 text-[11px] font-bold text-[#50757A] rounded-lg hover:bg-[#50757A] hover:text-white transition-all">
                     Review
                   </button>
                 </div>
@@ -117,11 +117,11 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
         {/* System Health */}
         <div className="lg:col-span-1">
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full flex flex-col">
-            <h2 className="text-lg font-bold text-[#222222] mb-6">System Health</h2>
+            <h2 className="text-lg font-bold text-[#50757A] mb-6">System Health</h2>
             <div className="space-y-6 flex-1">
                <div className="space-y-2">
                  <div className="flex justify-between text-xs font-bold">
-                   <span className="text-[#6a6a6a]">Platform Trust Score</span>
+                   <span className="text-[#50757A]">Platform Trust Score</span>
                    <span className="text-green-600">98%</span>
                  </div>
                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -130,7 +130,7 @@ const StaffOverviewTab: React.FC<Props> = ({ stats, userName: _userName }) => {
                </div>
                <div className="space-y-2">
                  <div className="flex justify-between text-xs font-bold">
-                   <span className="text-[#6a6a6a]">Legal Compliance</span>
+                   <span className="text-[#50757A]">Legal Compliance</span>
                    <span className="text-blue-600">100%</span>
                  </div>
                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">

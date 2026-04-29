@@ -5,6 +5,7 @@ import {
   LayoutDashboard, Building2, Calendar, Users, DollarSign, BarChart3
 } from 'lucide-react';
 import { selectCurrentUser } from '../../features/Slice/AuthSlice';
+import { useGetAgentDashboardQuery } from '../../features/Api/AgentApi';
 import { useGetMyPropertiesQuery } from '../../features/Api/PropertiesApi';
 import { DashboardShell } from '../../components/dashboard/shared';
 import type { NavItem } from '../../components/dashboard/shared';
@@ -15,12 +16,13 @@ import AgentListingsTab from '../../components/dashboard/agent/AgentListingsTab'
 import AgentViewingsTab from '../../components/dashboard/agent/AgentViewingsTab';
 import AgentLeadsTab from '../../components/dashboard/agent/AgentLeadsTab';
 import AgentCommissionsTab from '../../components/dashboard/agent/AgentCommissionsTab';
+import AgentReportsTab from '../../components/dashboard/agent/AgentReportsTab';
 
-const NAV: NavItem[] = [
+const buildNav = (kpi?: { pending_viewings: number; total_leads: number }): NavItem[] => [
   { id: 'overview',    label: 'Overview',    icon: LayoutDashboard },
   { id: 'listings',    label: 'My Listings', icon: Building2 },
-  { id: 'viewings',    label: 'Viewings',    icon: Calendar },
-  { id: 'leads',       label: 'Leads',       icon: Users },
+  { id: 'viewings',    label: 'Viewings',    icon: Calendar,   badge: kpi?.pending_viewings },
+  { id: 'leads',       label: 'Leads',       icon: Users,      badge: kpi?.total_leads },
   { id: 'commissions', label: 'Commissions', icon: DollarSign },
   { id: 'reports',     label: 'Reports',     icon: BarChart3 },
 ];
@@ -29,11 +31,18 @@ const AgentDashboard: React.FC = () => {
   const user = useSelector(selectCurrentUser);
   const [activeNav, setActiveNav] = useState('overview');
 
+  const { data: agentKpi } = useGetAgentDashboardQuery(undefined, { skip: !user });
   const { data: propertiesData } = useGetMyPropertiesQuery(undefined, { skip: !user });
   const properties = propertiesData?.properties ?? [];
 
-  // Build stats from real endpoint data
-  const stats = { ownedProperties: propertiesData?.total ?? 0, activeBookings: 0, activeCaretakers: 0 };
+  const stats = {
+    ownedProperties: agentKpi?.total_listings ?? propertiesData?.total ?? 0,
+    activeBookings:  agentKpi?.pending_viewings ?? 0,
+    activeCaretakers: 0,
+    leadsCount:      agentKpi?.total_leads ?? 0,
+    unreadMessages:  agentKpi?.unread_messages ?? 0,
+    activeBoosts:    agentKpi?.active_boosts ?? 0,
+  };
 
   if (!user) return <div className="p-20 text-center">Please login to access your dashboard.</div>;
 
@@ -48,7 +57,7 @@ const AgentDashboard: React.FC = () => {
 
   return (
     <DashboardShell
-      navItems={NAV}
+      navItems={buildNav(agentKpi)}
       activeNav={activeNav}
       onNavChange={setActiveNav}
       roleLabel="Agent"
@@ -60,12 +69,7 @@ const AgentDashboard: React.FC = () => {
       {activeNav === 'viewings' && <AgentViewingsTab />}
       {activeNav === 'leads' && <AgentLeadsTab />}
       {activeNav === 'commissions' && <AgentCommissionsTab />}
-      {activeNav === 'reports' && (
-        <div className="p-12 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-          <BarChart3 className="w-12 h-12 opacity-20 mx-auto mb-3" />
-          <p className="text-sm font-medium text-[#6a6a6a]">Performance reports coming soon.</p>
-        </div>
-      )}
+      {activeNav === 'reports' && <AgentReportsTab />}
     </DashboardShell>
   );
 };

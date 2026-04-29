@@ -35,7 +35,7 @@ const CaretakerTicketsTab: React.FC = () => {
         title="Maintenance Tickets"
         sub={`${MOCK_TICKETS.filter(t => t.status === 'pending').length} pending`}
         action={
-          <button className="flex items-center gap-2 bg-[#ff385c] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#e00b41] transition-all">
+          <button className="flex items-center gap-2 bg-[#DD6E42] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#C4623B] transition-all">
             <PlusCircle className="w-4 h-4" /> New Ticket
           </button>
         }
@@ -44,7 +44,7 @@ const CaretakerTicketsTab: React.FC = () => {
         {(['all', 'pending', 'in_progress', 'done'] as const).map(f => (
           <button key={f} onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-all capitalize ${
-              filter === f ? 'bg-[#111827] text-white border-[#111827]' : 'bg-white text-[#6a6a6a] border-gray-200 hover:border-gray-400'
+              filter === f ? 'bg-[#50757A] text-white border-[#50757A]' : 'bg-white text-[#50757A] border-gray-200 hover:border-gray-400'
             }`}>{f.replace('_', ' ')}</button>
         ))}
       </div>
@@ -54,12 +54,12 @@ const CaretakerTicketsTab: React.FC = () => {
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center shrink-0 border border-gray-100">
-                  <Wrench className="w-5 h-5 text-[#6a6a6a]" />
+                  <Wrench className="w-5 h-5 text-[#50757A]" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-[#222222]">{t.unit} · {t.category}</h4>
-                  <p className="text-sm text-[#6a6a6a] mt-0.5">{t.desc}</p>
-                  <p className="text-[11px] text-[#6a6a6a] mt-1.5">Reported {t.reported}</p>
+                  <h4 className="font-bold text-[#50757A]">{t.unit} · {t.category}</h4>
+                  <p className="text-sm text-[#50757A] mt-0.5">{t.desc}</p>
+                  <p className="text-[11px] text-[#50757A] mt-1.5">Reported {t.reported}</p>
                 </div>
               </div>
               <div className="flex flex-col items-end gap-2">
@@ -69,7 +69,7 @@ const CaretakerTicketsTab: React.FC = () => {
             </div>
             {t.status !== 'done' && (
               <div className="flex gap-2 mt-4 pt-4 border-t border-gray-50">
-                <button className="px-4 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-[#6a6a6a] hover:bg-gray-100 transition-colors">Start Progress</button>
+                <button className="px-4 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-[#50757A] hover:bg-gray-100 transition-colors">Start Progress</button>
                 <button className="px-4 py-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors">Mark Resolved</button>
               </div>
             )}

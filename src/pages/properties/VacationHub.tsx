@@ -57,7 +57,7 @@ const StatCounter: React.FC<{ value: number; label: string; format: (n: number) 
 
   return (
     <div ref={ref} className="text-center lg:text-left">
-      <div className="text-2xl font-black text-[#C5A373]">{format(counted)}</div>
+      <div className="text-2xl font-black text-[#C0D6DF]">{format(counted)}</div>
       <div className="text-xs text-white/60">{label}</div>
     </div>
   );
@@ -65,7 +65,7 @@ const StatCounter: React.FC<{ value: number; label: string; format: (n: number) 
 
 // ── Category tabs — labels are resolved at render time via t() ─────────────────
 const CATEGORY_DEFS = [
-  { value: '',                labelKey: 'all'       as const, icon: <LayoutGrid   className="w-4 h-4" />, color: 'text-[#ff385c]'  },
+  { value: '',                labelKey: 'all'       as const, icon: <LayoutGrid   className="w-4 h-4" />, color: 'text-[#DD6E42]'  },
   { value: 'long_term_rent',  labelKey: 'longRent'  as const, icon: <Home         className="w-4 h-4" />, color: 'text-blue-500'   },
   { value: 'for_sale',        labelKey: 'forSale'   as const, icon: <Building2    className="w-4 h-4" />, color: 'text-emerald-500'},
   { value: 'short_term_rent', labelKey: 'shortStay' as const, icon: <CalendarDays className="w-4 h-4" />, color: 'text-orange-500' },
@@ -109,7 +109,7 @@ const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void; 
           </div>
         )}
         {p.listing_category && (
-          <span className="absolute top-3 left-3 bg-white/90 text-[#ff385c] text-xs font-semibold px-2 py-0.5 rounded-full capitalize">
+          <span className="absolute top-3 left-3 bg-white/90 text-[#DD6E42] text-xs font-semibold px-2 py-0.5 rounded-full capitalize">
             {p.listing_category.replace(/_/g, ' ')}
           </span>
         )}
@@ -133,7 +133,7 @@ const PropertyCard: React.FC<{ property: any; onNavigate: (id: string) => void; 
             <span className="flex items-center gap-1"><Bath className="w-3 h-3" />{p.bathrooms} ba</span>
           )}
         </div>
-        <p className="text-[#ff385c] font-bold text-sm">
+        <p className="text-[#DD6E42] font-bold text-sm">
           {amount ? `${currency} ${Number(amount).toLocaleString()}` : priceOnRequest}
         </p>
       </div>
@@ -203,16 +203,16 @@ const VacationHub: React.FC = () => {
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       {/* pt-11 on mobile gives ~44px clearance for the floating navbar search pill */}
       
-      <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden pt-11 md:pt-0">
+      <div className="relative bg-gradient-to-br from-[#50757A] to-[#50757A] text-white overflow-hidden pt-11 md:pt-0">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-[#C5A373] rounded-full filter blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[ #1E4A3D] rounded-full filter blur-3xl" />
+          <div className="absolute top-0 left-0 w-64 h-64 bg-[#C0D6DF] rounded-full filter blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[ #50757A] rounded-full filter blur-3xl" />
         </div>
 
         {/* Decorative grid lines */}
         <div className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: 'linear-gradient( #1E4A3D 1px, transparent 1px), linear-gradient(90deg, #1E4A3D 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient( #50757A 1px, transparent 1px), linear-gradient(90deg, #50757A 1px, transparent 1px)',
             backgroundSize: '48px 48px',
           }}
         />
@@ -226,12 +226,12 @@ const VacationHub: React.FC = () => {
           >
             <div className="lg:w-2/3">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-                <Sparkles className="w-4 h-4 text-[#C5A373]" />
+                <Sparkles className="w-4 h-4 text-[#C0D6DF]" />
                 <span className="text-xs font-semibold uppercase tracking-wider">{t('welcomeBadge')}</span>
               </div>
 
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black mb-4 leading-tight">
-                {t('heroTitle1')} <span className="text-[#C5A373]">{t('heroTitle2')}</span><br />{t('heroTitle3')}
+                {t('heroTitle1')} <span className="text-[#C0D6DF]">{t('heroTitle2')}</span><br />{t('heroTitle3')}
               </h1>
 
               <p className="text-lg lg:text-xl text-white/80 mb-8 max-w-2xl lg:mx-0 mx-auto">
@@ -246,9 +246,9 @@ const VacationHub: React.FC = () => {
                   onClick={() => setShowSubscribe(true)}
                   className="
                     group flex items-center gap-3
-                    bg-[#1E4A3D] hover:bg-[#C5A373]
+                    bg-[#50757A] hover:bg-[#C0D6DF]
                     text-white font-bold px-7 py-3.5 rounded-full
-                    shadow-lg shadow-[#1E4A3D]/40
+                    shadow-lg shadow-[#50757A]/40
                     transition-colors duration-200
                     text-sm
                   "
@@ -289,7 +289,7 @@ const VacationHub: React.FC = () => {
 
             <div className="hidden lg:block lg:w-1/3">
               <div className="relative">
-                <div className="absolute -inset-4 bg-[#1E4A3D]/20 rounded-full filter blur-0xl" />
+                <div className="absolute -inset-4 bg-[#50757A]/20 rounded-full filter blur-0xl" />
                 <img
                   src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
                   alt="Luxury property"
@@ -356,7 +356,7 @@ const VacationHub: React.FC = () => {
               <span className="hidden sm:inline">{t('filters')}</span>
               {/* Active indicator dot */}
               {!!(activeBedrooms || activeMinPrice || activeMaxPrice || activeArea) && (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff385c] border-2 border-white" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#DD6E42] border-2 border-white" />
               )}
             </button>
 
@@ -384,7 +384,7 @@ const VacationHub: React.FC = () => {
                       onClick={() => setParam('bedrooms', opt.value)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                         activeBedrooms === opt.value
-                          ? 'bg-[#ff385c] border-[#ff385c] text-white'
+                          ? 'bg-[#DD6E42] border-[#DD6E42] text-white'
                           : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-400'
                       }`}
                     >
@@ -401,7 +401,7 @@ const VacationHub: React.FC = () => {
                   value={activeArea}
                   onChange={(e) => setParam('area', e.target.value)}
                   placeholder="e.g. Westlands, Kilimani"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                 />
               </div>
 
@@ -413,7 +413,7 @@ const VacationHub: React.FC = () => {
                   value={activeMinPrice}
                   onChange={(e) => setParam('min_price', e.target.value)}
                   placeholder="e.g. 5000"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                 />
               </div>
 
@@ -439,7 +439,7 @@ const VacationHub: React.FC = () => {
             <SearchResults />
           ) : defaultLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <div className="w-12 h-12 border-4 border-[#C5A373] border-t-transparent rounded-full animate-spin" />
+              <div className="w-12 h-12 border-4 border-[#C0D6DF] border-t-transparent rounded-full animate-spin" />
               <p className="text-gray-500 font-medium animate-pulse">{t('loading')}</p>
             </div>
           ) : (defaultData?.properties ?? []).length === 0 ? (
@@ -469,7 +469,7 @@ const VacationHub: React.FC = () => {
                       </div>
                       <button
                         onClick={() => navigate(`/properties?listing_category=${cat.value}`)}
-                        className="group flex items-center gap-1.5 text-sm font-semibold text-[#222] hover:text-[#ff385c] transition-colors"
+                        className="group flex items-center gap-1.5 text-sm font-semibold text-[#222] hover:text-[#DD6E42] transition-colors"
                       >
                         <span className="underline underline-offset-2 group-hover:no-underline">
                           {t('seeAll')}

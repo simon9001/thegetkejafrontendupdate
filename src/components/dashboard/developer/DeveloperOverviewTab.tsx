@@ -1,79 +1,73 @@
-// frontend/src/components/dashboard/developer/DeveloperOverviewTab.tsx
 import React from 'react';
-import { 
-  Building2, Layers, TrendingUp, BarChart3, 
-  ArrowUpRight, MapPin, Plus, Sparkles
+import { Link } from 'react-router-dom';
+import {
+  Building2, Layers, TrendingUp, DollarSign,
+  ArrowUpRight, MapPin, Plus, Calendar
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { DashboardStats } from '../../../features/Api/DashboardApi';
+import { useGetMyPropertiesQuery } from '../../../features/Api/PropertiesApi';
 
 interface Props {
-  stats?: DashboardStats;
+  stats?: {
+    ownedProperties: number;
+    activeBookings:  number;
+    totalEarnings:   number;
+  };
   userName: string;
 }
 
 const DeveloperOverviewTab: React.FC<Props> = ({ stats, userName }) => {
+  const { data: propertiesData } = useGetMyPropertiesQuery(undefined);
+  const recentProjects = (propertiesData?.properties ?? []).slice(0, 4);
+
   const kpis = [
     {
       label: 'Active Projects',
       value: stats?.ownedProperties ?? 0,
-      change: '+1',
-      trend: 'up',
       icon: Building2,
-      color: 'bg-indigo-50 text-indigo-600',
+      color: 'bg-[#50757A]/10 text-[#50757A]',
     },
     {
-      label: 'Total Units',
-      value: (stats as any)?.totalUnits ?? 124, // Fallback
-      change: '82% sold',
-      trend: 'up',
-      icon: Layers,
-      color: 'bg-purple-50 text-purple-600',
+      label: 'Upcoming Bookings',
+      value: stats?.activeBookings ?? 0,
+      icon: Calendar,
+      color: 'bg-[#DD6E42]/10 text-[#DD6E42]',
     },
     {
-      label: 'Market Valuation',
-      value: 'KES 420M',
-      change: '+15%',
-      trend: 'up',
-      icon: TrendingUp,
+      label: 'Total Earnings',
+      value: `KES ${(stats?.totalEarnings ?? 0).toLocaleString()}`,
+      icon: DollarSign,
       color: 'bg-emerald-50 text-emerald-600',
     },
     {
-      label: 'Project Efficiency',
-      value: '94%',
-      change: 'Optimal',
-      trend: 'neutral',
-      icon: BarChart3,
-      color: 'bg-blue-50 text-blue-600',
+      label: 'Portfolio Units',
+      value: (propertiesData?.properties ?? []).reduce((acc: number, p: any) => acc + (p.bedrooms ?? 1), 0),
+      icon: Layers,
+      color: 'bg-indigo-50 text-indigo-600',
     },
-  ];
-
-  const milestones = [
-    { name: 'Skyview Heights', status: '85% Complete', progress: 85, location: 'Kilimani' },
-    { name: 'Urban Oasis', status: 'Foundation', progress: 15, location: 'Westlands' },
-    { name: 'Riverway Plots', status: 'Ready for Title', progress: 95, location: 'Kitengela' },
   ];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header section with greeting */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#222222]">Developer Portal: {userName}</h1>
-          <p className="text-[#6a6a6a] mt-1">Strategic overview of your large-scale developments and acquisitions.</p>
+          <h1 className="text-2xl font-bold text-[#50757A]">Developer Portal — {userName}</h1>
+          <p className="text-[#50757A] mt-1 text-sm">Strategic overview of your developments and acquisitions.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" /> Reports
-          </button>
-          <button className="px-4 py-2 bg-[#ff385c] text-white rounded-xl text-sm font-semibold hover:bg-[#e31c5f] transition-colors shadow-sm flex items-center gap-2">
-            <Plus className="w-4 h-4" /> New Project
-          </button>
+          <Link
+            to="/dashboard/add-property"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#DD6E42] text-[#50757A] rounded-xl text-sm font-bold hover:bg-[#C4623B] transition-colors shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            New Project
+          </Link>
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi, idx) => (
           <motion.div
             key={kpi.label}
@@ -82,77 +76,95 @@ const DeveloperOverviewTab: React.FC<Props> = ({ stats, userName }) => {
             transition={{ delay: idx * 0.1 }}
             className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl ${kpi.color}`}>
-                <kpi.icon className="w-6 h-6" />
-              </div>
-              <div className={`flex items-center gap-0.5 text-xs font-bold ${
-                kpi.trend === 'up' ? 'text-green-600' : 'text-[#6a6a6a]'
-              }`}>
-                {kpi.change}
-                {kpi.trend === 'up' && <ArrowUpRight className="w-3 h-3" />}
-              </div>
+            <div className={`inline-flex p-3 rounded-xl mb-4 ${kpi.color}`}>
+              <kpi.icon className="w-6 h-6" />
             </div>
-            <p className="text-[#6a6a6a] text-[13px] font-medium">{kpi.label}</p>
-            <h3 className="text-2xl font-bold text-[#222222] mt-0.5">{kpi.value}</h3>
+            <p className="text-[#50757A] text-sm font-medium">{kpi.label}</p>
+            <h3 className="text-2xl font-bold text-[#50757A] mt-1">{kpi.value}</h3>
           </motion.div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Project Pipeline */}
+        {/* Real project pipeline */}
         <div className="lg:col-span-2">
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-[#222222]">Project Pipeline</h2>
-              <button className="text-[#ff385c] text-sm font-bold hover:underline">View All</button>
+              <h2 className="text-base font-bold text-[#50757A]">My Projects</h2>
+              <Link to="/dashboard/projects" className="text-[#DD6E42] text-sm font-bold hover:underline">
+                View All
+              </Link>
             </div>
-            
-            <div className="space-y-6">
-              {milestones.map((project, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
-                        <Building2 className="w-5 h-5 text-gray-400" />
+
+            {recentProjects.length === 0 ? (
+              <div className="text-center py-12">
+                <Building2 className="w-10 h-10 text-gray-200 mx-auto mb-3" />
+                <p className="text-sm text-[#50757A]">No projects yet. Add your first project.</p>
+                <Link
+                  to="/dashboard/add-property"
+                  className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#DD6E42] text-[#50757A] rounded-xl text-sm font-bold hover:bg-[#C4623B] transition-colors"
+                >
+                  <Plus className="w-4 h-4" /> Add Project
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {recentProjects.map((project: any, i: number) => (
+                  <div key={project.id ?? i} className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-[#DD6E42]/30 transition-colors">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 bg-[#50757A]/5 rounded-xl flex items-center justify-center shrink-0">
+                        <Building2 className="w-5 h-5 text-[#50757A]" />
                       </div>
-                      <div>
-                        <h4 className="font-bold text-[#222222] text-sm">{project.name}</h4>
-                        <div className="flex items-center gap-1 text-[11px] text-[#6a6a6a]">
-                          <MapPin className="w-3 h-3" />
-                          {project.location}
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-[#50757A] text-sm truncate">
+                          {project.title ?? 'Unnamed Project'}
+                        </h4>
+                        <div className="flex items-center gap-1 text-[11px] text-[#50757A] mt-0.5">
+                          <MapPin className="w-3 h-3 shrink-0" />
+                          <span className="truncate">
+                            {[project.location?.area, project.location?.county].filter(Boolean).join(', ') || 'Kenya'}
+                          </span>
                         </div>
                       </div>
                     </div>
-                    <span className="text-[11px] font-bold text-[#ff385c] bg-[#ff385c]/5 px-2 py-1 rounded-md">
-                      {project.status}
+                    <span className={`shrink-0 ml-3 text-[11px] font-bold px-2.5 py-1 rounded-lg ${
+                      project.status === 'active'
+                        ? 'bg-[#DD6E42]/10 text-[#DD6E42]'
+                        : project.status === 'pending_review'
+                          ? 'bg-amber-50 text-amber-600'
+                          : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      {(project.status ?? 'draft').replace(/_/g, ' ')}
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${project.progress}%` }}
-                      transition={{ duration: 1, delay: i * 0.2 }}
-                      className="h-full bg-gradient-to-r from-indigo-500 to-purple-500" 
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Insights & Actions */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="bg-gradient-to-br from-[#222222] to-[#444444] p-6 rounded-2xl text-white shadow-xl relative overflow-hidden h-full flex flex-col justify-between">
-            <Sparkles className="absolute -right-4 -top-4 w-24 h-24 opacity-10" />
-            <div>
-              <h3 className="font-bold text-lg mb-2">Market Insights</h3>
-              <p className="text-sm opacity-80 mb-6 leading-relaxed"> Westlands land prices rose by 4.2% last quarter. Your "Urban Oasis" project is now valued 8% above target. </p>
+        {/* Market insights panel */}
+        <div className="lg:col-span-1">
+          <div className="bg-gradient-to-br from-[#50757A] to-[#3D5A5E] p-6 rounded-2xl text-white shadow-xl h-full flex flex-col">
+            <TrendingUp className="w-8 h-8 text-[#DD6E42] mb-4" />
+            <h3 className="font-bold text-lg mb-2">Market Insights</h3>
+            <p className="text-sm text-[#C0D6DF] mb-6 leading-relaxed flex-1">
+              Track Nairobi's real-time property trends. Your listings are benchmarked against similar properties in your area to help you price competitively.
+            </p>
+            <div className="space-y-3">
+              {[
+                { label: 'Your Projects', value: stats?.ownedProperties ?? 0, icon: Building2 },
+                { label: 'Earnings (all time)', value: `KES ${(stats?.totalEarnings ?? 0).toLocaleString()}`, icon: DollarSign },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-white/5">
+                  <div className="flex items-center gap-2">
+                    <item.icon className="w-4 h-4 text-[#DD6E42]" />
+                    <span className="text-xs text-[#C0D6DF]">{item.label}</span>
+                  </div>
+                  <span className="text-sm font-bold text-white">{item.value}</span>
+                </div>
+              ))}
             </div>
-            <button className="w-full py-3 bg-white text-[#222222] rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors">
-              Read Market Report
-            </button>
           </div>
         </div>
       </div>

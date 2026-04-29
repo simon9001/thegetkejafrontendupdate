@@ -45,24 +45,24 @@ const AdminRevenueTab: React.FC = () => {
         />
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-xl px-3 py-1.5">
-            <Calendar className="w-3.5 h-3.5 text-[#6a6a6a]" />
+            <Calendar className="w-3.5 h-3.5 text-[#50757A]" />
             <input 
               type="date" 
               value={dateRange.from} 
               onChange={e => setDateRange(prev => ({ ...prev, from: e.target.value }))}
-              className="text-xs font-bold text-[#222222] outline-none bg-transparent"
+              className="text-xs font-bold text-[#50757A] outline-none bg-transparent"
             />
-            <span className="text-[#6a6a6a] text-xs">to</span>
+            <span className="text-[#50757A] text-xs">to</span>
             <input 
               type="date" 
               value={dateRange.to} 
               onChange={e => setDateRange(prev => ({ ...prev, to: e.target.value }))}
-              className="text-xs font-bold text-[#222222] outline-none bg-transparent"
+              className="text-xs font-bold text-[#50757A] outline-none bg-transparent"
             />
           </div>
           <button 
             onClick={handleExport}
-            className="flex items-center gap-2 bg-[#222222] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm"
+            className="flex items-center gap-2 bg-[#50757A] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm"
           >
             <Download className="w-3.5 h-3.5" /> Export
           </button>
@@ -80,13 +80,13 @@ const AdminRevenueTab: React.FC = () => {
       {/* Streams Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm transition-all hover:shadow-md">
-          <h3 className="text-sm font-bold text-[#222222] mb-4">Revenue by Stream</h3>
+          <h3 className="text-sm font-bold text-[#50757A] mb-4">Revenue by Stream</h3>
           {bdLoading ? (
             <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-8 bg-gray-50 rounded animate-pulse" />)}</div>
           ) : (
             <div className="space-y-4">
               {[
-                { label: 'Listing Fees', value: streams?.listing_fees_kes ?? 0, color: 'bg-[#ff385c]' },
+                { label: 'Listing Fees', value: streams?.listing_fees_kes ?? 0, color: 'bg-[#DD6E42]' },
                 { label: 'Viewing Fees', value: streams?.viewing_fees_kes ?? 0, color: 'bg-violet-500' },
                 { label: 'Subscriptions', value: streams?.subscriptions_kes ?? 0, color: 'bg-emerald-500' },
                 { label: 'Short-Stay Fees', value: streams?.short_stay_fees_kes ?? 0, color: 'bg-amber-500' },
@@ -95,8 +95,8 @@ const AdminRevenueTab: React.FC = () => {
                 return (
                   <div key={s.label} className="space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="text-[#6a6a6a] font-medium">{s.label}</span>
-                      <span className="text-[#222222] font-semibold">KES {s.value.toLocaleString()} ({pct.toFixed(1)}%)</span>
+                      <span className="text-[#50757A] font-medium">{s.label}</span>
+                      <span className="text-[#50757A] font-semibold">KES {s.value.toLocaleString()} ({pct.toFixed(1)}%)</span>
                     </div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div className={`h-full rounded-full transition-all duration-700 ${s.color}`} style={{ width: `${pct}%` }} />
@@ -109,15 +109,15 @@ const AdminRevenueTab: React.FC = () => {
         </div>
 
         <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm transition-all hover:shadow-md">
-          <h3 className="text-sm font-bold text-[#222222] mb-4">Listing Fees by Tier</h3>
+          <h3 className="text-sm font-bold text-[#50757A] mb-4">Listing Fees by Tier</h3>
           {bdLoading ? (
             <div className="space-y-2">{[...Array(4)].map((_, i) => <div key={i} className="h-6 bg-gray-50 rounded animate-pulse" />)}</div>
           ) : (
             <div className="space-y-2.5">
               {Object.entries(breakdown?.listing_fees_by_tier ?? {}).map(([tier, amount]) => (
                 <div key={tier} className="flex items-center justify-between text-sm">
-                  <span className="text-[#6a6a6a] capitalize font-medium">{tier.replace(/_/g, ' ')}</span>
-                  <span className="font-bold text-[#222222]">KES {(amount as number).toLocaleString()}</span>
+                  <span className="text-[#50757A] capitalize font-medium">{tier.replace(/_/g, ' ')}</span>
+                  <span className="font-bold text-[#50757A]">KES {(amount as number).toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -129,13 +129,13 @@ const AdminRevenueTab: React.FC = () => {
       <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-[#ff385c]" />
-            <h3 className="text-sm font-bold text-[#222222]">Daily Growth Series</h3>
+            <TrendingUp className="w-4 h-4 text-[#DD6E42]" />
+            <h3 className="text-sm font-bold text-[#50757A]">Daily Growth Series</h3>
           </div>
           <div className="flex gap-1">
             {[7, 14, 30, 60, 90].map(d => (
               <button key={d} onClick={() => setDays(d)}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${days === d ? 'bg-[#222222] text-white shadow-sm' : 'text-[#6a6a6a] hover:bg-gray-100'}`}>
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${days === d ? 'bg-[#50757A] text-white shadow-sm' : 'text-[#50757A] hover:bg-gray-100'}`}>
                 {d}d
               </button>
             ))}
@@ -150,11 +150,11 @@ const AdminRevenueTab: React.FC = () => {
               const h = (total / maxDayValue) * 100;
               return (
                 <div key={i} className="flex-1 min-w-[6px] group relative">
-                  <div className="w-full rounded-t-lg bg-gray-100 group-hover:bg-[#ff385c]/10 transition-colors absolute inset-0 bottom-0 pointer-events-none" />
-                  <div className="w-full rounded-t-lg bg-[#ff385c]/80 group-hover:bg-[#ff385c] transition-all cursor-pointer relative z-10"
+                  <div className="w-full rounded-t-lg bg-gray-100 group-hover:bg-[#DD6E42]/10 transition-colors absolute inset-0 bottom-0 pointer-events-none" />
+                  <div className="w-full rounded-t-lg bg-[#DD6E42]/80 group-hover:bg-[#DD6E42] transition-all cursor-pointer relative z-10"
                     style={{ height: `${Math.max(h, 4)}%` }}
                   >
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#222222] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-[#50757A] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
                       <p className="font-bold">{new Date(d.day).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' })}</p>
                       <p>KES {total.toLocaleString()}</p>
                     </div>

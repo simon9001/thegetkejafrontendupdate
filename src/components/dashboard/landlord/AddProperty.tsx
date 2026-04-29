@@ -10,10 +10,10 @@ import AddPropertyForm from '../shared/AddPropertyForm';
  */
 const AddProperty: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#f7f7f7] py-8 px-4">
+    <div className="min-h-screen bg-[#EAEAEA] py-8 px-4">
       <div className="max-w-3xl mx-auto mb-6">
-        <h1 className="text-2xl font-bold text-[#222222] tracking-tight">List a Property</h1>
-        <p className="text-sm text-[#6a6a6a] mt-1">Fill in the details below to publish your property on GETKEJA.</p>
+        <h1 className="text-2xl font-bold text-[#50757A] tracking-tight">List a Property</h1>
+        <p className="text-sm text-[#50757A] mt-1">Fill in the details below to publish your property on GETKEJA.</p>
       </div>
       <AddPropertyForm />
     </div>

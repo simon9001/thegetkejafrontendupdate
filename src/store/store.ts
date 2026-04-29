@@ -12,6 +12,11 @@ import { SavedPropertiesApi }   from '../features/Api/SavedPropertiesApi';
 import { ShortStayApi }         from '../features/Api/ShortStayApi';
 import { subscriptionsApi }    from '../features/Api/SubscriptionsApi';
 import { statsApi }            from '../features/Api/StatsApi';
+import { CaretakerApi }       from '../features/Api/CaretakerApi';
+import { AgentApi }           from '../features/Api/AgentApi';
+import { DeveloperApi }       from '../features/Api/DeveloperApi';
+import { RoommateApi }       from '../features/Api/RoommateApi';
+import { MovingApi }         from '../features/Api/MovingApi';
 import authReducer           from '../features/Slice/AuthSlice';
 import propertiesReducer     from '../features/Slice/PropertiesSlice';
 import savedPropertiesReducer from '../features/Slice/SavedPropertiesSlice';
@@ -44,6 +49,11 @@ const rootReducer = combineReducers({
   [ShortStayApi.reducerPath]:       ShortStayApi.reducer,
   [subscriptionsApi.reducerPath]:   subscriptionsApi.reducer,
   [statsApi.reducerPath]:           statsApi.reducer,
+  [CaretakerApi.reducerPath]:       CaretakerApi.reducer,
+  [AgentApi.reducerPath]:           AgentApi.reducer,
+  [DeveloperApi.reducerPath]:       DeveloperApi.reducer,
+  [RoommateApi.reducerPath]:        RoommateApi.reducer,
+  [MovingApi.reducerPath]:          MovingApi.reducer,
   // Feature slices
   auth:            persistedAuthReducer,
   properties:      propertiesReducer,
@@ -68,7 +78,12 @@ export const store = configureStore({
       .concat(SavedPropertiesApi.middleware)
       .concat(ShortStayApi.middleware)
       .concat(subscriptionsApi.middleware)
-      .concat(statsApi.middleware),
+      .concat(statsApi.middleware)
+      .concat(CaretakerApi.middleware)
+      .concat(AgentApi.middleware)
+      .concat(DeveloperApi.middleware)
+      .concat(RoommateApi.middleware)
+      .concat(MovingApi.middleware),
 });
 
 export const persistor = persistStore(store);

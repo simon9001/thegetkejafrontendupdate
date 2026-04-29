@@ -8,6 +8,12 @@ import {
   ShoppingCart, Fuel, Church, TreePine, Dumbbell,
 } from 'lucide-react';
 import NearbyPlaceMapPicker from '../../Search/NearbyPlaceMapPicker';
+import { WatermarkPanel, DEFAULT_WATERMARK } from '../../property/WatermarkPanel';
+import type { WatermarkConfig } from '../../property/WatermarkPanel';
+import { TenantTypePicker, DEFAULT_TENANT_TARGETING } from '../../property/TenantTypePicker';
+import type { TenantTargeting } from '../../property/TenantTypePicker';
+import { UtilityPricingConfig, DEFAULT_UTILITIES } from '../../property/UtilityPricingConfig';
+import type { UtilitiesConfig } from '../../property/UtilityPricingConfig';
 import { useCreatePropertyMutation } from '../../../features/Api/PropertiesApi';
 import { selectCurrentUser } from '../../../features/Slice/AuthSlice';
 import { toast } from 'react-hot-toast';
@@ -21,11 +27,11 @@ interface NearbyPlaceEntry {
 }
 
 const Label: React.FC<{ children: React.ReactNode; required?: boolean }> = ({ children, required }) => (
-  <label className="block text-[11px] font-bold text-[#6a6a6a] uppercase tracking-wider mb-1.5">
-    {children}{required && <span className="text-[#ff385c] ml-0.5">*</span>}
+  <label className="block text-[11px] font-bold text-[#50757A] uppercase tracking-wider mb-1.5">
+    {children}{required && <span className="text-[#DD6E42] ml-0.5">*</span>}
   </label>
 );
-const inputCls = "w-full px-3.5 py-2.5 bg-white border border-[#c1c1c1] rounded-lg text-sm text-[#222222] placeholder:text-[#c1c1c1] focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] transition";
+const inputCls = "w-full px-3.5 py-2.5 bg-white border border-[#EAEAEA] rounded-lg text-sm text-[#50757A] placeholder:text-[#AAAAAA] focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 focus:border-[#DD6E42] transition";
 const selectCls = inputCls;
 const PHONE_RE = /^\+?[\d\s\-()\[\]]{7,15}$/
 
@@ -36,7 +42,7 @@ const LISTING_TYPES: Record<string, { value: string; label: string }[]> = {
   commercial:     [{ value:'apartment',label:'Apartment Block'},{ value:'house',label:'Commercial Building'},{ value:'studio',label:'Studio / Open Plan'},{ value:'villa',label:'Villa / Compound'}],
 };
 
-const STEPS = ['Basic Info', 'Location', 'Pricing', 'Contacts', 'Details', 'Nearby Places', 'Photos'];
+const STEPS = ['Basic Info', 'Location', 'Pricing', 'Contacts', 'Details', 'Nearby Places', 'Photos', 'Watermark'];
 
 const PLACE_TYPES = [
   { value: 'school',        label: 'School',        icon: School },
@@ -208,7 +214,10 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
   ] as const;
 
   const SECURITY_TYPES = ['Guard','CCTV','Electric Fence','Intercom','Access Control'];
-  const [amenities, setAmenities] = useState<string[]>([]);
+  const [amenities, setAmenities]           = useState<string[]>([]);
+  const [watermark, setWatermark]           = useState<WatermarkConfig>(DEFAULT_WATERMARK);
+  const [tenantTargeting, setTenantTarget]  = useState<TenantTargeting>(DEFAULT_TENANT_TARGETING);
+  const [utilities, setUtilities]           = useState<UtilitiesConfig>(DEFAULT_UTILITIES);
   const toggleAmenity = (n: string) => setAmenities(p => p.includes(n) ? p.filter(a=>a!==n) : [...p,n]);
   const toggleSecurity = (t: string) => setCore(p => ({ ...p, security_type: p.security_type.includes(t) ? p.security_type.filter(s=>s!==t) : [...p.security_type,t] }));
   const addRule = () => { if (newRule.trim()) { setSs(p=>({...p,rules:[...p.rules,newRule.trim()]})); setNewRule(''); }};
@@ -346,6 +355,10 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
       location:locPayload, pricing:pricingPayload,
       contacts:[contactPayload], amenities:amenityPayload, media:mediaPayload,
       nearby_places: nearbyPayload,
+      // Client-side metadata stored in the listing payload for display purposes
+      watermark_config: watermark.enabled ? watermark : undefined,
+      tenant_targeting: tenantTargeting.types.length > 0 ? tenantTargeting : undefined,
+      utilities_config: utilities,
     };
 
     if (core.listing_category==='short_term_rent') {
@@ -459,28 +472,28 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
             <React.Fragment key={n}>
               <div className="flex flex-col items-center shrink-0">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all
-                  ${done?'bg-[#ff385c] text-white':active?'bg-[#222222] text-white':'bg-[#f2f2f2] text-[#6a6a6a]'}`}>
+                  ${done?'bg-[#DD6E42] text-white':active?'bg-[#50757A] text-white':'bg-[#EAEAEA] text-[#50757A]'}`}>
                   {done ? <CheckCircle2 className="w-4 h-4"/> : n}
                 </div>
-                <span className={`text-[10px] mt-1 font-semibold whitespace-nowrap ${active?'text-[#222222]':'text-[#6a6a6a]'}`}>{label}</span>
+                <span className={`text-[10px] mt-1 font-semibold whitespace-nowrap ${active?'text-[#50757A]':'text-[#50757A]'}`}>{label}</span>
               </div>
-              {i<STEPS.length-1 && <div className={`flex-1 min-w-[16px] h-px mx-1.5 mb-5 ${step>n?'bg-[#ff385c]':'bg-[#e5e5e5]'}`}/>}
+              {i<STEPS.length-1 && <div className={`flex-1 min-w-[16px] h-px mx-1.5 mb-5 ${step>n?'bg-[#DD6E42]':'bg-[#EAEAEA]'}`}/>}
             </React.Fragment>
           );
         })}
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="bg-white rounded-[20px] border border-[#e5e5e5] shadow-sm p-6 md:p-8">
+        <div className="bg-white rounded-[20px] border border-[#EAEAEA] shadow-sm p-6 md:p-8">
 
           {/* ── STEP 1: Basic Info ──────────────────────────────────────────── */}
           {step===1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Basic Information</h2>
-                <p className="text-sm text-[#6a6a6a]">Tell us about your property type and features.</p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Basic Information</h2>
+                <p className="text-sm text-[#50757A]">Tell us about your property type and features.</p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -569,13 +582,13 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               <div className="flex flex-wrap gap-3">
                 {!isCommercial && !isPlot && (
-                  <label className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                    <input type="checkbox" checked={core.is_ensuite} onChange={e=>setCore(p=>({...p,is_ensuite:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                  <label className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                    <input type="checkbox" checked={core.is_ensuite} onChange={e=>setCore(p=>({...p,is_ensuite:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                     <span className="text-sm font-medium">En-suite Bathrooms</span>
                   </label>
                 )}
-                <label className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                  <input type="checkbox" checked={core.compound_is_gated} onChange={e=>setCore(p=>({...p,compound_is_gated:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                <label className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                  <input type="checkbox" checked={core.compound_is_gated} onChange={e=>setCore(p=>({...p,compound_is_gated:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                   <span className="text-sm font-medium">Gated Compound</span>
                 </label>
               </div>
@@ -586,10 +599,10 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           {step===2 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Location Details</h2>
-                <p className="text-sm text-[#6a6a6a]">Help seekers find your property on the map.</p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Location Details</h2>
+                <p className="text-sm text-[#50757A]">Help seekers find your property on the map.</p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><Label required>County</Label><input value={loc.county} onChange={e=>setLoc(p=>({...p,county:e.target.value}))} placeholder="e.g. Nairobi" className={inputCls}/></div>
@@ -610,14 +623,14 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               <div><Label>Directions</Label><textarea value={loc.directions} onChange={e=>setLoc(p=>({...p,directions:e.target.value}))} rows={2} placeholder="e.g. Turn left at Shell, 2nd gate on the right" className={`${inputCls} resize-none`}/></div>
 
-              <div className="border border-[#e5e5e5] rounded-xl p-5 space-y-4">
+              <div className="border border-[#EAEAEA] rounded-xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold">GPS Coordinates</p>
-                    <p className="text-xs text-[#6a6a6a] mt-0.5">Required for map display and radius search</p>
+                    <p className="text-xs text-[#50757A] mt-0.5">Required for map display and radius search</p>
                   </div>
                   <button type="button" onClick={handleGeo} disabled={geoLoading}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#ff385c] text-white rounded-lg text-xs font-semibold disabled:opacity-60">
+                    className="flex items-center gap-2 px-4 py-2 bg-[#DD6E42] text-white rounded-lg text-xs font-semibold disabled:opacity-60">
                     {geoLoading ? <Loader2 className="w-3 h-3 animate-spin"/> : <LocateFixed className="w-3 h-3"/>} Detect
                   </button>
                 </div>
@@ -627,12 +640,12 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                 </div>
               </div>
 
-              <label className="flex items-center justify-between p-3.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
+              <label className="flex items-center justify-between p-3.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
                 <div>
                   <span className="text-sm font-medium">Show Full Address Publicly</span>
-                  <p className="text-xs text-[#6a6a6a] mt-0.5">Disable to show only area-level location to seekers</p>
+                  <p className="text-xs text-[#50757A] mt-0.5">Disable to show only area-level location to seekers</p>
                 </div>
-                <input type="checkbox" checked={loc.display_full_address} onChange={e=>setLoc(p=>({...p,display_full_address:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                <input type="checkbox" checked={loc.display_full_address} onChange={e=>setLoc(p=>({...p,display_full_address:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
               </label>
             </div>
           )}
@@ -641,10 +654,10 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           {step===3 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Pricing</h2>
-                <p className="text-sm text-[#6a6a6a]">Set your price and payment terms.</p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Pricing</h2>
+                <p className="text-sm text-[#50757A]">Set your price and payment terms.</p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               {isShortStay && (
                 <div className="space-y-4">
@@ -726,8 +739,8 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                 </div>
               )}
 
-              <label className="flex items-center gap-3 p-3.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                <input type="checkbox" checked={pricing.negotiable} onChange={e=>setPricing(p=>({...p,negotiable:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+              <label className="flex items-center gap-3 p-3.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                <input type="checkbox" checked={pricing.negotiable} onChange={e=>setPricing(p=>({...p,negotiable:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                 <span className="text-sm font-medium">Price is Negotiable</span>
               </label>
             </div>
@@ -737,10 +750,10 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           {step===4 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Contact Person</h2>
-                <p className="text-sm text-[#6a6a6a]">Who should seekers contact about this property?</p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Contact Person</h2>
+                <p className="text-sm text-[#50757A]">Who should seekers contact about this property?</p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -776,12 +789,12 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <label className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                  <input type="checkbox" checked={contact.is_primary_contact} onChange={e=>setContact(p=>({...p,is_primary_contact:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                <label className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                  <input type="checkbox" checked={contact.is_primary_contact} onChange={e=>setContact(p=>({...p,is_primary_contact:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                   <span className="text-sm font-medium">Primary Contact</span>
                 </label>
-                <label className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                  <input type="checkbox" checked={contact.is_on_site} onChange={e=>setContact(p=>({...p,is_on_site:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                <label className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                  <input type="checkbox" checked={contact.is_on_site} onChange={e=>setContact(p=>({...p,is_on_site:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                   <span className="text-sm font-medium">On-Site Contact</span>
                 </label>
               </div>
@@ -792,14 +805,14 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           {step===5 && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Property Details</h2>
-                <p className="text-sm text-[#6a6a6a]">Utilities, amenities, and property-specific information.</p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Property Details</h2>
+                <p className="text-sm text-[#50757A]">Utilities, amenities, and property-specific information.</p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               {/* Utilities */}
               <div>
-                <h3 className="text-sm font-bold text-[#222222] mb-3 flex items-center gap-2"><Droplets className="w-4 h-4 text-[#ff385c]"/> Utilities</h3>
+                <h3 className="text-sm font-bold text-[#50757A] mb-3 flex items-center gap-2"><Droplets className="w-4 h-4 text-[#DD6E42]"/> Utilities</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <Label>Water Supply</Label>
@@ -832,11 +845,11 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               {/* Security */}
               <div>
-                <h3 className="text-sm font-bold text-[#222222] mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-[#ff385c]"/> Security Features</h3>
+                <h3 className="text-sm font-bold text-[#50757A] mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-[#DD6E42]"/> Security Features</h3>
                 <div className="flex flex-wrap gap-2">
                   {SECURITY_TYPES.map(t=>(
                     <button key={t} type="button" onClick={()=>toggleSecurity(t)}
-                      className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition ${core.security_type.includes(t)?'bg-[#ff385c] text-white border-[#ff385c]':'bg-white text-[#222222] border-[#e5e5e5]'}`}>
+                      className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition ${core.security_type.includes(t)?'bg-[#DD6E42] text-white border-[#DD6E42]':'bg-white text-[#50757A] border-[#EAEAEA]'}`}>
                       {t}
                     </button>
                   ))}
@@ -845,21 +858,33 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               {/* Amenities */}
               <div>
-                <h3 className="text-sm font-bold text-[#222222] mb-3 flex items-center gap-2"><Star className="w-4 h-4 text-[#ff385c]"/> Amenities</h3>
+                <h3 className="text-sm font-bold text-[#50757A] mb-3 flex items-center gap-2"><Star className="w-4 h-4 text-[#DD6E42]"/> Amenities</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {AMENITY_OPTIONS.map(({name,icon:Icon})=>(
                     <button key={name} type="button" onClick={()=>toggleAmenity(name)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-bold transition ${amenities.includes(name)?'bg-[#ff385c] text-white border-[#ff385c]':'bg-white text-[#222222] border-[#e5e5e5]'}`}>
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[10px] font-bold transition ${amenities.includes(name)?'bg-[#DD6E42] text-white border-[#DD6E42]':'bg-white text-[#50757A] border-[#EAEAEA]'}`}>
                       <Icon className="w-3 h-3"/> {name}
                     </button>
                   ))}
                 </div>
               </div>
 
+              {/* ── Utilities & Bills ── */}
+              <div className="pt-4 border-t border-[#EAEAEA]">
+                <UtilityPricingConfig value={utilities} onChange={setUtilities} />
+              </div>
+
+              {/* ── Tenant Type Targeting ── */}
+              {(isLongRent || isForSale) && (
+                <div className="pt-4 border-t border-[#EAEAEA]">
+                  <TenantTypePicker value={tenantTargeting} onChange={setTenantTarget} />
+                </div>
+              )}
+
               {/* ── Short-stay settings ── */}
               {isShortStay && (
-                <div className="space-y-5 pt-4 border-t border-[#f2f2f2]">
-                  <h3 className="text-sm font-bold text-[#222222] flex items-center gap-2"><Clock className="w-4 h-4 text-[#ff385c]"/> Short-Stay Settings</h3>
+                <div className="space-y-5 pt-4 border-t border-[#EAEAEA]">
+                  <h3 className="text-sm font-bold text-[#50757A] flex items-center gap-2"><Clock className="w-4 h-4 text-[#DD6E42]"/> Short-Stay Settings</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label required>Stay Type</Label>
@@ -888,12 +913,12 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                     <div><Label>Airbnb Listing URL</Label><input type="url" value={ss.airbnb_listing_url} onChange={e=>setSs(p=>({...p,airbnb_listing_url:e.target.value}))} placeholder="https://airbnb.com/rooms/…" className={inputCls}/></div>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    <label className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                      <input type="checkbox" checked={ss.instant_book} onChange={e=>setSs(p=>({...p,instant_book:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                    <label className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                      <input type="checkbox" checked={ss.instant_book} onChange={e=>setSs(p=>({...p,instant_book:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                       <span className="text-sm font-medium">Instant Book</span>
                     </label>
-                    <label className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                      <input type="checkbox" checked={ss.catering_available} onChange={e=>setSs(p=>({...p,catering_available:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                    <label className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                      <input type="checkbox" checked={ss.catering_available} onChange={e=>setSs(p=>({...p,catering_available:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                       <span className="text-sm font-medium">Catering Available</span>
                     </label>
                   </div>
@@ -901,11 +926,11 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                     <Label>House Rules</Label>
                     <div className="flex gap-2 mb-3">
                       <input type="text" value={newRule} onChange={e=>setNewRule(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();addRule();}}} placeholder="e.g. No loud music after 10PM" className={inputCls}/>
-                      <button type="button" onClick={addRule} className="px-4 bg-[#222222] text-white rounded-lg text-sm font-bold whitespace-nowrap">Add</button>
+                      <button type="button" onClick={addRule} className="px-4 bg-[#50757A] text-white rounded-lg text-sm font-bold whitespace-nowrap">Add</button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {ss.rules.map((rule,i)=>(
-                        <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-[#f7f7f7] border border-[#e5e5e5] rounded-full text-xs font-medium">
+                        <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-[#EAEAEA] border border-[#EAEAEA] rounded-full text-xs font-medium">
                           {rule}
                           <button type="button" onClick={()=>removeRule(i)} className="p-0.5 hover:bg-gray-200 rounded-full"><X className="w-3 h-3"/></button>
                         </div>
@@ -917,8 +942,8 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               {/* ── Commercial config ── */}
               {isCommercial && (
-                <div className="space-y-5 pt-4 border-t border-[#f2f2f2]">
-                  <h3 className="text-sm font-bold text-[#222222] flex items-center gap-2"><Building2 className="w-4 h-4 text-[#ff385c]"/> Commercial Specifications</h3>
+                <div className="space-y-5 pt-4 border-t border-[#EAEAEA]">
+                  <h3 className="text-sm font-bold text-[#50757A] flex items-center gap-2"><Building2 className="w-4 h-4 text-[#DD6E42]"/> Commercial Specifications</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label required>Commercial Type</Label>
@@ -955,8 +980,8 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                       ['has_projector_screen','Projector / Screen'],
                       ['alcohol_license_possible','Alcohol License Possible'],
                     ] as [keyof typeof comm,string][]).map(([key,label])=>(
-                      <label key={key} className="flex items-center gap-2 p-3 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                        <input type="checkbox" checked={comm[key] as boolean} onChange={e=>setComm(p=>({...p,[key]:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                      <label key={key} className="flex items-center gap-2 p-3 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                        <input type="checkbox" checked={comm[key] as boolean} onChange={e=>setComm(p=>({...p,[key]:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                         <span className="text-xs font-medium">{label}</span>
                       </label>
                     ))}
@@ -966,8 +991,8 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               {/* ── Plot details ── */}
               {isPlot && (
-                <div className="space-y-5 pt-4 border-t border-[#f2f2f2]">
-                  <h3 className="text-sm font-bold text-[#222222] flex items-center gap-2"><MapPin className="w-4 h-4 text-[#ff385c]"/> Plot Details</h3>
+                <div className="space-y-5 pt-4 border-t border-[#EAEAEA]">
+                  <h3 className="text-sm font-bold text-[#50757A] flex items-center gap-2"><MapPin className="w-4 h-4 text-[#DD6E42]"/> Plot Details</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div><Label>Size (Acres)</Label><input type="number" min="0" step="0.01" value={plot.size_acres} onChange={e=>setPlot(p=>({...p,size_acres:e.target.value}))} className={inputCls}/></div>
                     <div><Label>Size (Sqft)</Label><input type="number" min="0" value={plot.size_sqft} onChange={e=>setPlot(p=>({...p,size_sqft:e.target.value}))} className={inputCls}/></div>
@@ -1000,8 +1025,8 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                   </div>
                   <div className="flex flex-wrap gap-3">
                     {([['is_corner_plot','Corner Plot'],['is_serviced','Serviced (Roads/Water/Power)'],['payment_plan_available','Payment Plan Available']] as [keyof typeof plot,string][]).map(([key,label])=>(
-                      <label key={key} className="flex items-center gap-2 px-4 py-2.5 border border-[#e5e5e5] rounded-xl cursor-pointer hover:bg-[#f7f7f7]">
-                        <input type="checkbox" checked={plot[key] as boolean} onChange={e=>setPlot(p=>({...p,[key]:e.target.checked}))} className="w-4 h-4 accent-[#ff385c]"/>
+                      <label key={key} className="flex items-center gap-2 px-4 py-2.5 border border-[#EAEAEA] rounded-xl cursor-pointer hover:bg-[#EAEAEA]">
+                        <input type="checkbox" checked={plot[key] as boolean} onChange={e=>setPlot(p=>({...p,[key]:e.target.checked}))} className="w-4 h-4 accent-[#DD6E42]"/>
                         <span className="text-sm font-medium">{label}</span>
                       </label>
                     ))}
@@ -1014,8 +1039,8 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
 
               {/* ── Off-plan details ── */}
               {isOffPlan && (
-                <div className="space-y-5 pt-4 border-t border-[#f2f2f2]">
-                  <h3 className="text-sm font-bold text-[#222222] flex items-center gap-2"><Calendar className="w-4 h-4 text-[#ff385c]"/> Off-Plan Details</h3>
+                <div className="space-y-5 pt-4 border-t border-[#EAEAEA]">
+                  <h3 className="text-sm font-bold text-[#50757A] flex items-center gap-2"><Calendar className="w-4 h-4 text-[#DD6E42]"/> Off-Plan Details</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div><Label required>Project Name</Label><input value={op.project_name} onChange={e=>setOp(p=>({...p,project_name:e.target.value}))} placeholder="e.g. The Pinnacle Residences" className={inputCls}/></div>
                     <div><Label>Developer Name</Label><input value={op.developer_name} onChange={e=>setOp(p=>({...p,developer_name:e.target.value}))} placeholder="e.g. Optiven Ltd" className={inputCls}/></div>
@@ -1038,14 +1063,14 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           {step===6 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Nearby Places</h2>
-                <p className="text-sm text-[#6a6a6a]">Add schools, hospitals, matatu stages and other nearby amenities to help seekers understand the location. <span className="font-medium text-[#222222]">Optional — you can skip this step.</span></p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Nearby Places</h2>
+                <p className="text-sm text-[#50757A]">Add schools, hospitals, matatu stages and other nearby amenities to help seekers understand the location. <span className="font-medium text-[#50757A]">Optional — you can skip this step.</span></p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               {/* Add place form */}
-              <div className="border border-[#e5e5e5] rounded-xl p-5 space-y-4 bg-[#fafafa]">
-                <h3 className="text-sm font-bold text-[#222222] flex items-center gap-2"><Plus className="w-4 h-4 text-[#ff385c]"/> Add a Nearby Place</h3>
+              <div className="border border-[#EAEAEA] rounded-xl p-5 space-y-4 bg-[#EAEAEA]">
+                <h3 className="text-sm font-bold text-[#50757A] flex items-center gap-2"><Plus className="w-4 h-4 text-[#DD6E42]"/> Add a Nearby Place</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label required>Place Type</Label>
@@ -1089,7 +1114,7 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
                 )}
                 {placeError && <p className="text-xs text-red-500 font-medium">{placeError}</p>}
                 <button type="button" onClick={addPlace}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-[#ff385c] text-white rounded-xl text-sm font-bold hover:bg-[#e0334f] transition">
+                  className="flex items-center gap-2 px-5 py-2.5 bg-[#DD6E42] text-white rounded-xl text-sm font-bold hover:bg-[#DD6E42] transition">
                   <Plus className="w-4 h-4"/> Add Place
                 </button>
               </div>
@@ -1097,20 +1122,20 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
               {/* Added places list */}
               {nearbyPlaces.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="text-sm font-bold text-[#222222]">Added Places ({nearbyPlaces.length})</h3>
+                  <h3 className="text-sm font-bold text-[#50757A]">Added Places ({nearbyPlaces.length})</h3>
                   {nearbyPlaces.map((place, i) => {
                     const pt = PLACE_TYPES.find(t=>t.value===place.place_type);
                     const Icon = pt?.icon ?? MapPin;
                     return (
-                      <div key={i} className="flex items-center gap-3 p-3.5 bg-white border border-[#e5e5e5] rounded-xl">
-                        <div className="w-8 h-8 rounded-lg bg-[#ff385c]/10 flex items-center justify-center shrink-0">
-                          <Icon className="w-4 h-4 text-[#ff385c]"/>
+                      <div key={i} className="flex items-center gap-3 p-3.5 bg-white border border-[#EAEAEA] rounded-xl">
+                        <div className="w-8 h-8 rounded-lg bg-[#DD6E42]/10 flex items-center justify-center shrink-0">
+                          <Icon className="w-4 h-4 text-[#DD6E42]"/>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-[#222222] truncate">{place.name}</p>
-                          <p className="text-[11px] text-[#6a6a6a]">{pt?.label ?? place.place_type} · {parseFloat(place.latitude).toFixed(4)}, {parseFloat(place.longitude).toFixed(4)}</p>
+                          <p className="text-sm font-bold text-[#50757A] truncate">{place.name}</p>
+                          <p className="text-[11px] text-[#50757A]">{pt?.label ?? place.place_type} · {parseFloat(place.latitude).toFixed(4)}, {parseFloat(place.longitude).toFixed(4)}</p>
                         </div>
-                        <button type="button" onClick={()=>removePlace(i)} className="p-1.5 hover:bg-red-50 rounded-lg text-[#6a6a6a] hover:text-red-500 transition">
+                        <button type="button" onClick={()=>removePlace(i)} className="p-1.5 hover:bg-red-50 rounded-lg text-[#50757A] hover:text-red-500 transition">
                           <Trash2 className="w-4 h-4"/>
                         </button>
                       </div>
@@ -1120,7 +1145,7 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
               )}
 
               {nearbyPlaces.length === 0 && (
-                <div className="text-center py-6 text-[#c1c1c1]">
+                <div className="text-center py-6 text-[#EAEAEA]">
                   <Navigation2 className="w-8 h-8 mx-auto mb-2"/>
                   <p className="text-sm">No nearby places added yet.</p>
                   <p className="text-xs mt-1">Adding places like schools and hospitals helps your listing rank better in search.</p>
@@ -1133,16 +1158,16 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           {step===7 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-[22px] font-bold text-[#222222] tracking-tight mb-0.5">Photos</h2>
-                <p className="text-sm text-[#6a6a6a]">Add clear, well-lit photos. First photo becomes the cover image.</p>
+                <h2 className="text-[22px] font-bold text-[#50757A] tracking-tight mb-0.5">Photos</h2>
+                <p className="text-sm text-[#50757A]">Add clear, well-lit photos. First photo becomes the cover image.</p>
               </div>
-              <hr className="border-[#f2f2f2]"/>
+              <hr className="border-[#EAEAEA]"/>
 
               <div onClick={()=>fileRef.current?.click()}
-                className="border-2 border-dashed border-[#c1c1c1] rounded-xl p-10 text-center cursor-pointer hover:border-[#ff385c] transition-colors">
-                <ImageIcon className="w-10 h-10 text-[#c1c1c1] mx-auto mb-2"/>
-                <p className="text-sm font-bold text-[#222222]">Click to add property photos</p>
-                <p className="text-xs text-[#6a6a6a] mt-1">JPG, PNG, WebP · Max 10MB each</p>
+                className="border-2 border-dashed border-[#EAEAEA] rounded-xl p-10 text-center cursor-pointer hover:border-[#DD6E42] transition-colors">
+                <ImageIcon className="w-10 h-10 text-[#EAEAEA] mx-auto mb-2"/>
+                <p className="text-sm font-bold text-[#50757A]">Click to add property photos</p>
+                <p className="text-xs text-[#50757A] mt-1">JPG, PNG, WebP · Max 10MB each</p>
                 <input ref={fileRef} type="file" multiple accept="image/*" className="hidden"
                   onChange={e=>{ if(e.target.files) processFiles(e.target.files); e.target.value=''; }}/>
               </div>
@@ -1150,9 +1175,9 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
               {images.length>0 && (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {images.map((img,i)=>(
-                    <div key={i} className={`relative aspect-square rounded-lg overflow-hidden border-2 ${i===0?'border-[#ff385c]':'border-gray-200'}`}>
+                    <div key={i} className={`relative aspect-square rounded-lg overflow-hidden border-2 ${i===0?'border-[#DD6E42]':'border-gray-200'}`}>
                       <img src={img.previewUrl} className="w-full h-full object-cover" alt=""/>
-                      {i===0 && <div className="absolute bottom-0 left-0 right-0 bg-[#ff385c] text-white text-[9px] font-bold text-center py-0.5">COVER</div>}
+                      {i===0 && <div className="absolute bottom-0 left-0 right-0 bg-[#DD6E42] text-white text-[9px] font-bold text-center py-0.5">COVER</div>}
                       <button type="button" onClick={()=>removeImg(i)} className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm hover:bg-red-50">
                         <X className="w-2.5 h-2.5 text-red-500"/>
                       </button>
@@ -1164,21 +1189,30 @@ const AddPropertyForm: React.FC<AddPropertyFormProps> = ({ onSuccess, redirectPa
           )}
         </div>
 
+          {/* ── STEP 8: Watermark ─────────────────────────────────────────────── */}
+          {step===8 && (
+            <WatermarkPanel
+              config={watermark}
+              onChange={setWatermark}
+              previewImageSrc={images[0]?.previewUrl}
+            />
+          )}
+
         {/* Navigation */}
         <div className="flex items-center justify-between mt-6">
           <button type="button" onClick={prevStep} disabled={step===1}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[#c1c1c1] text-sm font-bold disabled:opacity-30 hover:bg-[#f7f7f7] transition">
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[#EAEAEA] text-sm font-bold disabled:opacity-30 hover:bg-[#EAEAEA] transition">
             <ChevronLeft className="w-4 h-4"/> Back
           </button>
-          <span className="text-xs text-[#6a6a6a] font-medium">Step {step} of {totalSteps}</span>
+          <span className="text-xs text-[#50757A] font-medium">Step {step} of {totalSteps}</span>
           {step<totalSteps ? (
             <button type="button" onClick={nextStep}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#222222] text-white text-sm font-bold hover:bg-black transition">
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#50757A] text-white text-sm font-bold hover:bg-black transition">
               Next <ChevronRight className="w-4 h-4"/>
             </button>
           ) : (
             <button type="submit" disabled={isCreating}
-              className="flex items-center gap-2 px-8 py-2.5 rounded-xl bg-[#ff385c] text-white text-sm font-bold disabled:opacity-60 hover:bg-[#e0334f] transition">
+              className="flex items-center gap-2 px-8 py-2.5 rounded-xl bg-[#DD6E42] text-white text-sm font-bold disabled:opacity-60 hover:bg-[#DD6E42] transition">
               {isCreating ? <><Loader2 className="w-4 h-4 animate-spin"/> Publishing…</> : 'Publish Property'}
             </button>
           )}

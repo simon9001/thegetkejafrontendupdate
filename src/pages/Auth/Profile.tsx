@@ -244,7 +244,7 @@ const Profile: React.FC = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-[#D4A373]/10 text-[#D4A373]">
+                    <div className="w-full h-full flex items-center justify-center bg-[#DD6E42]/10 text-[#DD6E42]">
                       <User className="w-12 h-12" />
                     </div>
                   )}
@@ -257,14 +257,14 @@ const Profile: React.FC = () => {
                 <button
                   onClick={handleAvatarClick}
                   disabled={avatarLoading}
-                  className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-[#D4A373] transition group-hover:scale-110 disabled:opacity-50"
+                  className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-[#DD6E42] transition group-hover:scale-110 disabled:opacity-50"
                 >
                   <Camera className="w-4 h-4" />
                 </button>
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
               </div>
 
-              <h2 className="text-xl font-bold text-[#1B2430]">{profile?.full_name ?? profile?.email}</h2>
+              <h2 className="text-xl font-bold text-[#50757A]">{profile?.full_name ?? profile?.email}</h2>
               {(profile as any)?.display_name && (
                 <p className="text-gray-400 text-xs mt-0.5">@{(profile as any).display_name}</p>
               )}
@@ -291,8 +291,8 @@ const Profile: React.FC = () => {
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition text-sm font-bold ${
                       activeTab === tab.id
-                        ? 'bg-[#1B2430] text-white shadow-lg'
-                        : 'text-gray-500 hover:bg-gray-50 hover:text-[#1B2430]'
+                        ? 'bg-[#50757A] text-white shadow-lg'
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-[#50757A]'
                     }`}
                   >
                     <tab.icon className="w-4 h-4" />
@@ -329,12 +329,12 @@ const Profile: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Auth</span>
-                  <span className="text-[#1B2430] font-bold capitalize">{storeUser.auth_provider ?? 'local'}</span>
+                  <span className="text-[#50757A] font-bold capitalize">{storeUser.auth_provider ?? 'local'}</span>
                 </div>
                 {(profile as any)?.created_at && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-500">Member since</span>
-                    <span className="text-[#1B2430] font-bold">
+                    <span className="text-[#50757A] font-bold">
                       {new Date((profile as any).created_at).toLocaleDateString('en-KE', { month: 'short', year: 'numeric' })}
                     </span>
                   </div>
@@ -351,7 +351,7 @@ const Profile: React.FC = () => {
               <>
                 <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold text-[#1B2430]">Personal Information</h3>
+                    <h3 className="text-xl font-bold text-[#50757A]">Personal Information</h3>
                     {!editMode ? (
                       <button
                         onClick={() => setEditMode(true)}
@@ -370,7 +370,7 @@ const Profile: React.FC = () => {
                         <button
                           onClick={handleSaveProfile}
                           disabled={saving}
-                          className="flex items-center gap-1.5 px-4 py-2 bg-[#1B2430] text-white rounded-xl text-sm font-bold hover:bg-[#2C3A4E] transition disabled:opacity-60"
+                          className="flex items-center gap-1.5 px-4 py-2 bg-[#50757A] text-white rounded-xl text-sm font-bold hover:bg-[#50757A] transition disabled:opacity-60"
                         >
                           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                           Save
@@ -388,7 +388,7 @@ const Profile: React.FC = () => {
                           value={form.full_name}
                           onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))}
                           placeholder="Your full name"
-                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373]"
+                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                         />
                       </div>
                       <div className="space-y-1">
@@ -397,7 +397,7 @@ const Profile: React.FC = () => {
                           value={form.display_name}
                           onChange={(e) => setForm((f) => ({ ...f, display_name: e.target.value }))}
                           placeholder="@username shown publicly"
-                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373]"
+                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                         />
                       </div>
                       <div className="space-y-1">
@@ -405,7 +405,7 @@ const Profile: React.FC = () => {
                         <select
                           value={form.county}
                           onChange={(e) => setForm((f) => ({ ...f, county: e.target.value }))}
-                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373] bg-white"
+                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42] bg-white"
                         >
                           <option value="">-- Select county --</option>
                           {KENYA_COUNTIES.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -417,7 +417,7 @@ const Profile: React.FC = () => {
                           value={form.whatsapp_number}
                           onChange={(e) => setForm((f) => ({ ...f, whatsapp_number: e.target.value }))}
                           placeholder="+254 7XX XXX XXX"
-                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373]"
+                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                         />
                       </div>
                       <div className="space-y-1">
@@ -425,7 +425,7 @@ const Profile: React.FC = () => {
                         <select
                           value={form.preferred_language}
                           onChange={(e) => setForm((f) => ({ ...f, preferred_language: e.target.value }))}
-                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373] bg-white"
+                          className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42] bg-white"
                         >
                           <option value="en">English</option>
                           <option value="sw">Kiswahili</option>
@@ -448,7 +448,7 @@ const Profile: React.FC = () => {
                                 onClick={() => setForm((f) => ({ ...f, [key]: !f[key as keyof typeof f] }))}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition ${
                                   checked
-                                    ? 'bg-[#1B2430] text-white border-[#1B2430]'
+                                    ? 'bg-[#50757A] text-white border-[#50757A]'
                                     : 'bg-gray-50 text-gray-400 border-gray-200 hover:border-gray-400'
                                 }`}
                               >
@@ -465,11 +465,11 @@ const Profile: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <FieldRow
                         label="Full Name"
-                        value={<><User className="w-4 h-4 text-[#D4A373] flex-shrink-0" />{profile?.full_name}</>}
+                        value={<><User className="w-4 h-4 text-[#DD6E42] flex-shrink-0" />{profile?.full_name}</>}
                       />
                       <FieldRow
                         label="Email Address"
-                        value={<><Mail className="w-4 h-4 text-[#D4A373] flex-shrink-0" />{profile?.email}</>}
+                        value={<><Mail className="w-4 h-4 text-[#DD6E42] flex-shrink-0" />{profile?.email}</>}
                       />
                       <FieldRow
                         label="Display Name"
@@ -477,21 +477,21 @@ const Profile: React.FC = () => {
                       />
                       <FieldRow
                         label="Phone Number"
-                        value={<><Phone className="w-4 h-4 text-[#D4A373] flex-shrink-0" />{(profile as any)?.phone ?? profile?.phone ?? <span className="text-gray-400 italic">Not provided</span>}</>}
+                        value={<><Phone className="w-4 h-4 text-[#DD6E42] flex-shrink-0" />{(profile as any)?.phone ?? profile?.phone ?? <span className="text-gray-400 italic">Not provided</span>}</>}
                       />
                       <FieldRow
                         label="WhatsApp"
                         value={(profile as any)?.whatsapp_number
-                          ? <><Smartphone className="w-4 h-4 text-[#D4A373] flex-shrink-0" />{(profile as any).whatsapp_number}</>
+                          ? <><Smartphone className="w-4 h-4 text-[#DD6E42] flex-shrink-0" />{(profile as any).whatsapp_number}</>
                           : null}
                       />
                       <FieldRow
                         label="County"
-                        value={<><MapPin className="w-4 h-4 text-[#D4A373] flex-shrink-0" />{profile?.county}</>}
+                        value={<><MapPin className="w-4 h-4 text-[#DD6E42] flex-shrink-0" />{profile?.county}</>}
                       />
                       <FieldRow
                         label="Language"
-                        value={<><Globe className="w-4 h-4 text-[#D4A373] flex-shrink-0" />{(profile as any)?.preferred_language === 'sw' ? 'Kiswahili' : 'English'}</>}
+                        value={<><Globe className="w-4 h-4 text-[#DD6E42] flex-shrink-0" />{(profile as any)?.preferred_language === 'sw' ? 'Kiswahili' : 'English'}</>}
                       />
                       {/* Notification prefs */}
                       <div className="space-y-1 md:col-span-2">
@@ -521,7 +521,7 @@ const Profile: React.FC = () => {
                   <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                     <div className="flex items-center gap-2 mb-4">
                       <Building2 className="w-5 h-5 text-blue-500" />
-                      <h3 className="text-base font-bold text-[#1B2430]">Landlord Profile</h3>
+                      <h3 className="text-base font-bold text-[#50757A]">Landlord Profile</h3>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
                       <div><p className="text-gray-400 text-xs">Company</p><p className="font-semibold">{(profile as any).landlord_profile.company_name ?? '—'}</p></div>
@@ -540,7 +540,7 @@ const Profile: React.FC = () => {
                   <section className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
                     <div className="flex items-center gap-2 mb-4">
                       <Briefcase className="w-5 h-5 text-purple-500" />
-                      <h3 className="text-base font-bold text-[#1B2430]">Agent Profile</h3>
+                      <h3 className="text-base font-bold text-[#50757A]">Agent Profile</h3>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
                       <div><p className="text-gray-400 text-xs">Agency</p><p className="font-semibold">{(profile as any).agent_profile.agency_name ?? '—'}</p></div>
@@ -555,19 +555,19 @@ const Profile: React.FC = () => {
 
                 {/* Become Host CTA */}
                 {!['landlord', 'developer', 'agent'].some(r => storeUser.roles?.includes(r)) && (
-                  <div className="bg-gradient-to-br from-[#fff8f0] to-[#fff1e0] rounded-3xl p-8 border border-[#D4A373]/20">
+                  <div className="bg-gradient-to-br from-[#E8DAB2] to-[#E8DAB2] rounded-3xl p-8 border border-[#DD6E42]/20">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-[#D4A373]/10 rounded-2xl text-[#D4A373]">
+                      <div className="p-3 bg-[#DD6E42]/10 rounded-2xl text-[#DD6E42]">
                         <Home className="w-6 h-6" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-[#1B2430]">Share your home, earn income</h3>
+                        <h3 className="text-lg font-bold text-[#50757A]">Share your home, earn income</h3>
                         <p className="text-sm text-gray-500 mt-1 mb-4">
                           List your property on GetKeja and reach thousands of potential tenants and buyers.
                         </p>
                         <Link
                           to="/become-host"
-                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#D4A373] hover:bg-[#8B6E4E] text-white font-bold rounded-2xl transition-colors text-sm"
+                          className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#DD6E42] hover:bg-[#50757A] text-white font-bold rounded-2xl transition-colors text-sm"
                         >
                           <Home className="w-4 h-4" /> Become a Host <ChevronRight className="w-4 h-4" />
                         </Link>
@@ -581,13 +581,13 @@ const Profile: React.FC = () => {
             {/* ── Security tab ── */}
             {activeTab === 'security' && (
               <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-[#1B2430] mb-6">Account Security</h3>
+                <h3 className="text-xl font-bold text-[#50757A] mb-6">Account Security</h3>
 
                 {/* Only show password change for local auth */}
                 {storeUser.auth_provider !== 'google' ? (
                   <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
-                    <h4 className="font-bold text-[#1B2430] flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-[#D4A373]" /> Change Password
+                    <h4 className="font-bold text-[#50757A] flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-[#DD6E42]" /> Change Password
                     </h4>
 
                     {(['current', 'next', 'confirm'] as const).map((field) => {
@@ -604,7 +604,7 @@ const Profile: React.FC = () => {
                               required
                               autoComplete={autoCompletes[field]}
                               placeholder="••••••••"
-                              className="w-full border border-gray-200 rounded-2xl px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-[#D4A373]"
+                              className="w-full border border-gray-200 rounded-2xl px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                             />
                             <button
                               type="button"
@@ -632,7 +632,7 @@ const Profile: React.FC = () => {
                     <button
                       type="submit"
                       disabled={changingPw}
-                      className="flex items-center gap-2 px-6 py-3 bg-[#1B2430] text-white font-bold rounded-2xl hover:bg-[#2C3A4E] transition disabled:opacity-60"
+                      className="flex items-center gap-2 px-6 py-3 bg-[#50757A] text-white font-bold rounded-2xl hover:bg-[#50757A] transition disabled:opacity-60"
                     >
                       {changingPw ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
                       Update Password
@@ -649,7 +649,7 @@ const Profile: React.FC = () => {
             {/* ── Sessions tab ── */}
             {activeTab === 'sessions' && (
               <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-[#1B2430] mb-6">Active Sessions</h3>
+                <h3 className="text-xl font-bold text-[#50757A] mb-6">Active Sessions</h3>
                 {sessionsLoading ? (
                   <div className="flex items-center gap-2 text-gray-400 py-6">
                     <Loader2 className="w-5 h-5 animate-spin" /> Loading sessions…
@@ -661,11 +661,11 @@ const Profile: React.FC = () => {
                     {(sessionsData?.sessions ?? []).map((s) => (
                       <div key={s.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
                         <div className="flex items-center gap-4">
-                          <div className="p-2 bg-white rounded-xl shadow-sm text-[#D4A373]">
+                          <div className="p-2 bg-white rounded-xl shadow-sm text-[#DD6E42]">
                             {s.deviceType === 'mobile' ? <Smartphone className="w-5 h-5" /> : <Monitor className="w-5 h-5" />}
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-[#1B2430] capitalize">{s.deviceType ?? 'Unknown device'}</p>
+                            <p className="text-sm font-bold text-[#50757A] capitalize">{s.deviceType ?? 'Unknown device'}</p>
                             <p className="text-xs text-gray-400">{s.ipAddress ?? 'Unknown IP'} · Started {new Date(s.createdAt).toLocaleDateString()}</p>
                             <p className="text-[10px] text-gray-300 truncate max-w-[220px]">{s.userAgent}</p>
                           </div>

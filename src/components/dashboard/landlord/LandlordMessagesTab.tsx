@@ -85,13 +85,13 @@ const LandlordMessagesTab: React.FC = () => {
             {/* Search */}
             <div className="p-3 border-b border-gray-100">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#6a6a6a] pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#50757A] pointer-events-none" />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search conversations…"
-                  className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] bg-[#fafafa]"
+                  className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 focus:border-[#DD6E42] bg-[#EAEAEA]"
                 />
               </div>
             </div>
@@ -111,7 +111,7 @@ const LandlordMessagesTab: React.FC = () => {
               ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full py-16 text-center px-4">
                   <MessageCircle className="w-8 h-8 text-gray-200 mb-2" />
-                  <p className="text-sm text-[#6a6a6a]">No conversations yet</p>
+                  <p className="text-sm text-[#50757A]">No conversations yet</p>
                   <p className="text-xs text-[#9a9a9a] mt-1">Messages from enquirers will appear here</p>
                 </div>
               ) : (
@@ -136,13 +136,13 @@ const LandlordMessagesTab: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-0.5">
-                          <p className="text-sm font-semibold text-[#222222] truncate pr-2">{propTitle}</p>
+                          <p className="text-sm font-semibold text-[#50757A] truncate pr-2">{propTitle}</p>
                           <span className="text-[10px] text-[#9a9a9a] shrink-0">{formatTime(conv.last_message_at)}</span>
                         </div>
-                        <p className="text-xs text-[#6a6a6a] truncate">{conv.last_message_text ?? 'No messages yet'}</p>
+                        <p className="text-xs text-[#50757A] truncate">{conv.last_message_text ?? 'No messages yet'}</p>
                       </div>
                       {unread > 0 && (
-                        <span className="shrink-0 min-w-[18px] h-[18px] bg-[#ff385c] text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                        <span className="shrink-0 min-w-[18px] h-[18px] bg-[#DD6E42] text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
                           {unread > 9 ? '9+' : unread}
                         </span>
                       )}
@@ -157,11 +157,11 @@ const LandlordMessagesTab: React.FC = () => {
           <div className={`flex-1 flex flex-col ${activeId ? 'flex' : 'hidden md:flex'}`}>
             {!activeId ? (
               <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
-                <div className="w-16 h-16 rounded-2xl bg-[#ff385c]/10 flex items-center justify-center mb-4">
-                  <MessageCircle className="w-8 h-8 text-[#ff385c]" />
+                <div className="w-16 h-16 rounded-2xl bg-[#DD6E42]/10 flex items-center justify-center mb-4">
+                  <MessageCircle className="w-8 h-8 text-[#DD6E42]" />
                 </div>
-                <p className="text-sm font-semibold text-[#222222] mb-1">Select a conversation</p>
-                <p className="text-xs text-[#6a6a6a]">Choose a conversation from the list to view messages</p>
+                <p className="text-sm font-semibold text-[#50757A] mb-1">Select a conversation</p>
+                <p className="text-xs text-[#50757A]">Choose a conversation from the list to view messages</p>
               </div>
             ) : (
               <>
@@ -170,29 +170,29 @@ const LandlordMessagesTab: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setActiveId(null)}
-                    className="md:hidden p-1 text-[#6a6a6a] hover:text-[#222222]"
+                    className="md:hidden p-1 text-[#50757A] hover:text-[#50757A]"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <div>
-                    <p className="text-sm font-bold text-[#222222]">
+                    <p className="text-sm font-bold text-[#50757A]">
                       {activeConv?.properties?.title ?? 'Conversation'}
                     </p>
-                    <p className="text-[11px] text-[#6a6a6a]">
+                    <p className="text-[11px] text-[#50757A]">
                       {activeConv?.type?.replace(/_/g, ' ')}
                     </p>
                   </div>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto flex flex-col gap-3 p-4 bg-[#fafafa]">
+                <div className="flex-1 overflow-y-auto flex flex-col gap-3 p-4 bg-[#EAEAEA]">
                   {msgsLoading && messages.length === 0 ? (
                     <div className="flex items-center justify-center h-full">
-                      <Loader2 className="w-5 h-5 text-[#ff385c] animate-spin" />
+                      <Loader2 className="w-5 h-5 text-[#DD6E42] animate-spin" />
                     </div>
                   ) : messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center">
-                      <p className="text-xs text-[#6a6a6a]">No messages yet</p>
+                      <p className="text-xs text-[#50757A]">No messages yet</p>
                     </div>
                   ) : (
                     // Backend returns newest first → reverse for display
@@ -203,8 +203,8 @@ const LandlordMessagesTab: React.FC = () => {
                           <div
                             className={`max-w-[72%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
                               isMe
-                                ? 'bg-[#ff385c] text-white rounded-br-sm'
-                                : 'bg-white text-[#222222] border border-[#e5e5e5] rounded-bl-sm'
+                                ? 'bg-[#DD6E42] text-white rounded-br-sm'
+                                : 'bg-white text-[#50757A] border border-[#EAEAEA] rounded-bl-sm'
                             }`}
                           >
                             {msg.is_deleted ? (
@@ -232,13 +232,13 @@ const LandlordMessagesTab: React.FC = () => {
                       onChange={(e) => setInputText(e.target.value)}
                       onKeyDown={handleKeyDown}
                       placeholder="Type a message…"
-                      className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] bg-[#fafafa]"
+                      className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 focus:border-[#DD6E42] bg-[#EAEAEA]"
                     />
                     <button
                       type="button"
                       onClick={handleSend}
                       disabled={!inputText.trim() || sending}
-                      className="p-2.5 bg-[#ff385c] text-white rounded-xl hover:bg-[#e00b41] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="p-2.5 bg-[#DD6E42] text-white rounded-xl hover:bg-[#C4623B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </button>

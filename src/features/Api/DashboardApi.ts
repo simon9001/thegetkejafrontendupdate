@@ -1,9 +1,4 @@
 // frontend/src/features/Api/DashboardApi.ts
-// Maps to actual backend routes:
-//   GET /api/landlord/dashboard  → landlord KPI cards
-//   GET /api/users               → admin user list
-//   PATCH /api/users/:id/roles   → update roles
-//   PATCH /api/users/:id/status  → update account status
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQueryWithReauth } from './baseQuery';
 
@@ -17,6 +12,75 @@ export interface LandlordKpi {
   boosts:      { active: number };
   generated_at: string;
   code?: string;
+}
+
+export interface LandlordTenant {
+  id:              string;
+  property_id:     string;
+  property_title:  string;
+  status:          string;
+  type:            'long_term' | 'short_stay';
+  // long-term fields
+  monthly_rent_kes?: number;
+  start_date?:       string;
+  end_date?:         string;
+  tenant?:           { id: string; full_name: string; email: string; phone: string; avatar_url: string };
+  // short-stay fields
+  check_in_date?:    string;
+  check_out_date?:   string;
+  guests_count?:     number;
+  total_kes?:        number;
+  booking_ref?:      string;
+  guest?:            { id: string; full_name: string; email: string; phone: string; avatar_url: string };
+}
+
+export interface LandlordTenantsResponse {
+  long_term:         LandlordTenant[];
+  short_stay_guests: LandlordTenant[];
+  total:             number;
+}
+
+export interface ShortStayTransaction {
+  id:              string;
+  booking_ref:     string;
+  check_in_date:   string;
+  check_out_date:  string;
+  status:          string;
+  total_kes:       number;
+  host_payout_kes: number;
+  platform_fee_kes:number;
+  created_at:      string;
+  property:        { id: string; title: string } | null;
+  guest:           { id: string; full_name: string; email: string } | null;
+}
+
+export interface ShortStayPayments {
+  transactions: ShortStayTransaction[];
+  total:        number;
+  page:         number;
+  limit:        number;
+  summary: {
+    total_revenue_kes:    number;
+    pending_payments_kes: number;
+    this_month_kes:       number;
+  };
+}
+
+export interface LandlordFullReport {
+  total_properties:   number;
+  occupancy_rate_pct: number;
+  short_stay: {
+    bookings:        number;
+    revenue_kes:     number;
+    avg_stay_nights: number;
+  };
+  long_term: {
+    active_tenancies:     number;
+    monthly_income_kes:   number;
+    pending_applications: number;
+  };
+  by_category:  Record<string, number>;
+  generated_at: string;
 }
 
 // Unified stats shape (backend returns role-specific subset)
@@ -44,7 +108,7 @@ export interface DashboardStats {
 export const DashboardApi = createApi({
   reducerPath: 'dashboardApi',
   baseQuery:   baseQueryWithReauth,
-  tagTypes:    ['Dashboard', 'Users', 'ShortStay', 'Profile'],
+  tagTypes:    ['Dashboard', 'Users', 'ShortStay', 'Profile', 'LandlordTenants', 'LandlordPayments', 'LandlordReports'],
   endpoints: (builder) => ({
 
     // ── Unified role-aware dashboard stats ──────────────────────────────────
@@ -57,6 +121,31 @@ export const DashboardApi = createApi({
     getLandlordDashboard: builder.query<LandlordKpi, void>({
       query: () => 'landlord/dashboard',
       providesTags: ['Dashboard'],
+    }),
+
+    // ── Landlord tenants (long-term + short-stay guests) ─────────────────
+    getLandlordTenants: builder.query<LandlordTenantsResponse, void>({
+      query: () => 'landlord/tenants',
+      providesTags: ['LandlordTenants'],
+    }),
+
+    // ── Short-stay payments ───────────────────────────────────────────────
+    getLandlordShortStayPayments: builder.query<ShortStayPayments, { page?: number; limit?: number } | void>({
+      query: (params) => {
+        const p = params ?? {};
+        const qs = new URLSearchParams();
+        if ((p as any).page)  qs.set('page',  String((p as any).page));
+        if ((p as any).limit) qs.set('limit', String((p as any).limit));
+        const q = qs.toString();
+        return `landlord/short-stay/payments${q ? '?' + q : ''}`;
+      },
+      providesTags: ['LandlordPayments'],
+    }),
+
+    // ── Full reports ──────────────────────────────────────────────────────
+    getLandlordFullReport: builder.query<LandlordFullReport, void>({
+      query: () => 'landlord/reports/full',
+      providesTags: ['LandlordReports'],
     }),
 
     // ── Admin user list ─────────────────────────────────────────────────────
@@ -100,6 +189,9 @@ export const DashboardApi = createApi({
 export const {
   useGetDashboardStatsQuery,
   useGetLandlordDashboardQuery,
+  useGetLandlordTenantsQuery,
+  useGetLandlordShortStayPaymentsQuery,
+  useGetLandlordFullReportQuery,
   useGetUsersQuery,
   useUpdateUserRoleMutation,
   useUpdateUserStatusMutation,

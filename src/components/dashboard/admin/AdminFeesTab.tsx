@@ -37,8 +37,8 @@ const AdminFeesTab: React.FC = () => {
       {/* Global Config */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm transition-all hover:shadow-md">
-           <h3 className="text-sm font-bold text-[#222222] mb-5 flex items-center gap-2">
-             <div className="p-1.5 rounded-lg bg-[#ff385c]/10 text-[#ff385c]">
+           <h3 className="text-sm font-bold text-[#50757A] mb-5 flex items-center gap-2">
+             <div className="p-1.5 rounded-lg bg-[#DD6E42]/10 text-[#DD6E42]">
                <Settings className="w-4 h-4" />
              </div>
              Global Coefficients
@@ -47,8 +47,8 @@ const AdminFeesTab: React.FC = () => {
              {feeConfig.map((item: any) => (
                <div key={item.config_key} className="flex items-center justify-between p-3.5 bg-gray-50/50 rounded-2xl border border-gray-100">
                  <div className="flex-1 mr-4">
-                   <p className="text-xs font-bold text-[#222222] capitalize">{item.config_key.replace(/_/g, ' ')}</p>
-                   <p className="text-[10px] text-[#6a6a6a] mt-0.5 leading-relaxed">{item.description}</p>
+                   <p className="text-xs font-bold text-[#50757A] capitalize">{item.config_key.replace(/_/g, ' ')}</p>
+                   <p className="text-[10px] text-[#50757A] mt-0.5 leading-relaxed">{item.description}</p>
                  </div>
                  <div className="flex items-center gap-2">
                    <input 
@@ -56,12 +56,12 @@ const AdminFeesTab: React.FC = () => {
                     step="0.01"
                     defaultValue={item.config_value} 
                     onChange={e => setEditingValues(prev => ({ ...prev, [item.config_key]: parseFloat(e.target.value) }))}
-                    className="w-20 bg-white border border-gray-200 rounded-xl px-2.5 py-1.5 text-right text-xs font-bold text-[#222222] focus:ring-2 focus:ring-[#ff385c]/20 outline-none" 
+                    className="w-20 bg-white border border-gray-200 rounded-xl px-2.5 py-1.5 text-right text-xs font-bold text-[#50757A] focus:ring-2 focus:ring-[#DD6E42]/20 outline-none" 
                    />
                    <button 
                     onClick={() => handleUpdateConfig(item.config_key)}
                     disabled={editingValues[item.config_key] === undefined && savedKey !== item.config_key}
-                    className={`p-2 rounded-xl transition-all ${savedKey === item.config_key ? 'bg-emerald-50 text-emerald-600' : 'text-[#ff385c] hover:bg-white border border-transparent hover:border-gray-100'}`}
+                    className={`p-2 rounded-xl transition-all ${savedKey === item.config_key ? 'bg-emerald-50 text-emerald-600' : 'text-[#DD6E42] hover:bg-white border border-transparent hover:border-gray-100'}`}
                    >
                      {savedKey === item.config_key ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                    </button>
@@ -74,7 +74,7 @@ const AdminFeesTab: React.FC = () => {
 
         {/* Viewing Fees */}
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm transition-all hover:shadow-md">
-           <h3 className="text-sm font-bold text-[#222222] mb-5 flex items-center gap-2">
+           <h3 className="text-sm font-bold text-[#50757A] mb-5 flex items-center gap-2">
              <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">
                <DollarSign className="w-4 h-4" />
              </div>
@@ -84,10 +84,10 @@ const AdminFeesTab: React.FC = () => {
              {viewingFees.map((v: any) => (
                <div key={v.id} className="flex items-center justify-between p-3 border-b border-gray-50 last:border-0 last:pb-0 hover:bg-gray-50/30 rounded-xl transition-colors">
                  <div>
-                   <p className="text-sm font-semibold text-[#222222]">{v.category_name} · {v.property_type}</p>
-                   <p className="text-xs text-[#6a6a6a] font-medium">KES {(v.fee_kes ?? 0).toLocaleString()}</p>
+                   <p className="text-sm font-semibold text-[#50757A]">{v.category_name} · {v.property_type}</p>
+                   <p className="text-xs text-[#50757A] font-medium">KES {(v.fee_kes ?? 0).toLocaleString()}</p>
                  </div>
-                 <button className="text-xs font-bold text-[#ff385c] px-3 py-1.5 rounded-lg hover:bg-[#ff385c]/5 transition-all">Edit</button>
+                 <button className="text-xs font-bold text-[#DD6E42] px-3 py-1.5 rounded-lg hover:bg-[#DD6E42]/5 transition-all">Edit</button>
                </div>
              ))}
            </div>
@@ -98,7 +98,7 @@ const AdminFeesTab: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Listing Tiers */}
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-           <h3 className="text-sm font-bold text-[#222222] mb-5 flex items-center gap-2">
+           <h3 className="text-sm font-bold text-[#50757A] mb-5 flex items-center gap-2">
              <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600">
                <Award className="w-4 h-4" />
              </div>
@@ -107,7 +107,7 @@ const AdminFeesTab: React.FC = () => {
            <div className="overflow-x-auto">
              <table className="w-full text-xs text-left">
                <thead>
-                 <tr className="text-[#6a6a6a] font-bold border-b border-gray-100 uppercase tracking-widest text-[10px]">
+                 <tr className="text-[#50757A] font-bold border-b border-gray-100 uppercase tracking-widest text-[10px]">
                    <th className="pb-3 px-2">Tier</th>
                    <th className="pb-3 px-2 text-right">Price (KES)</th>
                    <th className="pb-3 px-2 text-center">Photos</th>
@@ -117,11 +117,11 @@ const AdminFeesTab: React.FC = () => {
                <tbody className="divide-y divide-gray-50">
                   {listingTiers.map((t: any) => (
                     <tr key={t.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="py-3 px-2 font-bold text-[#222222] capitalize">{t.tier_name}</td>
-                      <td className="py-3 px-2 text-right font-semibold text-[#222222]">{(t.base_price_kes ?? 0).toLocaleString()}</td>
+                      <td className="py-3 px-2 font-bold text-[#50757A] capitalize">{t.tier_name}</td>
+                      <td className="py-3 px-2 text-right font-semibold text-[#50757A]">{(t.base_price_kes ?? 0).toLocaleString()}</td>
 
-                      <td className="py-3 px-2 text-center text-[#6a6a6a] font-medium">{t.max_photos}</td>
-                      <td className="py-3 px-2 text-right"><button className="p-1.5 text-[#6a6a6a] hover:text-[#ff385c] hover:bg-white rounded-lg transition-all border border-transparent hover:border-gray-100"><Settings className="w-3.5 h-3.5" /></button></td>
+                      <td className="py-3 px-2 text-center text-[#50757A] font-medium">{t.max_photos}</td>
+                      <td className="py-3 px-2 text-right"><button className="p-1.5 text-[#50757A] hover:text-[#DD6E42] hover:bg-white rounded-lg transition-all border border-transparent hover:border-gray-100"><Settings className="w-3.5 h-3.5" /></button></td>
                     </tr>
                   ))}
                </tbody>
@@ -131,7 +131,7 @@ const AdminFeesTab: React.FC = () => {
 
         {/* Boost Packages */}
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-           <h3 className="text-sm font-bold text-[#222222] mb-5 flex items-center gap-2">
+           <h3 className="text-sm font-bold text-[#50757A] mb-5 flex items-center gap-2">
              <div className="p-1.5 rounded-lg bg-violet-50 text-violet-600">
                <ArrowUpRight className="w-4 h-4" />
              </div>
@@ -141,11 +141,11 @@ const AdminFeesTab: React.FC = () => {
              {boostPackages.map((b: any) => (
                <div key={b.id} className="p-4 bg-violet-50/30 rounded-2xl border border-violet-100/50 flex items-center justify-between group hover:border-violet-200 transition-all cursor-default">
                  <div>
-                   <p className="text-sm font-bold text-[#222222] flex items-center gap-2">
+                   <p className="text-sm font-bold text-[#50757A] flex items-center gap-2">
                      {b.package_name}
                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white border border-violet-100">+{b.score_boost} score</span>
                    </p>
-                   <p className="text-xs text-[#6a6a6a] mt-0.5">Duration: {b.duration_days} days · Full Featured Placement</p>
+                   <p className="text-xs text-[#50757A] mt-0.5">Duration: {b.duration_days} days · Full Featured Placement</p>
                  </div>
                  <div className="text-right">
                    <p className="text-sm font-bold text-violet-700">KES {(b.price_kes ?? 0).toLocaleString()}</p>

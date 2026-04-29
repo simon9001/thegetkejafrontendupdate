@@ -209,7 +209,7 @@ const PropertyStatus: React.FC<PropertyStatusProps> = ({
                 {/* Status Header */}
                 <div className="absolute top-6 left-0 right-0 z-10 flex items-center justify-between px-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#D4A373]">
+                        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#DD6E42]">
                             <img
                                 src={currentStatus.owner.avatar}
                                 alt={currentStatus.owner.name}
@@ -222,7 +222,7 @@ const PropertyStatus: React.FC<PropertyStatusProps> = ({
                                     {currentStatus.owner.name}
                                 </span>
                                 {currentStatus.owner.verified && (
-                                    <span className="text-[#D4A373] text-xs">✓</span>
+                                    <span className="text-[#DD6E42] text-xs">✓</span>
                                 )}
                                 <span className="text-xs text-gray-300">
                                     {new Date(currentStatus.postedAt).toLocaleDateString()}
@@ -292,7 +292,7 @@ const PropertyStatus: React.FC<PropertyStatusProps> = ({
                     </div>
                     <button
                         onClick={handleViewDetails}
-                        className="px-6 py-2 bg-[#D4A373] text-white rounded-full font-medium hover:bg-[#E6B17E] transition"
+                        className="px-6 py-2 bg-[#DD6E42] text-white rounded-full font-medium hover:bg-[#E8DAB2] transition"
                     >
                         View Details
                     </button>

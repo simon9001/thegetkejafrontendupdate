@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { selectCurrentUser } from '../../features/Slice/AuthSlice';
 import { useGetMyPropertiesQuery } from '../../features/Api/PropertiesApi';
+import { useGetLandlordDashboardQuery } from '../../features/Api/DashboardApi';
 import { DashboardShell } from '../../components/dashboard/shared';
 import type { NavItem } from '../../components/dashboard/shared';
 
@@ -31,7 +32,13 @@ const DeveloperDashboard: React.FC = () => {
   const [activeNav, setActiveNav] = useState('overview');
 
   const { data: propertiesData } = useGetMyPropertiesQuery(undefined, { skip: !isDeveloper });
-  const stats = { ownedProperties: propertiesData?.total ?? 0 };
+  const { data: kpi } = useGetLandlordDashboardQuery(undefined, { skip: !isDeveloper });
+
+  const stats = {
+    ownedProperties: kpi?.properties?.total ?? propertiesData?.total ?? 0,
+    activeBookings:  kpi?.short_stay?.upcoming_bookings ?? 0,
+    totalEarnings:   kpi?.earnings?.total_kes ?? 0,
+  };
 
   if (!user) return <div className="p-20 text-center">Please login to access the Developer Dashboard.</div>;
 

@@ -29,21 +29,21 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-2xl w-full max-w-sm shadow-2xl border border-gray-100 p-6"
       >
-        <h3 className="font-bold text-[#222222] mb-2">{title}</h3>
-        <p className="text-sm text-[#6a6a6a] mb-4">{message}</p>
+        <h3 className="font-bold text-[#50757A] mb-2">{title}</h3>
+        <p className="text-sm text-[#50757A] mb-4">{message}</p>
         {showNotes && (
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder={notesPlaceholder ?? 'Add notes…'}
             rows={3}
-            className="w-full text-sm text-[#222222] bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-[#ff385c]/30 resize-none mb-4"
+            className="w-full text-sm text-[#50757A] bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-[#DD6E42]/30 resize-none mb-4"
           />
         )}
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-[#6a6a6a] hover:bg-gray-50 transition-colors"
+            className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-[#50757A] hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>

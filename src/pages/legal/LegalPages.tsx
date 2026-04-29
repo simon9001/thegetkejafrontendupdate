@@ -15,7 +15,7 @@ const PageShell: React.FC<{
   children: React.ReactNode;
 }> = ({ icon, title, subtitle, lastUpdated, children }) => (
   <Layout showSearch={false}>
-    <div className="bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white">
+    <div className="bg-gradient-to-br from-[#50757A] to-[#50757A] text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">{icon}</div>
@@ -32,7 +32,7 @@ const PageShell: React.FC<{
 // ─── Prose section ────────────────────────────────────────────────────────────
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="mb-10">
-    <h2 className="text-xl font-bold text-[#1B2430] mb-4 pb-2 border-b border-gray-100">{title}</h2>
+    <h2 className="text-xl font-bold text-[#50757A] mb-4 pb-2 border-b border-gray-100">{title}</h2>
     <div className="text-gray-600 text-sm leading-relaxed space-y-3">{children}</div>
   </div>
 );
@@ -73,16 +73,16 @@ export const PrivacyPolicy: React.FC = () => (
       <p>We do not sell your personal data. We share data with landlords, agents, and developers only as needed to facilitate property bookings and viewings. We share with service providers (Resend for email, Cloudinary for media, Supabase for database) under strict data processing agreements.</p>
     </Section>
     <Section title="4. Data Retention">
-      <p>Account data is retained while your account is active. You may request deletion at any time by contacting <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a>. Some data may be retained for legal compliance for up to 7 years.</p>
+      <p>Account data is retained while your account is active. You may request deletion at any time by contacting <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a>. Some data may be retained for legal compliance for up to 7 years.</p>
     </Section>
     <Section title="5. Your Rights">
-      <p>Under the Kenya Data Protection Act 2019, you have the right to access, correct, delete, and port your data. To exercise these rights, email <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a>.</p>
+      <p>Under the Kenya Data Protection Act 2019, you have the right to access, correct, delete, and port your data. To exercise these rights, email <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a>.</p>
     </Section>
     <Section title="6. Cookies">
-      <p>We use cookies for authentication, analytics, and personalisation. See our <Link to="/cookies" className="text-[#ff385c] hover:underline">Cookie Policy</Link> for full details.</p>
+      <p>We use cookies for authentication, analytics, and personalisation. See our <Link to="/cookies" className="text-[#DD6E42] hover:underline">Cookie Policy</Link> for full details.</p>
     </Section>
     <Section title="7. Contact">
-      <p>For privacy enquiries, contact our Data Protection Officer at <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a>.</p>
+      <p>For privacy enquiries, contact our Data Protection Officer at <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a>.</p>
     </Section>
   </PageShell>
 );
@@ -124,7 +124,7 @@ export const TermsOfService: React.FC = () => (
       <p>By clicking "I Agree" during registration, by using Google OAuth to create an account, or by otherwise accessing the Platform, you:</p>
       <ul className="list-disc pl-5 space-y-1 mt-2">
         <li>Confirm that you have read and understood these Terms in their entirety.</li>
-        <li>Agree to be bound by these Terms and our <Link to="/privacy" className="text-[#ff385c] hover:underline">Privacy Policy</Link> and <Link to="/cookies" className="text-[#ff385c] hover:underline">Cookie Policy</Link>, which are incorporated by reference.</li>
+        <li>Agree to be bound by these Terms and our <Link to="/privacy" className="text-[#DD6E42] hover:underline">Privacy Policy</Link> and <Link to="/cookies" className="text-[#DD6E42] hover:underline">Cookie Policy</Link>, which are incorporated by reference.</li>
         <li>Confirm that your acceptance constitutes a legally binding contract under the Law of Contract Act (Cap 23) of Kenya.</li>
       </ul>
       <p className="mt-3">If you do not agree to any part of these Terms you must not register an account or use the Platform.</p>
@@ -144,7 +144,7 @@ export const TermsOfService: React.FC = () => (
     <Section title="4. Account Registration & Security">
       <p><strong>4.1 Accurate information.</strong> You must provide accurate, current, and complete information at registration and keep your profile up to date at all times.</p>
       <p><strong>4.2 One account per person.</strong> Each natural person may maintain only one personal account. Operating multiple accounts to circumvent restrictions or bans is prohibited.</p>
-      <p><strong>4.3 Password security.</strong> You are solely responsible for maintaining the confidentiality of your password and all activity conducted under your account. You must notify us immediately at <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a> if you suspect unauthorised access to your account.</p>
+      <p><strong>4.3 Password security.</strong> You are solely responsible for maintaining the confidentiality of your password and all activity conducted under your account. You must notify us immediately at <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a> if you suspect unauthorised access to your account.</p>
       <p><strong>4.4 Email verification.</strong> All accounts must be verified via the link sent to your registered email address before full access is granted.</p>
       <p><strong>4.5 Google OAuth.</strong> If you register using Google OAuth, you authorise Getkeja to retrieve your name, email address, and profile picture from Google. You remain bound by these Terms regardless of the sign-in method used.</p>
       <p><strong>4.6 Role verification.</strong> Agents must hold a valid licence issued by the Estate Agents Registration Board (EARB) under the Estate Agents Act (Cap 533) of Kenya. Developers must be duly incorporated or registered under Kenyan law. Getkeja reserves the right to request proof of credentials at any time and to suspend or downgrade accounts where credentials cannot be verified.</p>
@@ -234,7 +234,7 @@ export const TermsOfService: React.FC = () => (
 
     <Section title="11. Privacy & Data Protection">
       <p>Getkeja takes the protection of your personal data seriously. We process your personal data in accordance with the <strong>Kenya Data Protection Act 2019</strong> and the regulations issued thereunder by the Office of the Data Protection Commissioner (ODPC).</p>
-      <p className="mt-2">Our lawful bases for processing your data include: performance of this contract, compliance with a legal obligation, and legitimate interests. Full details of what data we collect, how we use it, with whom we share it, and how long we retain it are set out in our <Link to="/privacy" className="text-[#ff385c] hover:underline">Privacy Policy</Link>.</p>
+      <p className="mt-2">Our lawful bases for processing your data include: performance of this contract, compliance with a legal obligation, and legitimate interests. Full details of what data we collect, how we use it, with whom we share it, and how long we retain it are set out in our <Link to="/privacy" className="text-[#DD6E42] hover:underline">Privacy Policy</Link>.</p>
       <p className="mt-2"><strong>Your rights under the Data Protection Act 2019:</strong></p>
       <ul className="list-disc pl-5 space-y-1 mt-2">
         <li><strong>Right of access</strong> — to obtain a copy of your personal data held by us.</li>
@@ -244,7 +244,7 @@ export const TermsOfService: React.FC = () => (
         <li><strong>Right to object</strong> — to object to data processing based on legitimate interests.</li>
         <li><strong>Right to withdraw consent</strong> — where processing is based on consent, to withdraw consent at any time without affecting the lawfulness of prior processing.</li>
       </ul>
-      <p className="mt-2">To exercise any of these rights, contact our Data Protection Officer at <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a>. We will respond within 21 days as required by law. If you are unsatisfied with our response, you have the right to lodge a complaint with the Office of the Data Protection Commissioner (ODPC) at <a href="https://www.odpc.go.ke" className="text-[#ff385c] hover:underline" target="_blank" rel="noopener noreferrer">www.odpc.go.ke</a>.</p>
+      <p className="mt-2">To exercise any of these rights, contact our Data Protection Officer at <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a>. We will respond within 21 days as required by law. If you are unsatisfied with our response, you have the right to lodge a complaint with the Office of the Data Protection Commissioner (ODPC) at <a href="https://www.odpc.go.ke" className="text-[#DD6E42] hover:underline" target="_blank" rel="noopener noreferrer">www.odpc.go.ke</a>.</p>
     </Section>
 
     <Section title="12. Disclaimers">
@@ -283,13 +283,13 @@ export const TermsOfService: React.FC = () => (
         <li>We reasonably suspect fraudulent activity on your account.</li>
         <li>Your account has been inactive for more than 24 months.</li>
       </ul>
-      <p><strong>15.2 By you.</strong> You may close your account at any time by emailing <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a>. Upon closure, your personal data will be handled in accordance with our <Link to="/privacy" className="text-[#ff385c] hover:underline">Privacy Policy</Link> and applicable data retention obligations.</p>
+      <p><strong>15.2 By you.</strong> You may close your account at any time by emailing <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a>. Upon closure, your personal data will be handled in accordance with our <Link to="/privacy" className="text-[#DD6E42] hover:underline">Privacy Policy</Link> and applicable data retention obligations.</p>
       <p><strong>15.3 Effect of termination.</strong> Upon termination, your right to access the Platform ceases immediately. Active Short-Stay Bookings will be handled on a case-by-case basis. Any outstanding payment obligations remain enforceable.</p>
     </Section>
 
     <Section title="16. Governing Law & Dispute Resolution">
       <p><strong>16.1 Governing law.</strong> These Terms and any dispute or claim arising out of or in connection with them (including non-contractual disputes or claims) shall be governed by and construed in accordance with the laws of Kenya.</p>
-      <p><strong>16.2 Amicable resolution.</strong> In the event of a dispute, the parties shall first attempt to resolve it amicably by contacting us at <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a>. We aim to respond within 5 business days.</p>
+      <p><strong>16.2 Amicable resolution.</strong> In the event of a dispute, the parties shall first attempt to resolve it amicably by contacting us at <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a>. We aim to respond within 5 business days.</p>
       <p><strong>16.3 Consumer disputes.</strong> If you are a consumer, you may also raise disputes through the Consumer Protection mechanisms available under the Consumer Protection Act 2012, including referral to the Competition Authority of Kenya.</p>
       <p><strong>16.4 Mediation.</strong> If amicable resolution fails within 30 days, parties shall attempt mediation through the Nairobi Centre for International Arbitration (NCIA) or any mutually agreed mediator before proceeding to litigation.</p>
       <p><strong>16.5 Jurisdiction.</strong> If mediation fails, the courts of Nairobi, Kenya, shall have exclusive jurisdiction to hear and determine any dispute. Nothing in this clause prevents either party from seeking urgent injunctive relief from any competent court.</p>
@@ -317,10 +317,10 @@ export const TermsOfService: React.FC = () => (
     <Section title="19. Contact Us">
       <p>If you have any questions about these Terms, please contact us:</p>
       <ul className="list-disc pl-5 space-y-1 mt-2">
-        <li><strong>Email:</strong> <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a></li>
-        <li><strong>WhatsApp:</strong> <a href="https://wa.me/254757568845" className="text-[#ff385c] hover:underline" target="_blank" rel="noopener noreferrer">+254 757 568 845</a></li>
-        <li><strong>Data Protection Officer:</strong> <a href="mailto:hello@getkeja.online" className="text-[#ff385c] hover:underline">hello@getkeja.online</a></li>
-        <li><strong>Office of the Data Protection Commissioner:</strong> <a href="https://www.odpc.go.ke" className="text-[#ff385c] hover:underline" target="_blank" rel="noopener noreferrer">www.odpc.go.ke</a></li>
+        <li><strong>Email:</strong> <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a></li>
+        <li><strong>WhatsApp:</strong> <a href="https://wa.me/254757568845" className="text-[#DD6E42] hover:underline" target="_blank" rel="noopener noreferrer">+254 757 568 845</a></li>
+        <li><strong>Data Protection Officer:</strong> <a href="mailto:hello@getkeja.online" className="text-[#DD6E42] hover:underline">hello@getkeja.online</a></li>
+        <li><strong>Office of the Data Protection Commissioner:</strong> <a href="https://www.odpc.go.ke" className="text-[#DD6E42] hover:underline" target="_blank" rel="noopener noreferrer">www.odpc.go.ke</a></li>
       </ul>
     </Section>
 
@@ -400,10 +400,10 @@ export const SafetyTips: React.FC = () => (
         </div>
       ))}
     </div>
-    <div className="bg-[#ff385c]/5 border border-[#ff385c]/20 rounded-2xl p-6 text-center">
+    <div className="bg-[#DD6E42]/5 border border-[#DD6E42]/20 rounded-2xl p-6 text-center">
       <p className="font-bold text-[#222] mb-1">Found a suspicious listing?</p>
       <p className="text-sm text-gray-500 mb-4">Report it immediately. Our team reviews reports within 1 hour.</p>
-      <Link to="/contact" className="inline-flex items-center gap-2 bg-[#ff385c] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#e00b41] transition-colors">
+      <Link to="/contact" className="inline-flex items-center gap-2 bg-[#DD6E42] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#C4623B] transition-colors">
         <Mail className="w-4 h-4" /> Report a Listing
       </Link>
     </div>
@@ -433,13 +433,13 @@ export const HelpCenter: React.FC = () => (
         { icon: <Mail className="w-5 h-5" />, label: 'Contact Form', detail: 'Get a guaranteed reply', href: '/contact' },
       ].map((c) => (
         <a key={c.label} href={c.href} className="block bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-md transition-shadow text-center">
-          <div className="w-10 h-10 bg-[#ff385c]/10 text-[#ff385c] rounded-xl flex items-center justify-center mx-auto mb-3">{c.icon}</div>
+          <div className="w-10 h-10 bg-[#DD6E42]/10 text-[#DD6E42] rounded-xl flex items-center justify-center mx-auto mb-3">{c.icon}</div>
           <p className="font-bold text-sm text-[#222]">{c.label}</p>
           <p className="text-xs text-gray-400 mt-0.5">{c.detail}</p>
         </a>
       ))}
     </div>
-    <h2 className="text-xl font-bold text-[#1B2430] mb-5">Frequently Asked Questions</h2>
+    <h2 className="text-xl font-bold text-[#50757A] mb-5">Frequently Asked Questions</h2>
     <div className="space-y-3">
       {FAQS.map((f) => <FAQ key={f.q} q={f.q} a={f.a} />)}
     </div>
@@ -465,7 +465,7 @@ export const Sitemap: React.FC = () => (
           <ul className="space-y-2.5">
             {s.links.map((l) => (
               <li key={l.to}>
-                <Link to={l.to} className="text-sm text-gray-500 hover:text-[#ff385c] transition-colors">
+                <Link to={l.to} className="text-sm text-gray-500 hover:text-[#DD6E42] transition-colors">
                   {l.label}
                 </Link>
               </li>

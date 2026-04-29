@@ -37,14 +37,14 @@ const StaffDisputesTab: React.FC = () => {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono text-[#6a6a6a]">REF: {d.booking_id.slice(0, 8)}</span>
+                    <span className="text-xs font-mono text-[#50757A]">REF: {d.booking_id.slice(0, 8)}</span>
                     <Badge status={d.status} />
                   </div>
-                  <h4 className="font-bold text-[#222222]">{d.reason}</h4>
+                  <h4 className="font-bold text-[#50757A]">{d.reason}</h4>
                 </div>
                 <div className="text-right">
-                   <p className="text-lg font-bold text-[#ff385c]">KES {d.total_charged_kes?.toLocaleString()}</p>
-                   <p className="text-[10px] text-[#6a6a6a] font-medium">Escrow Amount</p>
+                   <p className="text-lg font-bold text-[#DD6E42]">KES {d.total_charged_kes?.toLocaleString()}</p>
+                   <p className="text-[10px] text-[#50757A] font-medium">Escrow Amount</p>
                 </div>
               </div>
               
@@ -56,7 +56,7 @@ const StaffDisputesTab: React.FC = () => {
               {d.status === 'open' && (
                 <div className="flex gap-3 pt-4 border-t border-gray-50">
                   <button onClick={() => handleResolve(d.id, 'resolved_guest')} className="flex-1 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition-colors">Refund Guest</button>
-                  <button onClick={() => handleResolve(d.id, 'resolved_host')} className="flex-1 py-2 bg-[#222222] text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">Pay Landlord</button>
+                  <button onClick={() => handleResolve(d.id, 'resolved_host')} className="flex-1 py-2 bg-[#50757A] text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">Pay Landlord</button>
                 </div>
               )}
             </motion.div>

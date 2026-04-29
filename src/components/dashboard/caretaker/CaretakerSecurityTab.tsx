@@ -8,8 +8,8 @@ const CaretakerSecurityTab: React.FC = () => (
     <SectionHeader title="Security & Incidents" sub="Daily security logs and incident reports" />
     <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
        <div className="p-5 border-b border-gray-50 flex items-center justify-between">
-          <h3 className="font-bold text-[#222222] text-sm">Incident Feed</h3>
-          <button className="text-xs font-bold text-[#ff385c] hover:underline">+ New Entry</button>
+          <h3 className="font-bold text-[#50757A] text-sm">Incident Feed</h3>
+          <button className="text-xs font-bold text-[#DD6E42] hover:underline">+ New Entry</button>
        </div>
        <div className="divide-y divide-gray-50">
           {[
@@ -19,10 +19,10 @@ const CaretakerSecurityTab: React.FC = () => (
           ].map((e, i) => (
             <div key={i} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center"><Clock className="w-4 h-4 text-[#6a6a6a]" /></div>
+                  <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center"><Clock className="w-4 h-4 text-[#50757A]" /></div>
                   <div>
-                    <p className="text-sm font-semibold text-[#222222]">{e.event}</p>
-                    <p className="text-[11px] text-[#6a6a6a]">{e.time}</p>
+                    <p className="text-sm font-semibold text-[#50757A]">{e.event}</p>
+                    <p className="text-[11px] text-[#50757A]">{e.time}</p>
                   </div>
                </div>
                {e.status === 'flagged' ? (

@@ -58,7 +58,7 @@ const StatCounter: React.FC<{
       transition={{ duration: 0.5, delay: delay / 1000 }}
       className="text-center"
     >
-      <p className="text-4xl font-black text-[#ff385c] tabular-nums">{format(counted)}</p>
+      <p className="text-4xl font-black text-[#DD6E42] tabular-nums">{format(counted)}</p>
       <p className="text-sm text-gray-500 mt-1 font-medium">{label}</p>
     </motion.div>
   );
@@ -75,9 +75,9 @@ const VALUES = [
 ];
 
 const TEAM = [
-  { name: 'Emanuel Miyu',  role: 'CEO & Co-founder',     initials: 'EM', color: 'bg-[#ff385c]' },
-  { name: 'Duncun Mainya', role: 'Head of Operations',   initials: 'DM', color: 'bg-[#C5A373]' },
-  { name: 'Simon Gatungo', role: 'Lead Engineer',        initials: 'SG', color: 'bg-[#1B2430]' },
+  { name: 'Emanuel Miyu',  role: 'CEO & Co-founder',     initials: 'EM', color: 'bg-[#DD6E42]' },
+  { name: 'Duncun Mainya', role: 'Head of Operations',   initials: 'DM', color: 'bg-[#C0D6DF]' },
+  { name: 'Simon Gatungo', role: 'Lead Engineer',        initials: 'SG', color: 'bg-[#50757A]' },
 ];
 
 const fade = (delay = 0) => ({
@@ -92,10 +92,10 @@ const AboutUs: React.FC = () => (
   <Layout showSearch={false}>
 
     {/* ── Hero ── */}
-    <div className="relative bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white overflow-hidden">
+    <div className="relative bg-gradient-to-br from-[#50757A] to-[#50757A] text-white overflow-hidden">
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-[#C5A373] rounded-full filter blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#ff385c] rounded-full filter blur-3xl" />
+        <div className="absolute top-0 left-0 w-72 h-72 bg-[#C0D6DF] rounded-full filter blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#DD6E42] rounded-full filter blur-3xl" />
       </div>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center relative z-10">
         <motion.div {...fade()}>
@@ -104,7 +104,7 @@ const AboutUs: React.FC = () => (
           </span>
           <h1 className="text-4xl lg:text-6xl font-black mb-6 leading-tight">
             We help Kenyans find<br />
-            <span className="text-[#C5A373]">places they love</span>
+            <span className="text-[#C0D6DF]">places they love</span>
           </h1>
           <p className="text-lg text-white/70 max-w-2xl mx-auto leading-relaxed">
             Getkeja was born from frustration with housing scams and opaque listings. We set out to build a platform that puts trust, simplicity, and community at the center of every property search.
@@ -129,9 +129,9 @@ const AboutUs: React.FC = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <motion.div {...fade()}>
-          <h2 className="text-3xl lg:text-4xl font-black text-[#1B2430] mb-5 leading-tight">
+          <h2 className="text-3xl lg:text-4xl font-black text-[#50757A] mb-5 leading-tight">
             Our mission is simple:<br />
-            <span className="text-[#ff385c]">no more housing scams.</span>
+            <span className="text-[#DD6E42]">no more housing scams.</span>
           </h2>
           <p className="text-gray-500 leading-relaxed mb-4">
             Finding a home in Kenya is hard. Too many listings are fake, prices are hidden, and landlords are unreachable. We're fixing that — one verified listing at a time.
@@ -141,7 +141,7 @@ const AboutUs: React.FC = () => (
           </p>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 bg-[#ff385c] text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-[#e00b41] transition-colors"
+            className="inline-flex items-center gap-2 bg-[#DD6E42] text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-[#C4623B] transition-colors"
           >
             Get in touch
           </Link>
@@ -149,8 +149,8 @@ const AboutUs: React.FC = () => (
         <motion.div {...fade(0.2)} className="grid grid-cols-2 gap-4">
           {VALUES.slice(0, 4).map((v) => (
             <div key={v.title} className="bg-gray-50 rounded-2xl p-5">
-              <div className="w-9 h-9 rounded-xl bg-[#ff385c]/10 flex items-center justify-center mb-3">
-                <v.icon className="w-4 h-4 text-[#ff385c]" />
+              <div className="w-9 h-9 rounded-xl bg-[#DD6E42]/10 flex items-center justify-center mb-3">
+                <v.icon className="w-4 h-4 text-[#DD6E42]" />
               </div>
               <h4 className="font-bold text-[#222] text-sm mb-1">{v.title}</h4>
               <p className="text-xs text-gray-400 leading-relaxed">{v.desc}</p>
@@ -164,14 +164,14 @@ const AboutUs: React.FC = () => (
     <div className="bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div {...fade()} className="text-center mb-12">
-          <h2 className="text-3xl font-black text-[#1B2430] mb-3">What we stand for</h2>
+          <h2 className="text-3xl font-black text-[#50757A] mb-3">What we stand for</h2>
           <p className="text-gray-400 max-w-xl mx-auto">Six principles that guide every decision we make.</p>
         </motion.div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {VALUES.map((v, i) => (
             <motion.div key={v.title} {...fade(i * 0.08)} className="bg-white rounded-2xl p-6 shadow-sm">
-              <div className="w-10 h-10 rounded-2xl bg-[#ff385c]/10 flex items-center justify-center mb-4">
-                <v.icon className="w-5 h-5 text-[#ff385c]" />
+              <div className="w-10 h-10 rounded-2xl bg-[#DD6E42]/10 flex items-center justify-center mb-4">
+                <v.icon className="w-5 h-5 text-[#DD6E42]" />
               </div>
               <h4 className="font-bold text-[#222] mb-2">{v.title}</h4>
               <p className="text-sm text-gray-400 leading-relaxed">{v.desc}</p>
@@ -184,7 +184,7 @@ const AboutUs: React.FC = () => (
     {/* ── Team ── */}
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <motion.div {...fade()} className="text-center mb-12">
-        <h2 className="text-3xl font-black text-[#1B2430] mb-3">Meet the team</h2>
+        <h2 className="text-3xl font-black text-[#50757A] mb-3">Meet the team</h2>
         <p className="text-gray-400 max-w-xl mx-auto">The people behind Getkeja — passionate about housing and built for Kenya.</p>
       </motion.div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
@@ -201,12 +201,12 @@ const AboutUs: React.FC = () => (
     </div>
 
     {/* ── CTA ── */}
-    <div className="bg-gradient-to-br from-[#ff385c] to-[#c7003a] text-white">
+    <div className="bg-gradient-to-br from-[#DD6E42] to-[#c7003a] text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
         <h2 className="text-3xl font-black mb-4">Ready to find your keja?</h2>
         <p className="text-white/80 mb-8">Browse thousands of verified listings across Kenya today.</p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link to="/"            className="px-6 py-3 bg-white text-[#ff385c] font-bold rounded-full hover:bg-gray-100 transition-colors">Browse Properties</Link>
+          <Link to="/"            className="px-6 py-3 bg-white text-[#DD6E42] font-bold rounded-full hover:bg-gray-100 transition-colors">Browse Properties</Link>
           <Link to="/become-host" className="px-6 py-3 bg-white/20 text-white font-bold rounded-full hover:bg-white/30 transition-colors">List Your Property</Link>
         </div>
       </div>

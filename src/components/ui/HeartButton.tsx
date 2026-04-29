@@ -50,7 +50,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
                 <Heart
                     className={`w-5 h-5 lg:w-6 lg:h-6 transition-all duration-300 ${isSaved
                             ? 'fill-red-500 text-red-500 scale-110'
-                            : 'text-[#1B2430] hover:text-red-400 hover:scale-110'
+                            : 'text-[#50757A] hover:text-red-400 hover:scale-110'
                         }`}
                 />
             </button>

@@ -13,7 +13,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
     return (
-        <div className="min-h-screen bg-[#0F172A] flex flex-col font-sans antialiased text-gray-200 overflow-x-hidden">
+        <div className="min-h-screen bg-[#50757A] flex flex-col font-sans antialiased text-gray-200 overflow-x-hidden">
             <Navbar />
 
             <div className="flex flex-1 pt-16">
@@ -33,7 +33,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 {/* Main Content Area */}
                 <div className="flex-1 flex flex-col min-w-0 lg:ml-64 transition-all duration-300">
                     {/* Mobile toggle - since we removed Header */}
-                    <div className="lg:hidden p-4 flex items-center bg-[#1B2430]/50 backdrop-blur-md sticky top-0 z-30 border-b border-white/5">
+                    <div className="lg:hidden p-4 flex items-center bg-[#50757A]/50 backdrop-blur-md sticky top-0 z-30 border-b border-white/5">
                         <button
                             onClick={toggleSidebar}
                             className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl border border-transparent hover:border-white/10 transition-all"

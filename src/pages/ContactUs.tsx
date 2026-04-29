@@ -11,11 +11,11 @@ const ContactCard: React.FC<{ icon: React.ReactNode; title: string; detail: stri
   icon, title, detail, sub, href,
 }) => (
   <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-start gap-4">
-    <div className="w-11 h-11 rounded-xl bg-[#ff385c]/10 flex items-center justify-center shrink-0">{icon}</div>
+    <div className="w-11 h-11 rounded-xl bg-[#DD6E42]/10 flex items-center justify-center shrink-0">{icon}</div>
     <div>
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{title}</p>
       {href ? (
-        <a href={href} className="font-bold text-[#222] text-sm mt-0.5 hover:text-[#ff385c] transition-colors block">{detail}</a>
+        <a href={href} className="font-bold text-[#222] text-sm mt-0.5 hover:text-[#DD6E42] transition-colors block">{detail}</a>
       ) : (
         <p className="font-bold text-[#222] text-sm mt-0.5">{detail}</p>
       )}
@@ -59,7 +59,7 @@ const ContactUs: React.FC = () => {
     <Layout showSearch={false}>
 
       {/* ── Hero ── */}
-      <div className="bg-gradient-to-br from-[#1B2430] to-[#2C3A4E] text-white">
+      <div className="bg-gradient-to-br from-[#50757A] to-[#50757A] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-5">
@@ -78,30 +78,30 @@ const ContactUs: React.FC = () => {
 
           {/* ── Left: contact cards + hours ── */}
           <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-xl font-black text-[#1B2430] mb-6">Get in touch</h2>
+            <h2 className="text-xl font-black text-[#50757A] mb-6">Get in touch</h2>
 
             <ContactCard
-              icon={<Mail className="w-5 h-5 text-[#ff385c]" />}
+              icon={<Mail className="w-5 h-5 text-[#DD6E42]" />}
               title="Email us"
               detail="hello@getkeja.online"
               sub="We reply within 2 hours on weekdays"
               href="mailto:hello@getkeja.online"
             />
             <ContactCard
-              icon={<Phone className="w-5 h-5 text-[#ff385c]" />}
+              icon={<Phone className="w-5 h-5 text-[#DD6E42]" />}
               title="Call us"
               detail="+254 700 000 000"
               sub="Mon – Fri, 8 AM – 6 PM EAT"
               href="tel:+254700000000"
             />
             <ContactCard
-              icon={<MapPin className="w-5 h-5 text-[#ff385c]" />}
+              icon={<MapPin className="w-5 h-5 text-[#DD6E42]" />}
               title="Visit us"
               detail="Westlands, Nairobi"
               sub="Kenya · By appointment only"
             />
             <ContactCard
-              icon={<MessageCircle className="w-5 h-5 text-[#ff385c]" />}
+              icon={<MessageCircle className="w-5 h-5 text-[#DD6E42]" />}
               title="WhatsApp"
               detail="Chat with us on WhatsApp"
               sub="Fastest response — usually &lt;30 min"
@@ -111,7 +111,7 @@ const ContactUs: React.FC = () => {
             {/* Business hours */}
             <div className="bg-gray-50 rounded-2xl p-5 mt-2">
               <div className="flex items-center gap-2 mb-3">
-                <Clock className="w-4 h-4 text-[#ff385c]" />
+                <Clock className="w-4 h-4 text-[#DD6E42]" />
                 <p className="font-bold text-[#222] text-sm">Business Hours</p>
               </div>
               <div className="space-y-1.5 text-sm">
@@ -147,7 +147,7 @@ const ContactUs: React.FC = () => {
                   </p>
                   <button
                     onClick={() => { setSent(false); setForm({ name: '', email: '', phone: '', topic: '', message: '' }); }}
-                    className="mt-6 px-5 py-2.5 bg-[#ff385c] text-white rounded-full text-sm font-bold hover:bg-[#e00b41] transition-colors"
+                    className="mt-6 px-5 py-2.5 bg-[#DD6E42] text-white rounded-full text-sm font-bold hover:bg-[#C4623B] transition-colors"
                   >
                     Send another message
                   </button>
@@ -165,7 +165,7 @@ const ContactUs: React.FC = () => {
                           value={form.name}
                           onChange={set('name')}
                           placeholder="John Doe"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 focus:border-[#DD6E42]"
                         />
                       </div>
                       <div>
@@ -176,7 +176,7 @@ const ContactUs: React.FC = () => {
                           value={form.email}
                           onChange={set('email')}
                           placeholder="you@example.com"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 focus:border-[#DD6E42]"
                         />
                       </div>
                     </div>
@@ -189,7 +189,7 @@ const ContactUs: React.FC = () => {
                           value={form.phone}
                           onChange={set('phone')}
                           placeholder="+254 7XX XXX XXX"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 focus:border-[#DD6E42]"
                         />
                       </div>
                       <div>
@@ -198,7 +198,7 @@ const ContactUs: React.FC = () => {
                           required
                           value={form.topic}
                           onChange={set('topic')}
-                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] bg-white"
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 focus:border-[#DD6E42] bg-white"
                         >
                           <option value="">Select a topic…</option>
                           {TOPICS.map((t) => <option key={t}>{t}</option>)}
@@ -214,7 +214,7 @@ const ContactUs: React.FC = () => {
                         value={form.message}
                         onChange={set('message')}
                         placeholder="Tell us how we can help…"
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c] resize-none"
+                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 focus:border-[#DD6E42] resize-none"
                       />
                     </div>
 
@@ -227,7 +227,7 @@ const ContactUs: React.FC = () => {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 bg-[#ff385c] hover:bg-[#e00b41] disabled:opacity-60 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-3.5 bg-[#DD6E42] hover:bg-[#C4623B] disabled:opacity-60 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                     >
                       {loading
                         ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>

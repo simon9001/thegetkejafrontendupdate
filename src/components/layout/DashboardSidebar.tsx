@@ -115,20 +115,20 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) 
     });
 
     return (
-        <div className={`w-64 h-screen bg-[#1B2430] text-white flex flex-col fixed left-0 top-0 z-[50] border-r border-[#2C3A4E] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0 shadow-2xl shadow-[#D4A373]/10' : '-translate-x-full'}`}>
+        <div className={`w-64 h-screen bg-[#50757A] text-white flex flex-col fixed left-0 top-0 z-[50] border-r border-[#50757A] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0 shadow-2xl shadow-[#DD6E42]/10' : '-translate-x-full'}`}>
             <div className="p-8 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#D4A373] rounded-xl flex items-center justify-center shadow-lg shadow-[#D4A373]/20 transition-transform hover:scale-110">
-                        <div className="w-5 h-5 bg-[#1B2430] rounded-md"></div>
+                    <div className="w-10 h-10 bg-[#DD6E42] rounded-xl flex items-center justify-center shadow-lg shadow-[#DD6E42]/20 transition-transform hover:scale-110">
+                        <div className="w-5 h-5 bg-[#50757A] rounded-md"></div>
                     </div>
                     <h1 className="text-2xl font-black tracking-tight text-white group cursor-default">
-                        Get<span className="text-[#D4A373]">Keja</span>
+                        Get<span className="text-[#DD6E42]">Keja</span>
                     </h1>
                 </div>
                 {/* Close for mobile */}
                 <button
                     onClick={onClose}
-                    className="lg:hidden p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors border border-transparent hover:border-[#2C3A4E]"
+                    className="lg:hidden p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors border border-transparent hover:border-[#50757A]"
                 >
                     <X size={20} />
                 </button>
@@ -145,18 +145,18 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) 
                                 if (window.innerWidth < 1024) onClose();
                             }}
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${isActive
-                                ? 'bg-[#D4A373] text-white shadow-xl shadow-[#D4A373]/20'
+                                ? 'bg-[#DD6E42] text-white shadow-xl shadow-[#DD6E42]/20'
                                 : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
-                            <item.icon size={20} className={isActive ? 'text-white' : 'text-gray-400 group-hover:text-[#D4A373]'} />
+                            <item.icon size={20} className={isActive ? 'text-white' : 'text-gray-400 group-hover:text-[#DD6E42]'} />
                             <span className="font-bold text-sm">{item.label}</span>
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="p-6 space-y-2 border-t border-[#2C3A4E] bg-[#1B2430]/50 backdrop-blur-sm">
+            <div className="p-6 space-y-2 border-t border-[#50757A] bg-[#50757A]/50 backdrop-blur-sm">
                 <Link
                     to="/dashboard/settings"
                     onClick={() => {

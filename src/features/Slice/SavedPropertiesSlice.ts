@@ -48,9 +48,14 @@ export const savedPropertiesSlice = createSlice({
             // Check if already saved
             const exists = state.items.some(item => item.id === action.payload.id);
             if (!exists) {
-                const primaryImage = action.payload.image ||
-                    action.payload.images?.find((img: any) => img.is_primary)?.image_url ||
-                    action.payload.images?.[0]?.image_url;
+                const p = action.payload as any;
+                const primaryImage =
+                    p.image ||
+                    p.images?.find((img: any) => img.is_primary)?.image_url ||
+                    p.images?.[0]?.image_url ||
+                    p.media?.find((m: any) => m.is_cover && m.media_type === 'photo')?.url ||
+                    p.media?.find((m: any) => m.media_type === 'photo')?.url ||
+                    p.media?.[0]?.url;
 
                 const newItem = {
                     ...action.payload,
@@ -71,9 +76,14 @@ export const savedPropertiesSlice = createSlice({
             const index = state.items.findIndex(item => item.id === action.payload.id);
             if (index === -1) {
                 // Add if not exists
-                const primaryImage = action.payload.image ||
-                    action.payload.images?.find((img: any) => img.is_primary)?.image_url ||
-                    action.payload.images?.[0]?.image_url;
+                const p = action.payload as any;
+                const primaryImage =
+                    p.image ||
+                    p.images?.find((img: any) => img.is_primary)?.image_url ||
+                    p.images?.[0]?.image_url ||
+                    p.media?.find((m: any) => m.is_cover && m.media_type === 'photo')?.url ||
+                    p.media?.find((m: any) => m.media_type === 'photo')?.url ||
+                    p.media?.[0]?.url;
 
                 const newItem = {
                     ...action.payload,

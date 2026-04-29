@@ -20,7 +20,7 @@ const colorMap = {
     blue: { bg: 'bg-blue-500', text: 'text-blue-500', iconBg: 'bg-blue-500/10 text-blue-500', hover: 'hover:bg-blue-600' },
     amber: { bg: 'bg-amber-500', text: 'text-amber-500', iconBg: 'bg-amber-500/10 text-amber-500', hover: 'hover:bg-amber-600' },
     green: { bg: 'bg-green-500', text: 'text-green-500', iconBg: 'bg-green-500/10 text-green-500', hover: 'hover:bg-green-600' },
-    primary: { bg: 'bg-[#D4A373]', text: 'text-[#D4A373]', iconBg: 'bg-[#D4A373]/10 text-[#D4A373]', hover: 'hover:bg-[#E6B17E]' }
+    primary: { bg: 'bg-[#DD6E42]', text: 'text-[#DD6E42]', iconBg: 'bg-[#DD6E42]/10 text-[#DD6E42]', hover: 'hover:bg-[#E8DAB2]' }
 };
 
 const ActionModal: React.FC<ActionModalProps> = ({
@@ -47,7 +47,7 @@ const ActionModal: React.FC<ActionModalProps> = ({
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="bg-white dark:bg-[#1B2430] rounded-[24px] w-full max-w-md border border-gray-100 dark:border-white/10 shadow-2xl overflow-hidden flex flex-col"
+                className="bg-white dark:bg-[#50757A] rounded-[24px] w-full max-w-md border border-gray-100 dark:border-white/10 shadow-2xl overflow-hidden flex flex-col"
             >
                 <div className="p-6 border-b border-gray-100 dark:border-white/5 flex justify-between items-start bg-gray-50/50 dark:bg-white/[0.02]">
                     <div className="flex gap-4 items-center">

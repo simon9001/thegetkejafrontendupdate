@@ -162,7 +162,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
       {/* Back Button */}
       <button
         onClick={onToggle}
-        className="absolute left-4 top-4 text-[#1B2430]/50 hover:text-[#1B2430] transition-colors"
+        className="absolute left-4 top-4 text-[#50757A]/50 hover:text-[#50757A] transition-colors"
         aria-label="Back to sign in"
       >
         <ArrowLeft className="w-4 h-4" />
@@ -170,14 +170,14 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
 
       {/* Header */}
       <div className="text-center mb-5">
-        <h1 className="text-2xl font-bold text-[#1B2430] mb-0.5">Sign Up</h1>
-        <p className="text-[#C5A373] text-xs font-medium">Join Us Today!</p>
+        <h1 className="text-2xl font-bold text-[#50757A] mb-0.5">Sign Up</h1>
+        <p className="text-[#C0D6DF] text-xs font-medium">Join Us Today!</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         {/* Full Name */}
         <div>
-          <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+          <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
             Full Name
           </label>
           <input
@@ -190,7 +190,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
             disabled={isLoading}
             className={`w-full px-3 py-2 bg-gray-50 border ${
               fieldErrors.full_name ? 'border-red-300' : 'border-gray-200'
-            } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430] placeholder:text-gray-400`}
+            } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-xs text-[#50757A] placeholder:text-gray-400`}
           />
           {fieldErrors.full_name && (
             <p className="text-[10px] text-red-600 mt-0.5">{fieldErrors.full_name}</p>
@@ -199,7 +199,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
 
         {/* Email */}
         <div>
-          <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+          <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
             Email
           </label>
           <input
@@ -212,7 +212,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
             disabled={isLoading}
             className={`w-full px-3 py-2 bg-gray-50 border ${
               fieldErrors.email ? 'border-red-300' : 'border-gray-200'
-            } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430] placeholder:text-gray-400`}
+            } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-xs text-[#50757A] placeholder:text-gray-400`}
           />
           {fieldErrors.email && (
             <p className="text-[10px] text-red-600 mt-0.5">{fieldErrors.email}</p>
@@ -221,7 +221,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
 
         {/* Phone */}
         <div>
-          <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+          <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
             Phone <span className="font-normal normal-case text-gray-400">(optional)</span>
           </label>
           <input
@@ -233,7 +233,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
             disabled={isLoading}
             className={`w-full px-3 py-2 bg-gray-50 border ${
               fieldErrors.phone ? 'border-red-300' : 'border-gray-200'
-            } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430] placeholder:text-gray-400`}
+            } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-xs text-[#50757A] placeholder:text-gray-400`}
           />
           {fieldErrors.phone && (
             <p className="text-[10px] text-red-600 mt-0.5">{fieldErrors.phone}</p>
@@ -242,7 +242,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
 
         {/* Password */}
         <div>
-          <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+          <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
             Password
           </label>
           <div className="relative">
@@ -258,12 +258,12 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
               disabled={isLoading}
               className={`w-full px-3 py-2 bg-gray-50 border ${
                 fieldErrors.password ? 'border-red-300' : 'border-gray-200'
-              } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-sm text-[#1B2430]`}
+              } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-sm text-[#50757A]`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C5A373] transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C0D6DF] transition-colors"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -279,7 +279,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
 
         {/* Confirm Password */}
         <div>
-          <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+          <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
             Confirm Password
           </label>
           <div className="relative">
@@ -293,12 +293,12 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
               disabled={isLoading}
               className={`w-full px-3 py-2 bg-gray-50 border ${
                 fieldErrors.confirmPassword ? 'border-red-300' : 'border-gray-200'
-              } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-sm text-[#1B2430]`}
+              } rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-sm text-[#50757A]`}
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C5A373] transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C0D6DF] transition-colors"
             >
               {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -321,15 +321,15 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
                 }
               }}
               disabled={isLoading}
-              className="mt-0.5 accent-[#C5A373] shrink-0"
+              className="mt-0.5 accent-[#C0D6DF] shrink-0"
             />
             <span className="text-[10px] leading-relaxed">
               I have read and agree to the{' '}
-              <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-[#C5A373] font-semibold hover:text-[#8B6E4E] underline underline-offset-2">
+              <Link to="/terms" target="_blank" rel="noopener noreferrer" className="text-[#C0D6DF] font-semibold hover:text-[#50757A] underline underline-offset-2">
                 Terms & Conditions
               </Link>
               {' '}and{' '}
-              <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#C5A373] font-semibold hover:text-[#8B6E4E] underline underline-offset-2">
+              <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#C0D6DF] font-semibold hover:text-[#50757A] underline underline-offset-2">
                 Privacy Policy
               </Link>
               . I confirm I am at least 18 years old and legally capable of entering contracts in Kenya.
@@ -360,7 +360,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
         <button
           type="submit"
           disabled={isLoading || !!success || !termsAccepted}
-          className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all shadow-sm shadow-[#C5A373]/30 active:scale-[0.98] disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2 mt-1"
+          className="w-full py-2.5 bg-[#C0D6DF] text-white font-bold rounded-lg hover:bg-[#50757A] transition-all shadow-sm shadow-[#C0D6DF]/30 active:scale-[0.98] disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2 mt-1"
         >
           {isLoading && <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />}
           <span>{isLoading ? 'PROCESSING…' : success ? 'SUCCESS!' : 'SIGN UP'}</span>
@@ -368,7 +368,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
 
         <p className="text-center">
           <button type="button" onClick={onToggle}
-            className="text-[#C5A373] font-bold hover:text-[#8B6E4E] transition-colors text-xs uppercase tracking-wider">
+            className="text-[#C0D6DF] font-bold hover:text-[#50757A] transition-colors text-xs uppercase tracking-wider">
             SIGN IN
           </button>
         </p>
@@ -377,7 +377,7 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
         <div className="pt-2">
           <div className="flex items-center justify-center gap-2.5">
             <a href="/api/auth/google" aria-label="Sign up with Google"
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all">
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#50757A] hover:border-[#C0D6DF] hover:bg-[#E8DAB2] transition-all">
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                 <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -386,11 +386,11 @@ const Register: React.FC<RegisterProps> = ({ onToggle }) => {
               </svg>
             </a>
             <button type="button" aria-label="Sign up with Twitter"
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all">
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#50757A] hover:border-[#C0D6DF] hover:bg-[#E8DAB2] transition-all">
               <Twitter className="w-3.5 h-3.5 fill-current" />
             </button>
             <button type="button" aria-label="Sign up with Facebook"
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all">
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#50757A] hover:border-[#C0D6DF] hover:bg-[#E8DAB2] transition-all">
               <Facebook className="w-3.5 h-3.5 fill-current" />
             </button>
           </div>

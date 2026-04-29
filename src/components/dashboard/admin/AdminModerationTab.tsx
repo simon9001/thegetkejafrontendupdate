@@ -50,7 +50,7 @@ const AdminModerationTab: React.FC = () => {
           { id: 'messages', label: 'Reported Messages', icon: MessageSquare },
         ].map(t => (
           <button key={t.id} onClick={() => { setActiveTab(t.id as ModTab); setPage(1); }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === t.id ? 'bg-white text-[#222222] shadow-sm' : 'text-[#6a6a6a] hover:text-[#222222]'}`}>
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === t.id ? 'bg-white text-[#50757A] shadow-sm' : 'text-[#50757A] hover:text-[#50757A]'}`}>
             <t.icon className="w-4 h-4" />
             {t.label}
           </button>
@@ -66,7 +66,7 @@ const AdminModerationTab: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/50 text-left text-xs font-semibold text-[#6a6a6a]">
+                    <tr className="border-b border-gray-100 bg-gray-50/50 text-left text-xs font-semibold text-[#50757A]">
                       <th className="px-4 py-3">User</th>
                       <th className="px-4 py-3">Doc Type</th>
                       <th className="px-4 py-3">Status</th>
@@ -78,12 +78,12 @@ const AdminModerationTab: React.FC = () => {
                     {verifData.verifications.map((v: any) => (
                       <tr key={v.id} className="hover:bg-gray-50/50 transition-colors">
                         <td className="px-4 py-3">
-                          <p className="font-semibold text-[#222222]">{v.user_full_name ?? 'User'}</p>
-                          <p className="text-xs text-[#6a6a6a]">{v.user_email}</p>
+                          <p className="font-semibold text-[#50757A]">{v.user_full_name ?? 'User'}</p>
+                          <p className="text-xs text-[#50757A]">{v.user_email}</p>
                         </td>
                         <td className="px-4 py-3 capitalize">{v.doc_type.replace('_', ' ')}</td>
                         <td className="px-4 py-3"><Badge status={v.status} /></td>
-                        <td className="px-4 py-3 text-[#6a6a6a]">{new Date(v.submitted_at).toLocaleDateString()}</td>
+                        <td className="px-4 py-3 text-[#50757A]">{new Date(v.submitted_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3 text-right">
                           {v.status === 'pending' && (
                             <div className="flex items-center justify-end gap-1">
@@ -112,7 +112,7 @@ const AdminModerationTab: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/50 text-left text-xs font-semibold text-[#6a6a6a]">
+                    <tr className="border-b border-gray-100 bg-gray-50/50 text-left text-xs font-semibold text-[#50757A]">
                       <th className="px-4 py-3">Booking Ref</th>
                       <th className="px-4 py-3">Reason</th>
                       <th className="px-4 py-3">Status</th>
@@ -126,8 +126,8 @@ const AdminModerationTab: React.FC = () => {
                         <td className="px-4 py-3 font-mono text-xs">{d.booking_ref ?? d.booking_id.slice(0, 8)}</td>
                         <td className="px-4 py-3 font-medium">{d.reason}</td>
                         <td className="px-4 py-3"><Badge status={d.status} /></td>
-                        <td className="px-4 py-3 font-bold text-[#ff385c]">KES {d.total_charged_kes?.toLocaleString() ?? '—'}</td>
-                        <td className="px-4 py-3 text-[#6a6a6a]">{new Date(d.raised_at).toLocaleDateString()}</td>
+                        <td className="px-4 py-3 font-bold text-[#DD6E42]">KES {d.total_charged_kes?.toLocaleString() ?? '—'}</td>
+                        <td className="px-4 py-3 text-[#50757A]">{new Date(d.raised_at).toLocaleDateString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -150,12 +150,12 @@ const AdminModerationTab: React.FC = () => {
                   <div key={f.id} className="p-4 hover:bg-gray-50/50 transition-colors">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <p className="font-semibold text-[#222222]">{f.property_title ?? 'Property Review'}</p>
-                        <p className="text-xs text-[#6a6a6a]">{f.reviewer_email} · Overall: {f.rating_overall}/5</p>
+                        <p className="font-semibold text-[#50757A]">{f.property_title ?? 'Property Review'}</p>
+                        <p className="text-xs text-[#50757A]">{f.reviewer_email} · Overall: {f.rating_overall}/5</p>
                       </div>
                       <Badge status={f.status} />
                     </div>
-                    <p className="text-sm text-[#6a6a6a] line-clamp-2 italic mb-3">"{f.review_text}"</p>
+                    <p className="text-sm text-[#50757A] line-clamp-2 italic mb-3">"{f.review_text}"</p>
                     <div className="flex flex-wrap gap-2">
                       {f.fraud_signals.map((s: any) => (
                         <span key={s.id} className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-50 text-red-600 border border-red-100">
@@ -182,13 +182,13 @@ const AdminModerationTab: React.FC = () => {
                 {msgData.reports.map((r: any) => (
                   <div key={r.id} className="p-4 hover:bg-gray-50/50 transition-colors">
                     <div className="flex items-start justify-between mb-2">
-                       <p className="text-xs font-bold text-[#ff385c]">REASON: {r.reason}</p>
+                       <p className="text-xs font-bold text-[#DD6E42]">REASON: {r.reason}</p>
                        <Badge status={r.reviewed ? 'resolved' : 'pending'} />
                     </div>
                     <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 mb-2">
-                      <p className="text-sm text-[#222222]">{r.message_body ?? '[Message Deleted or Unreachable]'}</p>
+                      <p className="text-sm text-[#50757A]">{r.message_body ?? '[Message Deleted or Unreachable]'}</p>
                     </div>
-                    <p className="text-[10px] text-[#6a6a6a]">From: {r.sender_email} · Reported by: {r.reporter_email}</p>
+                    <p className="text-[10px] text-[#50757A]">From: {r.sender_email} · Reported by: {r.reporter_email}</p>
                   </div>
                 ))}
               </div>

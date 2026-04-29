@@ -27,31 +27,31 @@ const LandlordBookingsTab: React.FC = () => {
                <div className="flex items-start justify-between mb-4">
                  <div className="flex gap-4">
                    <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center shrink-0">
-                     <User className="w-6 h-6 text-[#6a6a6a]" />
+                     <User className="w-6 h-6 text-[#50757A]" />
                    </div>
                    <div>
-                     <h4 className="font-bold text-[#222222]">{b.guest_name ?? 'Guest Name'}</h4>
-                     <p className="text-xs text-[#6a6a6a] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {b.properties?.title || 'Unknown Property'}</p>
+                     <h4 className="font-bold text-[#50757A]">{b.guest_name ?? 'Guest Name'}</h4>
+                     <p className="text-xs text-[#50757A] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {b.properties?.title || 'Unknown Property'}</p>
                    </div>
                  </div>
                  <Badge status={b.status} />
                </div>
                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-gray-50">
                  <div>
-                   <p className="text-[10px] text-[#6a6a6a] font-bold uppercase">Check In</p>
-                   <p className="text-xs font-bold text-[#222222]">{new Date(b.check_in_date).toLocaleDateString()}</p>
+                   <p className="text-[10px] text-[#50757A] font-bold uppercase">Check In</p>
+                   <p className="text-xs font-bold text-[#50757A]">{new Date(b.check_in_date).toLocaleDateString()}</p>
                  </div>
                  <div>
-                   <p className="text-[10px] text-[#6a6a6a] font-bold uppercase">Check Out</p>
-                   <p className="text-xs font-bold text-[#222222]">{new Date(b.check_out_date).toLocaleDateString()}</p>
+                   <p className="text-[10px] text-[#50757A] font-bold uppercase">Check Out</p>
+                   <p className="text-xs font-bold text-[#50757A]">{new Date(b.check_out_date).toLocaleDateString()}</p>
                  </div>
                  <div>
-                   <p className="text-[10px] text-[#6a6a6a] font-bold uppercase">Net Earnings</p>
+                   <p className="text-[10px] text-[#50757A] font-bold uppercase">Net Earnings</p>
                    <p className="text-xs font-bold text-emerald-600">KES {b.host_payout_kes?.toLocaleString()}</p>
                  </div>
                  <div className="flex justify-end items-center gap-2">
-                    <button className="p-2 bg-gray-50 rounded-lg text-[#6a6a6a] hover:bg-gray-100"><Phone className="w-4 h-4" /></button>
-                    <button className="p-2 bg-gray-50 rounded-lg text-[#6a6a6a] hover:bg-gray-100"><Mail className="w-4 h-4" /></button>
+                    <button className="p-2 bg-gray-50 rounded-lg text-[#50757A] hover:bg-gray-100"><Phone className="w-4 h-4" /></button>
+                    <button className="p-2 bg-gray-50 rounded-lg text-[#50757A] hover:bg-gray-100"><Mail className="w-4 h-4" /></button>
                  </div>
                </div>
             </div>

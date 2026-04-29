@@ -99,7 +99,7 @@ const LongTermRentForm: React.FC<LongTermRentFormProps> = ({ onSubmit, isLoading
       {/* Basic Info Section */}
       <div className="bg-white rounded-xl border p-6">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Home className="w-5 h-5 text-[#ff385c]" />
+          <Home className="w-5 h-5 text-[#DD6E42]" />
           Basic Information
         </h3>
         
@@ -110,7 +110,7 @@ const LongTermRentForm: React.FC<LongTermRentFormProps> = ({ onSubmit, isLoading
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#ff385c]"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#DD6E42]"
               placeholder="e.g., Spacious 2BR Apartment in Westlands"
               required
             />
@@ -122,7 +122,7 @@ const LongTermRentForm: React.FC<LongTermRentFormProps> = ({ onSubmit, isLoading
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
               rows={4}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#ff385c]"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#DD6E42]"
               placeholder="Describe the property, nearby amenities, unique features..."
             />
           </div>
@@ -195,7 +195,7 @@ const LongTermRentForm: React.FC<LongTermRentFormProps> = ({ onSubmit, isLoading
       {/* Pricing Section */}
       <div className="bg-white rounded-xl border p-6">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-[#ff385c]" />
+          <DollarSign className="w-5 h-5 text-[#DD6E42]" />
           Pricing
         </h3>
         
@@ -297,7 +297,7 @@ const LongTermRentForm: React.FC<LongTermRentFormProps> = ({ onSubmit, isLoading
       {/* Contact Section */}
       <div className="bg-white rounded-xl border p-6">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Users className="w-5 h-5 text-[#ff385c]" />
+          <Users className="w-5 h-5 text-[#DD6E42]" />
           Contact Information
         </h3>
         
@@ -349,7 +349,7 @@ const LongTermRentForm: React.FC<LongTermRentFormProps> = ({ onSubmit, isLoading
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-[#ff385c] text-white py-3 rounded-xl font-bold hover:bg-[#e00b41] disabled:opacity-50 transition"
+        className="w-full bg-[#DD6E42] text-white py-3 rounded-xl font-bold hover:bg-[#C4623B] disabled:opacity-50 transition"
       >
         {isLoading ? 'Publishing...' : 'Publish Property'}
       </button>

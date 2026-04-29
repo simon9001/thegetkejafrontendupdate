@@ -236,7 +236,7 @@ const NaturalLanguageSearch: React.FC<NaturalLanguageSearchProps> = ({
           onChange={handleChange}
           autoFocus={autoFocus}
           placeholder={placeholder}
-          className="w-full pl-12 pr-28 py-4 text-base border border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c] focus:border-transparent bg-white"
+          className="w-full pl-12 pr-28 py-4 text-base border border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42] focus:border-transparent bg-white"
         />
         {query && (
           <button
@@ -251,7 +251,7 @@ const NaturalLanguageSearch: React.FC<NaturalLanguageSearchProps> = ({
         <button
           type="submit"
           disabled={isFetching || !query.trim()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#ff385c] text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-[#e0334f] disabled:opacity-50 transition-colors flex items-center gap-1.5 text-sm"
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#DD6E42] text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-[#DD6E42] disabled:opacity-50 transition-colors flex items-center gap-1.5 text-sm"
         >
           {isFetching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
           <span className="hidden sm:inline">Search</span>
@@ -260,8 +260,8 @@ const NaturalLanguageSearch: React.FC<NaturalLanguageSearchProps> = ({
 
       {/* Parsed interpretation pill */}
       {parsedSummary && (
-        <div className="mt-2 flex items-center gap-1.5 text-xs text-[#6a6a6a] px-1">
-          <Sparkles className="w-3.5 h-3.5 text-[#ff385c]" />
+        <div className="mt-2 flex items-center gap-1.5 text-xs text-[#50757A] px-1">
+          <Sparkles className="w-3.5 h-3.5 text-[#DD6E42]" />
           <span>{parsedSummary}</span>
         </div>
       )}

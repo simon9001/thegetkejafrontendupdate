@@ -43,8 +43,8 @@ const DashboardRedirect: React.FC = () => {
     if (path) return <Navigate to={path} replace />;
   }
 
-  // seekers and any unrecognised role → profile page
-  return <Navigate to="/profile" replace />;
+  // seekers and any unrecognised role → homepage
+  return <Navigate to="/" replace />;
 };
 
 export default DashboardRedirect;

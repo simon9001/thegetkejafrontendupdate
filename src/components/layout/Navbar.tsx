@@ -1,5 +1,5 @@
 // frontend/src/components/layout/Navbar.tsx
-// Airbnb-inspired design: white sticky header, Rausch Red (#ff385c) accent,
+// Airbnb-inspired design: white sticky header, Rausch Red (#DD6E42) accent,
 // three-segment search pill, circular nav controls, warm near-black text.
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -16,6 +16,8 @@ import {
   LayoutDashboard,
   X,
   Check,
+  Users,
+  Truck,
 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
@@ -24,6 +26,7 @@ import { useLogoutMutation } from '../../features/Api/AuthApi';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../../assets/logo.png';
 import { useLanguage, type Lang } from '../../context/LanguageContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface NavbarProps {
   transparent?:    boolean;
@@ -116,7 +119,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const elevated    = isScrolled || !transparent;
   const navBg       = elevated ? 'bg-white' : 'bg-transparent';
   const shadowClass = elevated ? 'shadow-[0_1px_2px_rgba(0,0,0,0.08)]' : '';
-  const textColor   = elevated || !transparent ? 'text-[#222222]' : 'text-white';
+  const textColor   = elevated || !transparent ? 'text-[#50757A]' : 'text-white';
 
   return (
     <>
@@ -142,7 +145,7 @@ const Navbar: React.FC<NavbarProps> = ({
             />
             <span
               className={`text-xl font-bold tracking-tight ${
-                elevated || !transparent ? 'text-[#ff385c]' : 'text-white'
+                elevated || !transparent ? 'text-[#DD6E42]' : 'text-white'
               }`}
             >
               Getkeja
@@ -157,14 +160,14 @@ const Navbar: React.FC<NavbarProps> = ({
                 hidden md:flex items-center h-9 rounded-full border px-1.5 gap-0
                 shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_4px]
                 hover:shadow-[rgba(0,0,0,0.08)_0px_3px_10px]
-                bg-white border-[#e5e5e5] transition-shadow duration-200
+                bg-white border-[#EAEAEA] transition-shadow duration-200
                 ${elevated ? '' : 'border-white/40'}
               `}
             >
-              <span className="px-3 text-xs font-semibold text-[#222222] whitespace-nowrap">{t('findYourKeja')}</span>
-              <span className="w-px h-4 bg-[#c1c1c1]" />
-              <span className="px-3 text-xs text-[#6a6a6a] whitespace-nowrap">{t('anyBudget')}</span>
-              <span className="ml-1 w-6 h-6 flex items-center justify-center bg-[#ff385c] rounded-full shrink-0">
+              <span className="px-3 text-xs font-semibold text-[#50757A] whitespace-nowrap">{t('findYourKeja')}</span>
+              <span className="w-px h-4 bg-[#EAEAEA]" />
+              <span className="px-3 text-xs text-[#50757A] whitespace-nowrap">{t('anyBudget')}</span>
+              <span className="ml-1 w-6 h-6 flex items-center justify-center bg-[#DD6E42] rounded-full shrink-0">
                 <Search className="w-3 h-3 text-white" />
               </span>
             </button>
@@ -183,6 +186,32 @@ const Navbar: React.FC<NavbarProps> = ({
               `}
             >
               {t('shareYourHome')}
+            </Link>
+
+            {/* Roommate Finder */}
+            <Link
+              to="/roommates"
+              className={`
+                hidden md:flex items-center gap-1.5 px-3 py-2.5 rounded-full text-sm font-semibold
+                transition-colors duration-150 hover:bg-black/[0.04]
+                ${textColor}
+              `}
+            >
+              <Users className="w-4 h-4 shrink-0" />
+              <span className="hidden lg:inline">Roommate</span>
+            </Link>
+
+            {/* Movers */}
+            <Link
+              to="/moving-services"
+              className={`
+                hidden md:flex items-center gap-1.5 px-3 py-2.5 rounded-full text-sm font-semibold
+                transition-colors duration-150 hover:bg-black/[0.04]
+                ${textColor}
+              `}
+            >
+              <Truck className="w-4 h-4 shrink-0" />
+              <span className="hidden lg:inline">Movers</span>
             </Link>
 
             {/* Language picker */}
@@ -214,10 +243,10 @@ const Navbar: React.FC<NavbarProps> = ({
                       absolute right-0 top-[calc(100%+6px)] z-50
                       w-44 bg-white rounded-[14px] py-2 overflow-hidden
                       shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px,rgba(0,0,0,0.12)_0px_8px_24px]
-                      border border-[#e5e5e5]
+                      border border-[#EAEAEA]
                     "
                   >
-                    <p className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#6a6a6a]">
+                    <p className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#50757A]">
                       {t('language')}
                     </p>
                     {([
@@ -227,18 +256,23 @@ const Navbar: React.FC<NavbarProps> = ({
                       <button
                         key={code}
                         onClick={() => { setLang(code); setIsLangOpen(false); }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-[#222222] hover:bg-[#f7f7f7] transition-colors"
+                        className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-[#50757A] hover:bg-[#EAEAEA] transition-colors"
                       >
                         <div className="flex items-center gap-2.5">
                           <span className="text-base leading-none">{flag}</span>
                           {label}
                         </div>
-                        {lang === code && <Check className="w-3.5 h-3.5 text-[#ff385c]" />}
+                        {lang === code && <Check className="w-3.5 h-3.5 text-[#DD6E42]" />}
                       </button>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+
+            {/* Theme picker */}
+            <div className="hidden sm:flex items-center">
+              <ThemeToggle />
             </div>
 
             {/* Saved properties icon — always visible in navbar */}
@@ -253,11 +287,11 @@ const Navbar: React.FC<NavbarProps> = ({
             >
               <Heart
                 className={`w-[18px] h-[18px] transition-colors ${
-                  savedCount > 0 ? 'fill-[#ff385c] text-[#ff385c]' : ''
+                  savedCount > 0 ? 'fill-[#DD6E42] text-[#DD6E42]' : ''
                 }`}
               />
               {savedCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-[#ff385c] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-[#DD6E42] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                   {savedCount > 9 ? '9+' : savedCount}
                 </span>
               )}
@@ -268,7 +302,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={() => setIsUserMenuOpen((v) => !v)}
                 className="
-                  flex items-center gap-2 border border-[#c1c1c1] rounded-full
+                  flex items-center gap-2 border border-[#EAEAEA] rounded-full
                   py-1.5 pl-3 pr-1.5 bg-white
                   hover:shadow-[rgba(0,0,0,0.08)_0px_4px_12px]
                   transition-shadow duration-200
@@ -276,8 +310,8 @@ const Navbar: React.FC<NavbarProps> = ({
                 aria-expanded={isUserMenuOpen}
                 aria-label="User menu"
               >
-                <Menu className="w-4 h-4 text-[#222222]" />
-                <div className="w-7 h-7 rounded-full bg-[#6a6a6a] flex items-center justify-center overflow-hidden">
+                <Menu className="w-4 h-4 text-[#50757A]" />
+                <div className="w-7 h-7 rounded-full bg-[#50757A] flex items-center justify-center overflow-hidden">
                   {user?.avatar_url ? (
                     <img
                       src={user.avatar_url}
@@ -315,18 +349,18 @@ const Navbar: React.FC<NavbarProps> = ({
                         absolute right-0 top-[calc(100%+8px)] z-50
                         w-56 bg-white rounded-[14px] py-2
                         shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px,rgba(0,0,0,0.12)_0px_8px_24px]
-                        border border-[#e5e5e5]
+                        border border-[#EAEAEA]
                       "
                     >
                       {isAuthenticated && user ? (
                         <>
                           {/* User info header */}
-                          <div className="px-4 py-3 border-b border-[#f2f2f2]">
-                            <p className="text-sm font-semibold text-[#222222] truncate">
+                          <div className="px-4 py-3 border-b border-[#EAEAEA]">
+                            <p className="text-sm font-semibold text-[#50757A] truncate">
                               {user.full_name ?? user.email}
                             </p>
-                            <p className="text-xs text-[#6a6a6a] truncate mt-0.5">{user.email}</p>
-                            <span className="inline-flex items-center mt-1.5 px-2 py-0.5 rounded-full bg-[#fff1f2] text-[#ff385c] text-[10px] font-semibold capitalize">
+                            <p className="text-xs text-[#50757A] truncate mt-0.5">{user.email}</p>
+                            <span className="inline-flex items-center mt-1.5 px-2 py-0.5 rounded-full bg-[#E8DAB2] text-[#DD6E42] text-[10px] font-semibold capitalize">
                               {user.primaryRole ?? user.roles?.[0] ?? 'seeker'}
                             </span>
                           </div>
@@ -345,12 +379,17 @@ const Navbar: React.FC<NavbarProps> = ({
                           <MenuItem to="/messages" icon={<MessageCircle className="w-4 h-4" />}   label={t('messages')} />
                           <MenuItem
                             to="/saved"
-                            icon={<Heart className={`w-4 h-4 ${savedCount > 0 ? 'fill-[#ff385c] text-[#ff385c]' : ''}`} />}
+                            icon={<Heart className={`w-4 h-4 ${savedCount > 0 ? 'fill-[#DD6E42] text-[#DD6E42]' : ''}`} />}
                             label={t('saved')}
                             badge={savedCount > 0 ? String(savedCount > 9 ? '9+' : savedCount) : undefined}
                           />
 
-                          <div className="my-1.5 border-t border-[#f2f2f2]" />
+                          <div className="my-1.5 border-t border-[#EAEAEA]" />
+
+                          <MenuItem to="/roommates"  icon={<Users className="w-4 h-4" />}  label="Roommate Finder" />
+                          <MenuItem to="/moving-services"  icon={<Truck className="w-4 h-4" />}  label="Movers" />
+
+                          <div className="my-1.5 border-t border-[#EAEAEA]" />
 
                           <MenuItem to="/settings" icon={<Settings className="w-4 h-4" />} label={t('settings')} />
 
@@ -358,7 +397,7 @@ const Navbar: React.FC<NavbarProps> = ({
                             onClick={handleLogout}
                             className="
                               w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium
-                              text-[#c13515] hover:bg-[#fff1f2] transition-colors duration-150
+                              text-[#DD6E42] hover:bg-[#E8DAB2] transition-colors duration-150
                             "
                           >
                             <LogOut className="w-4 h-4" />
@@ -369,24 +408,26 @@ const Navbar: React.FC<NavbarProps> = ({
                         <>
                           <Link
                             to="/login"
-                            className="block px-4 py-2.5 text-sm font-semibold text-[#222222] hover:bg-[#f7f7f7] transition-colors"
+                            className="block px-4 py-2.5 text-sm font-semibold text-[#50757A] hover:bg-[#EAEAEA] transition-colors"
                           >
                             {t('login')}
                           </Link>
                           <Link
                             to="/register"
-                            className="block px-4 py-2.5 text-sm text-[#222222] hover:bg-[#f7f7f7] transition-colors"
+                            className="block px-4 py-2.5 text-sm text-[#50757A] hover:bg-[#EAEAEA] transition-colors"
                           >
                             {t('signup')}
                           </Link>
-                          <div className="my-1.5 border-t border-[#f2f2f2]" />
+                          <div className="my-1.5 border-t border-[#EAEAEA]" />
                           <MenuItem
                             to="/saved"
                             icon={<Heart className="w-4 h-4" />}
                             label={t('savedProperties')}
                           />
-                          <MenuItem to="/become-host" icon={<span className="w-4 h-4 text-[#ff385c] font-bold text-base leading-none">+</span>} label={t('shareYourHome')} />
-                          <MenuItem to="/help"        icon={<X className="w-4 h-4 rotate-45" />} label={t('help')} />
+                          <MenuItem to="/become-host"      icon={<span className="w-4 h-4 text-[#DD6E42] font-bold text-base leading-none">+</span>} label={t('shareYourHome')} />
+                          <MenuItem to="/roommates"  icon={<Users className="w-4 h-4" />} label="Roommate Finder" />
+                          <MenuItem to="/moving-services"  icon={<Truck className="w-4 h-4" />} label="Movers" />
+                          <MenuItem to="/help"             icon={<X className="w-4 h-4 rotate-45" />} label={t('help')} />
                         </>
                       )}
                     </motion.div>
@@ -420,10 +461,10 @@ const Navbar: React.FC<NavbarProps> = ({
             shadow-[rgba(0,0,0,0.06)_0px_2px_12px]
           "
         >
-          <Search className="w-4 h-4 text-[#ff385c] shrink-0" />
-          <span className="flex-1 text-left text-sm font-medium text-[#222222]/80">{t('findYourKeja')}…</span>
-          <span className="flex-1 text-left text-sm font-medium text-[#222222]/80">{t('anyBudget')}</span>
-          <span className="flex-1 text-left text-sm font-medium text-[#222222]/80">{t('anywhere')}</span>
+          <Search className="w-4 h-4 text-[#DD6E42] shrink-0" />
+          <span className="flex-1 text-left text-sm font-medium text-[#50757A]/80">{t('findYourKeja')}…</span>
+          <span className="flex-1 text-left text-sm font-medium text-[#50757A]/80">{t('anyBudget')}</span>
+          <span className="flex-1 text-left text-sm font-medium text-[#50757A]/80">{t('anywhere')}</span>
         </button>
       </div>
     )}
@@ -441,14 +482,14 @@ interface MenuItemProps {
 const MenuItem: React.FC<MenuItemProps> = ({ to, icon, label, badge }) => (
   <Link
     to={to}
-    className="flex items-center justify-between px-4 py-2.5 text-sm font-medium text-[#222222] hover:bg-[#f7f7f7] transition-colors duration-150"
+    className="flex items-center justify-between px-4 py-2.5 text-sm font-medium text-[#50757A] hover:bg-[#EAEAEA] transition-colors duration-150"
   >
     <div className="flex items-center gap-3">
-      <span className="text-[#6a6a6a]">{icon}</span>
+      <span className="text-[#50757A]">{icon}</span>
       {label}
     </div>
     {badge && (
-      <span className="bg-[#ff385c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
+      <span className="bg-[#DD6E42] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
         {badge}
       </span>
     )}

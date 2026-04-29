@@ -19,7 +19,7 @@ const Social: React.FC<{
     target="_blank"
     rel="noopener noreferrer"
     aria-label={label}
-    className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#ff385c] text-white/70 hover:text-white transition-all duration-200"
+    className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#DD6E42] text-white/70 hover:text-white transition-all duration-200"
   >
     {icon}
   </a>
@@ -100,12 +100,12 @@ const NewsletterForm: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="flex-1 sm:w-64 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]/50 focus:border-[#ff385c]"
+              className="flex-1 sm:w-64 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/50 focus:border-[#DD6E42]"
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2.5 bg-[#ff385c] hover:bg-[#e00b41] disabled:opacity-60 text-white font-bold rounded-xl text-sm transition-colors shrink-0 flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-[#DD6E42] hover:bg-[#C4623B] disabled:opacity-60 text-white font-bold rounded-xl text-sm transition-colors shrink-0 flex items-center gap-1.5"
             >
               {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
               Subscribe
@@ -123,7 +123,7 @@ const Footer: React.FC = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#1B2430] text-white">
+    <footer className="bg-[#50757A] text-white">
 
       {/* ── Newsletter strip ─────────────────────────────────────────── */}
       <div className="border-b border-white/10">
@@ -146,7 +146,7 @@ const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-1.5 mb-4">
               <img src={logo} alt="GetKeja logo" className="w-8 h-8 object-contain" />
-              <span className="text-xl font-black text-[#ff385c]">Getkeja</span>
+              <span className="text-xl font-black text-[#DD6E42]">Getkeja</span>
             </Link>
             <p className="text-white/55 text-sm leading-relaxed mb-5 max-w-xs">
               Kenya's trusted platform for finding verified rentals, homes for sale, and commercial spaces  from Nairobi to the coast.
@@ -155,18 +155,18 @@ const Footer: React.FC = () => {
             {/* Contact snippets */}
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm text-white/55">
-                <MapPin className="w-4 h-4 text-[#ff385c] shrink-0" />
+                <MapPin className="w-4 h-4 text-[#DD6E42] shrink-0" />
                 Westlands, Nairobi, Kenya
               </li>
               <li>
                 <a href="mailto:hello@getkeja.online" className="flex items-center gap-2 text-sm text-white/55 hover:text-white transition-colors">
-                  <Mail className="w-4 h-4 text-[#ff385c] shrink-0" />
+                  <Mail className="w-4 h-4 text-[#DD6E42] shrink-0" />
                   hello@getkeja.online
                 </a>
               </li>
               <li>
                 <a href="tel:+2547576568845" className="flex items-center gap-2 text-sm text-white/55 hover:text-white transition-colors">
-                  <Phone className="w-4 h-4 text-[#ff385c] shrink-0" />
+                  <Phone className="w-4 h-4 text-[#DD6E42] shrink-0" />
                   +254 7576568845
                 </a>
               </li>
@@ -232,7 +232,7 @@ const Footer: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-xs text-center sm:text-left">
             © {year} Getkeja. All rights reserved. Made with{' '}
-            <Heart className="inline w-3 h-3 text-[#ff385c] fill-[#ff385c]" /> in Kenya.
+            <Heart className="inline w-3 h-3 text-[#DD6E42] fill-[#DD6E42]" /> in Kenya.
           </p>
           <div className="flex items-center gap-4 text-white/40 text-xs">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>

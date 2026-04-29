@@ -58,7 +58,7 @@ const AdminUsersTab: React.FC = () => {
         <SectionHeader title="User Management" sub={`${userStats?.new_this_month ?? 0} new users this month · ${userStats?.verified_ids_total ?? 0} verified IDs`} />
         <button 
           onClick={handleExport}
-          className="flex items-center gap-2 bg-[#222222] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm self-start md:self-auto"
+          className="flex items-center gap-2 bg-[#50757A] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm self-start md:self-auto"
         >
           <Download className="w-3.5 h-3.5" /> Export Users
         </button>
@@ -68,8 +68,8 @@ const AdminUsersTab: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {Object.entries(userStats?.by_role ?? {}).slice(0, 4).map(([role, count]) => (
           <div key={role} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-            <p className="text-xl font-bold text-[#222222]">{(count as number).toLocaleString()}</p>
-            <p className="text-xs text-[#6a6a6a] capitalize mt-0.5">{role.replace('_', ' ')}s</p>
+            <p className="text-xl font-bold text-[#50757A]">{(count as number).toLocaleString()}</p>
+            <p className="text-xs text-[#50757A] capitalize mt-0.5">{role.replace('_', ' ')}s</p>
           </div>
         ))}
       </div>
@@ -77,25 +77,25 @@ const AdminUsersTab: React.FC = () => {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[200px] relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6a6a6a]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#50757A]" />
           <input type="text" placeholder="Search by name or email…" value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-[#222222] placeholder:text-[#6a6a6a] focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 focus:border-[#ff385c]"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-[#50757A] placeholder:text-[#50757A] focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 focus:border-[#DD6E42]"
           />
         </div>
         <div className="relative">
           <select value={roleFilter} onChange={e => { setRoleFilter(e.target.value); setPage(1); }}
-            className="appearance-none bg-white border border-gray-200 rounded-xl pl-3 pr-8 py-2.5 text-sm text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 cursor-pointer">
+            className="appearance-none bg-white border border-gray-200 rounded-xl pl-3 pr-8 py-2.5 text-sm text-[#50757A] focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 cursor-pointer">
             {ROLES.map(r => <option key={r} value={r}>{r === 'all' ? 'All Roles' : r.replace('_', ' ')}</option>)}
           </select>
-          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#6a6a6a] pointer-events-none" />
+          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#50757A] pointer-events-none" />
         </div>
         <div className="relative">
           <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-            className="appearance-none bg-white border border-gray-200 rounded-xl pl-3 pr-8 py-2.5 text-sm text-[#222222] focus:outline-none focus:ring-2 focus:ring-[#ff385c]/30 cursor-pointer">
+            className="appearance-none bg-white border border-gray-200 rounded-xl pl-3 pr-8 py-2.5 text-sm text-[#50757A] focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/30 cursor-pointer">
             {STATUSES.map(s => <option key={s} value={s}>{s === 'all' ? 'All Status' : s.replace('_', ' ')}</option>)}
           </select>
-          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#6a6a6a] pointer-events-none" />
+          <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#50757A] pointer-events-none" />
         </div>
       </div>
 
@@ -112,12 +112,12 @@ const AdminUsersTab: React.FC = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/50">
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">User</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Roles</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Status</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Provider</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Joined</th>
-                  <th className="text-right px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Actions</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">User</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Roles</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Status</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Provider</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Joined</th>
+                  <th className="text-right px-4 py-3 font-semibold text-[#50757A] text-xs">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -129,8 +129,8 @@ const AdminUsersTab: React.FC = () => {
                           <span className="text-blue-600 text-xs font-bold">{(u.full_name ?? u.email ?? '?')[0].toUpperCase()}</span>
                         </div>
                         <div>
-                          <p className="font-semibold text-[#222222] text-sm">{u.full_name ?? 'No name'}</p>
-                          <p className="text-xs text-[#6a6a6a]">{u.email}</p>
+                          <p className="font-semibold text-[#50757A] text-sm">{u.full_name ?? 'No name'}</p>
+                          <p className="text-xs text-[#50757A]">{u.email}</p>
                         </div>
                       </div>
                     </td>
@@ -140,8 +140,8 @@ const AdminUsersTab: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3"><Badge status={u.account_status ?? u.status ?? 'active'} /></td>
-                    <td className="px-4 py-3"><span className="text-xs text-[#6a6a6a] capitalize">{u.auth_provider ?? 'email'}</span></td>
-                    <td className="px-4 py-3"><span className="text-xs text-[#6a6a6a]">{u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs text-[#50757A] capitalize">{u.auth_provider ?? 'email'}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs text-[#50757A]">{u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</span></td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1.5">
                         {(u.account_status ?? u.status) !== 'suspended' && (u.account_status ?? u.status) !== 'banned' && (

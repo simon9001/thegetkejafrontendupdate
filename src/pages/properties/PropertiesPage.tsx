@@ -67,7 +67,7 @@ const PropertiesPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-[#f7f7f7]">
+      <div className="min-h-screen bg-[#EAEAEA]">
         {/* Search header */}
         <div className="bg-white border-b border-gray-200 py-5 px-4 sticky top-0 z-20 shadow-sm">
           <div className="max-w-5xl mx-auto">
@@ -90,7 +90,7 @@ const PropertiesPage: React.FC = () => {
                   onClick={() => setParam('listing_category', cat.value)}
                   className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                     category === cat.value
-                      ? 'bg-[#ff385c] border-[#ff385c] text-white'
+                      ? 'bg-[#DD6E42] border-[#DD6E42] text-white'
                       : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
                   }`}
                 >
@@ -155,7 +155,7 @@ const PropertiesPage: React.FC = () => {
                       onClick={() => setParam('bedrooms', opt.value)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                         bedrooms === opt.value
-                          ? 'bg-[#ff385c] border-[#ff385c] text-white'
+                          ? 'bg-[#DD6E42] border-[#DD6E42] text-white'
                           : 'bg-gray-50 border-gray-200 text-#000000-600 hover:border-gray-400'
                       }`}
                     >
@@ -171,7 +171,7 @@ const PropertiesPage: React.FC = () => {
                   value={area}
                   onChange={(e) => setParam('area', e.target.value)}
                   placeholder="e.g. Westlands, Kilimani"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                 />
               </div>
               <div>
@@ -182,7 +182,7 @@ const PropertiesPage: React.FC = () => {
                   value={minPrice}
                   onChange={(e) => setParam('min_price', e.target.value)}
                   placeholder="e.g. 5000"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                 />
               </div>
               <div>
@@ -193,7 +193,7 @@ const PropertiesPage: React.FC = () => {
                   value={maxPrice}
                   onChange={(e) => setParam('max_price', e.target.value)}
                   placeholder="e.g. 50000"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff385c]"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#DD6E42]"
                 />
               </div>
             </div>

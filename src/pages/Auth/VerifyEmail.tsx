@@ -77,8 +77,8 @@ const VerifyEmail: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FCFAF2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C5A373]/30 antialiased">
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C5A373]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
+        <div className="min-h-screen bg-[#E8DAB2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C0D6DF]/30 antialiased">
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C0D6DF]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
 
             <div className="w-full max-w-5xl h-[90vh] sm:h-[85vh] bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_20px_50px_rgba(197,163,115,0.15)] overflow-hidden flex flex-col lg:flex-row relative">
                 
@@ -90,7 +90,7 @@ const VerifyEmail: React.FC = () => {
                                 {/* Back Button */}
                                 <Link 
                                     to="/login" 
-                                    className="absolute left-4 top-4 text-[#1B2430]/50 hover:text-[#1B2430] transition-colors inline-flex items-center gap-1"
+                                    className="absolute left-4 top-4 text-[#50757A]/50 hover:text-[#50757A] transition-colors inline-flex items-center gap-1"
                                 >
                                     <ArrowLeft className="w-4 h-4" />
                                     <span className="text-[10px] font-bold uppercase tracking-wider">Back</span>
@@ -98,17 +98,17 @@ const VerifyEmail: React.FC = () => {
 
                                 {/* Header */}
                                 <div className="text-center mb-5">
-                                    <h1 className="text-2xl font-bold text-[#1B2430] mb-0.5">Verify Email</h1>
-                                    <p className="text-[#C5A373] text-xs font-medium">Confirm your account</p>
+                                    <h1 className="text-2xl font-bold text-[#50757A] mb-0.5">Verify Email</h1>
+                                    <p className="text-[#C0D6DF] text-xs font-medium">Confirm your account</p>
                                 </div>
 
                                 {/* Icon */}
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-14 h-14 bg-[#C5A373]/10 rounded-full flex items-center justify-center">
+                                    <div className="w-14 h-14 bg-[#C0D6DF]/10 rounded-full flex items-center justify-center">
                                         {isVerifying ? (
-                                            <Loader2 className="w-7 h-7 text-[#C5A373] animate-spin" />
+                                            <Loader2 className="w-7 h-7 text-[#C0D6DF] animate-spin" />
                                         ) : (
-                                            <MailCheck className="w-7 h-7 text-[#C5A373]" />
+                                            <MailCheck className="w-7 h-7 text-[#C0D6DF]" />
                                         )}
                                     </div>
                                 </div>
@@ -140,7 +140,7 @@ const VerifyEmail: React.FC = () => {
                                 {token ? (
                                     // Verifying with token
                                     <div className="text-center">
-                                        <h2 className="text-lg font-bold text-[#1B2430] mb-2">
+                                        <h2 className="text-lg font-bold text-[#50757A] mb-2">
                                             {isVerifying ? 'Verifying your email…' : 'Verification Failed'}
                                         </h2>
                                         {!isVerifying && error && (
@@ -154,12 +154,12 @@ const VerifyEmail: React.FC = () => {
                                                         placeholder="your@email.com"
                                                         value={resendEmail}
                                                         onChange={(e) => setResendEmail(e.target.value)}
-                                                        className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#C5A373] text-sm"
+                                                        className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#C0D6DF] text-sm"
                                                     />
                                                     <button
                                                         onClick={handleResend}
                                                         disabled={isResending}
-                                                        className="w-full py-2.5 bg-[#1B2430] text-white font-bold rounded-xl hover:bg-[#243447] transition-all text-sm"
+                                                        className="w-full py-2.5 bg-[#50757A] text-white font-bold rounded-xl hover:bg-[#50757A] transition-all text-sm"
                                                     >
                                                         {isResending ? 'Sending…' : 'Send New Link'}
                                                     </button>
@@ -170,12 +170,12 @@ const VerifyEmail: React.FC = () => {
                                 ) : (
                                     // No token — email was auto-sent on mount
                                     <>
-                                        <h2 className="text-lg font-bold text-[#1B2430] text-center mb-2">Check your inbox</h2>
+                                        <h2 className="text-lg font-bold text-[#50757A] text-center mb-2">Check your inbox</h2>
                                         <p className="text-xs text-gray-500 text-center mb-1">
                                             We've sent a verification link to:
                                         </p>
                                         {resendEmail && (
-                                            <p className="text-sm font-bold text-[#1B2430] text-center mb-4 break-all">{resendEmail}</p>
+                                            <p className="text-sm font-bold text-[#50757A] text-center mb-4 break-all">{resendEmail}</p>
                                         )}
                                         <p className="text-xs text-gray-400 text-center mb-4">
                                             Click the link in the email to activate your account. Check your spam folder if you don't see it within a minute.
@@ -190,13 +190,13 @@ const VerifyEmail: React.FC = () => {
                                                     placeholder="your@email.com"
                                                     value={resendEmail}
                                                     onChange={(e) => setResendEmail(e.target.value)}
-                                                    className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#C5A373] text-sm"
+                                                    className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#C0D6DF] text-sm"
                                                 />
                                             </div>
                                             <button
                                                 onClick={handleResend}
                                                 disabled={isResending || !resendEmail}
-                                                className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-xl hover:bg-[#8B6E4E] transition-all disabled:opacity-50 text-sm"
+                                                className="w-full py-2.5 bg-[#C0D6DF] text-white font-bold rounded-xl hover:bg-[#50757A] transition-all disabled:opacity-50 text-sm"
                                             >
                                                 {isResending ? 'Sending…' : 'Resend Email'}
                                             </button>
@@ -206,7 +206,7 @@ const VerifyEmail: React.FC = () => {
 
                                 <p className="text-[10px] text-gray-500 text-center mt-4">
                                     Didn't receive it? Check spam or{' '}
-                                    <Link to="/contact" className="font-bold text-[#C5A373] hover:text-[#8B6E4E] transition-colors underline">
+                                    <Link to="/contact" className="font-bold text-[#C0D6DF] hover:text-[#50757A] transition-colors underline">
                                         Contact Support
                                     </Link>
                                 </p>
@@ -215,7 +215,7 @@ const VerifyEmail: React.FC = () => {
                     </div>
 
                     {/* Desktop Sidebar Image */}
-                    <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#1B2430]">
+                    <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#50757A]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -226,11 +226,11 @@ const VerifyEmail: React.FC = () => {
                                 backgroundPosition: 'center 30%',
                             }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#1B2430]/90 via-[#1B2430]/40 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#50757A]/90 via-[#50757A]/40 to-transparent"></div>
                             <div className="absolute bottom-12 left-10 right-10 text-white z-20">
-                                <div className="w-10 h-1 bg-[#C5A373] mb-4 rounded-full"></div>
+                                <div className="w-10 h-1 bg-[#C0D6DF] mb-4 rounded-full"></div>
                                 <h2 className="text-3xl font-black mb-3 leading-tight">
-                                    Verify Your <span className="text-[#C5A373]">Email</span>
+                                    Verify Your <span className="text-[#C0D6DF]">Email</span>
                                 </h2>
                                 <p className="text-white/90 text-sm font-medium leading-relaxed max-w-sm">
                                     Please verify your email address to access your account and start exploring luxury properties.
@@ -240,7 +240,7 @@ const VerifyEmail: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="absolute inset-0 pointer-events-none border border-[#C5A373]/10 rounded-3xl sm:rounded-[2.5rem] hidden sm:block"></div>
+                <div className="absolute inset-0 pointer-events-none border border-[#C0D6DF]/10 rounded-3xl sm:rounded-[2.5rem] hidden sm:block"></div>
             </div>
         </div>
     );

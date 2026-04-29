@@ -39,7 +39,7 @@ const AdminAdsTab: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50/50 text-[#6a6a6a] text-xs font-semibold">
+                <tr className="border-b border-gray-100 bg-gray-50/50 text-[#50757A] text-xs font-semibold">
                   <th className="px-4 py-3">Campaign</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Budget</th>
@@ -48,21 +48,21 @@ const AdminAdsTab: React.FC = () => {
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 text-[#222222]">
+              <tbody className="divide-y divide-gray-50 text-[#50757A]">
                 {list.campaigns.map((c: any) => (
                   <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-4 py-3 font-semibold">{c.name ?? 'Unnamed Campaign'}</td>
                     <td className="px-4 py-3"><Badge status={c.status} /></td>
-                    <td className="px-4 py-3 text-xs font-bold text-[#6a6a6a]">KES {fmt(c.budget_kes)}</td>
+                    <td className="px-4 py-3 text-xs font-bold text-[#50757A]">KES {fmt(c.budget_kes)}</td>
                     <td className="px-4 py-3 text-xs font-bold text-emerald-600">KES {fmt(c.spent_kes)}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="text-center">
-                          <p className="text-[10px] uppercase text-[#6a6a6a] font-bold">Clicks</p>
+                          <p className="text-[10px] uppercase text-[#50757A] font-bold">Clicks</p>
                           <p className="text-xs font-bold">{fmt(c.clicks)}</p>
                         </div>
                         <div className="text-center">
-                          <p className="text-[10px] uppercase text-[#6a6a6a] font-bold">CTR</p>
+                          <p className="text-[10px] uppercase text-[#50757A] font-bold">CTR</p>
                           <p className="text-xs font-bold">{(c.ctr_pct ?? 0).toFixed(2)}%</p>
                         </div>
                       </div>

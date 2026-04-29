@@ -13,7 +13,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   icon: Icon, message, sub, action, className = '',
 }) => (
   <div
-    className={`flex flex-col items-center justify-center h-48 text-[#6a6a6a] gap-3 bg-gray-50 rounded-2xl border border-dashed border-gray-200 ${className}`}
+    className={`flex flex-col items-center justify-center h-48 text-[#50757A] gap-3 bg-gray-50 rounded-2xl border border-dashed border-gray-200 ${className}`}
   >
     <Icon className="w-12 h-12 opacity-20" />
     <p className="text-sm font-medium">{message}</p>

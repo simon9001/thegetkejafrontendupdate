@@ -90,14 +90,14 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
     <div className="w-full max-w-xs mx-auto px-5 py-6">
       {/* Header */}
       <div className="text-center mb-5">
-        <h1 className="text-2xl font-bold text-[#1B2430] mb-0.5">Sign In</h1>
-        <p className="text-[#C5A373] text-xs font-medium">Welcome, Friend!</p>
+        <h1 className="text-2xl font-bold text-[#50757A] mb-0.5">Sign In</h1>
+        <p className="text-[#C0D6DF] text-xs font-medium">Welcome, Friend!</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <div>
-          <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+          <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
             Email
           </label>
           <input
@@ -107,19 +107,19 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
             placeholder="name@getkeja.com"
             required
             disabled={isLoading}
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-xs text-[#1B2430] placeholder:text-gray-400 placeholder:text-[10px]"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-xs text-[#50757A] placeholder:text-gray-400 placeholder:text-[10px]"
           />
         </div>
 
         {/* Password */}
         <div>
           <div className="flex justify-between items-center mb-1">
-            <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider">
+            <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider">
               Password
             </label>
             <Link
               to="/forgot-password"
-              className="text-[10px] font-bold text-[#C5A373] hover:text-[#8B6E4E] transition-colors uppercase tracking-wider"
+              className="text-[10px] font-bold text-[#C0D6DF] hover:text-[#50757A] transition-colors uppercase tracking-wider"
             >
               Forgot?
             </Link>
@@ -132,12 +132,12 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
               placeholder="••••••••"
               required
               disabled={isLoading}
-              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] focus:bg-white transition-all text-sm text-[#1B2430] placeholder:text-gray-400"
+              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] focus:bg-white transition-all text-sm text-[#50757A] placeholder:text-gray-400"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C5A373] transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C0D6DF] transition-colors"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -174,7 +174,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all shadow-sm shadow-[#C5A373]/30 active:scale-[0.98] disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-[#C0D6DF] text-white font-bold rounded-lg hover:bg-[#50757A] transition-all shadow-sm shadow-[#C0D6DF]/30 active:scale-[0.98] disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2"
         >
           {isLoading && (
             <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
@@ -187,7 +187,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
           <button
             type="button"
             onClick={onToggle}
-            className="text-[#C5A373] font-bold hover:text-[#8B6E4E] transition-colors text-xs uppercase tracking-wider"
+            className="text-[#C0D6DF] font-bold hover:text-[#50757A] transition-colors text-xs uppercase tracking-wider"
           >
             SIGN UP
           </button>
@@ -198,7 +198,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
           <div className="flex items-center justify-center gap-2.5">
             <a
               href="/api/auth/google"
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#50757A] hover:border-[#C0D6DF] hover:bg-[#E8DAB2] transition-all"
               aria-label="Sign in with Google"
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
@@ -210,14 +210,14 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
             </a>
             <button
               type="button"
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#50757A] hover:border-[#C0D6DF] hover:bg-[#E8DAB2] transition-all"
               aria-label="Sign in with Twitter"
             >
               <Twitter className="w-3.5 h-3.5 fill-current" />
             </button>
             <button
               type="button"
-              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#1B2430] hover:border-[#C5A373] hover:bg-[#FCFAF2] transition-all"
+              className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-[#50757A] hover:border-[#C0D6DF] hover:bg-[#E8DAB2] transition-all"
               aria-label="Sign in with Facebook"
             >
               <Facebook className="w-3.5 h-3.5 fill-current" />

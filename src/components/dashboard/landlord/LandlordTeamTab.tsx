@@ -24,8 +24,8 @@ const LandlordTeamTab: React.FC = () => {
 
   if (isLoading) return (
     <div className="flex flex-col items-center justify-center p-20 space-y-4">
-      <Loader2 className="w-8 h-8 text-[#ff385c] animate-spin" />
-      <p className="text-sm text-[#6a6a6a]">Loading team members...</p>
+      <Loader2 className="w-8 h-8 text-[#DD6E42] animate-spin" />
+      <p className="text-sm text-[#50757A]">Loading team members...</p>
     </div>
   );
 
@@ -40,7 +40,7 @@ const LandlordTeamTab: React.FC = () => {
         action={
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-[#ff385c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-[#e00b41] hover:shadow-md transition-all active:scale-95"
+            className="flex items-center gap-2 bg-[#DD6E42] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-[#C4623B] hover:shadow-md transition-all active:scale-95"
           >
             <Plus className="w-4 h-4" /> Add Team Member
           </button>
@@ -50,13 +50,13 @@ const LandlordTeamTab: React.FC = () => {
       {/* Agents Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-2 px-2">
-          <ShieldCheck className="w-5 h-5 text-[#ff385c]" />
-          <h3 className="font-bold text-[#222222]">Managed by Agents</h3>
-          <span className="text-xs font-medium text-[#6a6a6a] bg-gray-100 px-2 py-0.5 rounded-full">{agents.length}</span>
+          <ShieldCheck className="w-5 h-5 text-[#DD6E42]" />
+          <h3 className="font-bold text-[#50757A]">Managed by Agents</h3>
+          <span className="text-xs font-medium text-[#50757A] bg-gray-100 px-2 py-0.5 rounded-full">{agents.length}</span>
         </div>
         {agents.length === 0 ? (
           <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-10 text-center">
-            <p className="text-sm text-[#6a6a6a]">No agents assigned yet. Partner with an agent to help manage your listings.</p>
+            <p className="text-sm text-[#50757A]">No agents assigned yet. Partner with an agent to help manage your listings.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -73,12 +73,12 @@ const LandlordTeamTab: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center gap-2 px-2">
           <Users className="w-5 h-5 text-indigo-500" />
-          <h3 className="font-bold text-[#222222]">Property Caretakers</h3>
-          <span className="text-xs font-medium text-[#6a6a6a] bg-gray-100 px-2 py-0.5 rounded-full">{caretakers.length}</span>
+          <h3 className="font-bold text-[#50757A]">Property Caretakers</h3>
+          <span className="text-xs font-medium text-[#50757A] bg-gray-100 px-2 py-0.5 rounded-full">{caretakers.length}</span>
         </div>
         {caretakers.length === 0 ? (
           <div className="bg-gray-50 border border-dashed border-gray-200 rounded-2xl p-10 text-center">
-            <p className="text-sm text-[#6a6a6a]">No caretakers assigned. Add a caretaker to handle day-to-day property tasks.</p>
+            <p className="text-sm text-[#50757A]">No caretakers assigned. Add a caretaker to handle day-to-day property tasks.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -102,15 +102,15 @@ const TeamCard: React.FC<{ member: any, onRevoke: () => void }> = ({ member, onR
   <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all group">
     <div className="flex items-start justify-between mb-4">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-2xl bg-[#f7f7f7] border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+        <div className="w-12 h-12 rounded-2xl bg-[#EAEAEA] border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
           {member.avatar_url ? (
             <img src={member.avatar_url} className="w-full h-full object-cover" alt="" />
           ) : (
-            <span className="text-[#ff385c] font-bold text-lg">{member.full_name[0]}</span>
+            <span className="text-[#DD6E42] font-bold text-lg">{member.full_name[0]}</span>
           )}
         </div>
         <div>
-          <h4 className="font-bold text-[#222222] line-clamp-1">{member.full_name}</h4>
+          <h4 className="font-bold text-[#50757A] line-clamp-1">{member.full_name}</h4>
           <p className="text-[11px] text-indigo-600 font-bold uppercase tracking-wider">{member.role}</p>
         </div>
       </div>
@@ -124,17 +124,17 @@ const TeamCard: React.FC<{ member: any, onRevoke: () => void }> = ({ member, onR
     </div>
 
     <div className="space-y-2 mb-5">
-      <div className="flex items-center gap-2 text-xs text-[#6a6a6a]">
+      <div className="flex items-center gap-2 text-xs text-[#50757A]">
         <Mail className="w-3.5 h-3.5" />
         <span className="truncate">{member.email}</span>
       </div>
       {member.phone_number && (
-        <div className="flex items-center gap-2 text-xs text-[#6a6a6a]">
+        <div className="flex items-center gap-2 text-xs text-[#50757A]">
           <Phone className="w-3.5 h-3.5" />
           <span>{member.phone_number}</span>
         </div>
       )}
-      <div className="flex items-center gap-2 text-xs text-[#6a6a6a]">
+      <div className="flex items-center gap-2 text-xs text-[#50757A]">
         <Edit3 className="w-3.5 h-3.5" />
         <span className="truncate">Assigned: {member.property_title || 'Multiple Properties'}</span>
       </div>
@@ -150,8 +150,8 @@ const TeamCard: React.FC<{ member: any, onRevoke: () => void }> = ({ member, onR
     )}
 
     <div className="flex gap-2">
-      <button className="flex-1 px-3 py-2.5 bg-gray-50 rounded-xl text-xs font-bold text-[#222222] hover:bg-gray-100 transition-colors border border-gray-100">Message</button>
-      <button className="flex-1 px-3 py-2.5 bg-[#222222] text-white rounded-xl text-xs font-bold hover:bg-black transition-colors">Manage Access</button>
+      <button className="flex-1 px-3 py-2.5 bg-gray-50 rounded-xl text-xs font-bold text-[#50757A] hover:bg-gray-100 transition-colors border border-gray-100">Message</button>
+      <button className="flex-1 px-3 py-2.5 bg-[#50757A] text-white rounded-xl text-xs font-bold hover:bg-black transition-colors">Manage Access</button>
     </div>
   </div>
 );

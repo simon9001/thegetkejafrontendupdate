@@ -64,7 +64,7 @@ const PropertyCard: React.FC<{ property: Property }> = ({ property: p }) => {
           </div>
         )}
         {p.listing_category && (
-          <span className="absolute top-3 left-3 bg-white/90 text-[#ff385c] text-xs font-semibold px-2 py-0.5 rounded-full capitalize">
+          <span className="absolute top-3 left-3 bg-white/90 text-[#DD6E42] text-xs font-semibold px-2 py-0.5 rounded-full capitalize">
             {p.listing_category.replace(/_/g, ' ')}
           </span>
         )}
@@ -102,7 +102,7 @@ const PropertyCard: React.FC<{ property: Property }> = ({ property: p }) => {
           )}
         </div>
 
-        <p className="text-[#ff385c] font-bold text-sm">{formatPrice(p)}</p>
+        <p className="text-[#DD6E42] font-bold text-sm">{formatPrice(p)}</p>
       </div>
     </div>
   );
@@ -138,7 +138,7 @@ const Pagination: React.FC<{ page: number; pages: number; onPage: (p: number) =>
           key={n}
           onClick={() => onPage(n)}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            n === page ? 'bg-[#ff385c] text-white' : 'hover:bg-gray-100 text-gray-700'
+            n === page ? 'bg-[#DD6E42] text-white' : 'hover:bg-gray-100 text-gray-700'
           }`}
         >
           {n}
@@ -207,7 +207,7 @@ const SearchResults: React.FC = () => {
   if (isFetching) {
     return (
       <div className="flex items-center justify-center py-24">
-        <Loader2 className="w-8 h-8 animate-spin text-[#ff385c]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#DD6E42]" />
       </div>
     );
   }

@@ -37,16 +37,16 @@ const DeveloperProjectsTab: React.FC = () => {
   return (
     <div className="space-y-5 max-w-7xl">
       <SectionHeader title="My Projects" sub="Manage your real estate developments" action={
-        <Link to="/dashboard/add-property" className="inline-flex items-center gap-2 bg-[#ff385c] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#e00b41] transition-all">
+        <Link to="/dashboard/add-property" className="inline-flex items-center gap-2 bg-[#DD6E42] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#C4623B] transition-all">
           <Plus className="w-4 h-4" /> New Project
         </Link>
       } />
 
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[240px] relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6a6a6a]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#50757A]" />
           <input type="text" placeholder="Search projects..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#ff385c]/30" />
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#DD6E42]/30" />
         </div>
       </div>
 
@@ -70,16 +70,16 @@ const DeveloperProjectsTab: React.FC = () => {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-[#222222] truncate mb-1">{p.title}</h3>
-                <p className="text-xs text-[#6a6a6a] flex items-center gap-1 mb-3">
+                <h3 className="font-bold text-[#50757A] truncate mb-1">{p.title}</h3>
+                <p className="text-xs text-[#50757A] flex items-center gap-1 mb-3">
                   <MapPin className="w-3 h-3" /> {[p.location?.area, p.location?.town].filter(Boolean).join(', ') || 'Location not set'}
                 </p>
                 <div className="flex items-center justify-between pt-3 border-t border-gray-50">
-                  <span className="text-sm font-bold text-[#ff385c]">
+                  <span className="text-sm font-bold text-[#DD6E42]">
                     {getPriceStr(p)}
                   </span>
                   <div className="flex gap-1">
-                    <button className="p-1.5 text-[#6a6a6a] hover:bg-gray-50 rounded-lg"><Edit3 className="w-4 h-4" /></button>
+                    <button className="p-1.5 text-[#50757A] hover:bg-gray-50 rounded-lg"><Edit3 className="w-4 h-4" /></button>
                     <button onClick={() => setDeleteId(p.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>

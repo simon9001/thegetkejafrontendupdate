@@ -57,7 +57,7 @@ const AdminPropertiesTab: React.FC = () => {
         <SectionHeader title="Property Management" sub={`${stats?.featured_count ?? 0} featured · ${stats?.active_boosts ?? 0} active boosts`} />
         <button 
           onClick={handleExport}
-          className="flex items-center gap-2 bg-[#222222] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm self-start md:self-auto"
+          className="flex items-center gap-2 bg-[#50757A] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-sm self-start md:self-auto"
         >
           <Download className="w-3.5 h-3.5" /> Export {view === 'stats' ? 'Stats' : 'Listings'}
         </button>
@@ -67,7 +67,7 @@ const AdminPropertiesTab: React.FC = () => {
       <div className="flex gap-2 p-1 bg-gray-100 rounded-xl w-fit">
         {(['stats', 'pending', 'top'] as const).map(v => (
           <button key={v} onClick={() => { setView(v); setPage(1); }}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${view === v ? 'bg-white text-[#222222] shadow-sm' : 'text-[#6a6a6a] hover:text-[#222222]'}`}>
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${view === v ? 'bg-white text-[#50757A] shadow-sm' : 'text-[#50757A] hover:text-[#50757A]'}`}>
             {v === 'stats' ? 'Overview' : v === 'pending' ? `Pending (${pending?.total ?? 0})` : 'Top Listings'}
           </button>
         ))}
@@ -79,14 +79,14 @@ const AdminPropertiesTab: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {Object.entries(stats?.by_status ?? {}).map(([status, count]) => (
               <div key={status} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-                <p className="text-xl font-bold text-[#222222]">{(count as number).toLocaleString()}</p>
-                <p className="text-xs text-[#6a6a6a] capitalize mt-0.5">{status.replace(/_/g, ' ')}</p>
+                <p className="text-xl font-bold text-[#50757A]">{(count as number).toLocaleString()}</p>
+                <p className="text-xs text-[#50757A] capitalize mt-0.5">{status.replace(/_/g, ' ')}</p>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-              <h3 className="text-sm font-bold text-[#222222] mb-3">By Category</h3>
+              <h3 className="text-sm font-bold text-[#50757A] mb-3">By Category</h3>
               <div className="space-y-2.5">
                 {Object.entries(stats?.by_category ?? {}).map(([cat, count]) => {
                    const total = Object.values(stats?.by_category ?? {}).reduce((a, b) => (a as number) + (b as number), 0);
@@ -94,11 +94,11 @@ const AdminPropertiesTab: React.FC = () => {
                    return (
                     <div key={cat} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#6a6a6a] capitalize font-medium">{cat.replace(/_/g, ' ')}</span>
-                        <span className="font-bold text-[#222222]">{(count as number).toLocaleString()}</span>
+                        <span className="text-[#50757A] capitalize font-medium">{cat.replace(/_/g, ' ')}</span>
+                        <span className="font-bold text-[#50757A]">{(count as number).toLocaleString()}</span>
                       </div>
                       <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#ff385c] rounded-full" style={{ width: `${pct}%` }} />
+                        <div className="h-full bg-[#DD6E42] rounded-full" style={{ width: `${pct}%` }} />
                       </div>
                     </div>
                    );
@@ -106,12 +106,12 @@ const AdminPropertiesTab: React.FC = () => {
               </div>
             </div>
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-              <h3 className="text-sm font-bold text-[#222222] mb-3">By Type</h3>
+              <h3 className="text-sm font-bold text-[#50757A] mb-3">By Type</h3>
               <div className="space-y-2.5">
                 {Object.entries(stats?.by_type ?? {}).map(([type, count]) => (
                   <div key={type} className="flex items-center justify-between text-sm">
-                    <span className="text-[#6a6a6a] capitalize font-medium">{type.replace(/_/g, ' ')}</span>
-                    <span className="font-bold text-[#222222]">{(count as number).toLocaleString()}</span>
+                    <span className="text-[#50757A] capitalize font-medium">{type.replace(/_/g, ' ')}</span>
+                    <span className="font-bold text-[#50757A]">{(count as number).toLocaleString()}</span>
                   </div>
                 ))}
               </div>
@@ -137,12 +137,12 @@ const AdminPropertiesTab: React.FC = () => {
                     : <Building2 className="w-6 h-6 text-gray-300 mx-auto mt-5" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-[#222222] truncate">{p.title}</p>
-                  <p className="text-xs text-[#6a6a6a] mt-0.5">{p.owner_email ?? 'Unknown owner'} · {p.property_type ?? 'N/A'}</p>
+                  <p className="font-semibold text-[#50757A] truncate">{p.title}</p>
+                  <p className="text-xs text-[#50757A] mt-0.5">{p.owner_email ?? 'Unknown owner'} · {p.property_type ?? 'N/A'}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button onClick={() => window.open(`/property/${p.id}`, '_blank')}
-                    className="p-2 rounded-xl text-[#6a6a6a] hover:bg-gray-50 border border-gray-200 transition-colors" title="View Listing"><Eye className="w-4 h-4" /></button>
+                    className="p-2 rounded-xl text-[#50757A] hover:bg-gray-50 border border-gray-200 transition-colors" title="View Listing"><Eye className="w-4 h-4" /></button>
                   <button onClick={() => approveListing(p.id)}
                     className="p-2 rounded-xl text-emerald-600 hover:bg-emerald-50 border border-emerald-200 transition-colors" title="Approve"><CheckCircle className="w-4 h-4" /></button>
                   <button onClick={() => setRejectTarget(p.id)}
@@ -163,19 +163,19 @@ const AdminPropertiesTab: React.FC = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50/50">
-                <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs uppercase tracking-wider">Property</th>
-                <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs uppercase tracking-wider">Type</th>
-                <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs uppercase tracking-wider">Status</th>
-                <th className="text-right px-4 py-3 font-semibold text-[#6a6a6a] text-xs uppercase tracking-wider">Views</th>
+                <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs uppercase tracking-wider">Property</th>
+                <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs uppercase tracking-wider">Type</th>
+                <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs uppercase tracking-wider">Status</th>
+                <th className="text-right px-4 py-3 font-semibold text-[#50757A] text-xs uppercase tracking-wider">Views</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {(top?.listings ?? []).map((p: any, i: number) => (
                 <tr key={p.id ?? `row-${i}`} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-4 py-3"><p className="font-semibold text-[#222222]">{p.title}</p></td>
-                  <td className="px-4 py-3"><span className="text-xs text-[#6a6a6a] capitalize">{(p.property_type ?? '').replace(/_/g, ' ')}</span></td>
+                  <td className="px-4 py-3"><p className="font-semibold text-[#50757A]">{p.title}</p></td>
+                  <td className="px-4 py-3"><span className="text-xs text-[#50757A] capitalize">{(p.property_type ?? '').replace(/_/g, ' ')}</span></td>
                   <td className="px-4 py-3"><Badge status={p.status ?? 'active'} /></td>
-                  <td className="px-4 py-3 text-right"><span className="font-bold text-[#222222]">{(p.view_count ?? 0).toLocaleString()}</span></td>
+                  <td className="px-4 py-3 text-right"><span className="font-bold text-[#50757A]">{(p.view_count ?? 0).toLocaleString()}</span></td>
                 </tr>
               ))}
             </tbody>

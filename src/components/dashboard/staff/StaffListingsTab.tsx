@@ -45,7 +45,7 @@ const StaffListingsTab: React.FC = () => {
       {isLoading ? (
         <div className="grid gap-3">{[...Array(4)].map((_, i) => <div key={i} className="h-32 bg-gray-100 rounded-xl animate-pulse" />)}</div>
       ) : !data?.listings?.length ? (
-        <div className="flex flex-col items-center justify-center h-48 bg-gray-50 rounded-2xl border border-dashed border-gray-200 text-[#6a6a6a]">
+        <div className="flex flex-col items-center justify-center h-48 bg-gray-50 rounded-2xl border border-dashed border-gray-200 text-[#50757A]">
           <Building2 className="w-12 h-12 opacity-20 mb-3" />
           <p className="text-sm font-bold">All caught up!</p>
           <p className="text-xs">No pending listings to review.</p>
@@ -64,14 +64,14 @@ const StaffListingsTab: React.FC = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <h3 className="font-bold text-[#222222] truncate">{p.title}</h3>
+                      <h3 className="font-bold text-[#50757A] truncate">{p.title}</h3>
                       <Badge status={p.status} />
                    </div>
-                   <p className="text-xs text-[#6a6a6a] mb-2">{p.owner_email} · {p.property_type} · {p.currency} {p.price?.toLocaleString()}</p>
+                   <p className="text-xs text-[#50757A] mb-2">{p.owner_email} · {p.property_type} · {p.currency} {p.price?.toLocaleString()}</p>
                    <div className="flex gap-2">
                      <button onClick={() => handleApprove(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-100"><ThumbsUp className="w-3.5 h-3.5" /> Approve</button>
                      <button onClick={() => setRejectId(p.id)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 text-xs font-bold rounded-lg hover:bg-red-100 transition-colors border border-red-100"><ThumbsDown className="w-3.5 h-3.5" /> Reject</button>
-                     <button onClick={() => window.open(`/property/${p.id}`, '_blank')} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-[#6a6a6a] text-xs font-bold rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"><ExternalLink className="w-3.5 h-3.5" /> View Details</button>
+                     <button onClick={() => window.open(`/property/${p.id}`, '_blank')} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-[#50757A] text-xs font-bold rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"><ExternalLink className="w-3.5 h-3.5" /> View Details</button>
                    </div>
                 </div>
               </div>

@@ -17,7 +17,7 @@ import {
 import Layout from '../../components/layout/Layout';
 
 const MemoizedMapView = React.memo(({ lat, lng, propertyTitle }: { lat: number; lng: number; propertyTitle: string }) => (
-    <div className="h-[280px] w-full rounded-[14px] overflow-hidden border border-[#e5e5e5]">
+    <div className="h-[280px] w-full rounded-[14px] overflow-hidden border border-[#EAEAEA]">
         <MapContainer center={[lat, lng]} zoom={15} scrollWheelZoom={false} className="h-full w-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -55,7 +55,7 @@ const CommercialPropertyDetails: React.FC = () => {
         return (
             <Layout showSearch={false}>
                 <div className="flex items-center justify-center min-h-[60vh]">
-                    <div className="w-10 h-10 border-[3px] border-[#ff385c] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-10 h-10 border-[3px] border-[#DD6E42] border-t-transparent rounded-full animate-spin" />
                 </div>
             </Layout>
         );
@@ -65,11 +65,11 @@ const CommercialPropertyDetails: React.FC = () => {
         return (
             <Layout showSearch={false}>
                 <div className="text-center py-24">
-                    <h2 className="text-2xl font-semibold text-[#222222]">Venue not found</h2>
-                    <p className="text-[#6a6a6a] text-sm mt-2 mb-6">This listing may have been removed.</p>
+                    <h2 className="text-2xl font-semibold text-[#50757A]">Venue not found</h2>
+                    <p className="text-[#50757A] text-sm mt-2 mb-6">This listing may have been removed.</p>
                     <button
                         onClick={() => navigate('/')}
-                        className="px-6 py-2.5 bg-[#222222] text-white text-sm font-semibold rounded-[8px] hover:bg-[#ff385c] transition-colors"
+                        className="px-6 py-2.5 bg-[#50757A] text-white text-sm font-semibold rounded-[8px] hover:bg-[#DD6E42] transition-colors"
                     >
                         Back to home
                     </button>
@@ -171,15 +171,15 @@ const CommercialPropertyDetails: React.FC = () => {
 
     // ── Reusable components ────────────────────────────────────────────────────
     const InfoPill = ({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) => (
-        <div className="p-3 rounded-[14px] border border-[#e5e5e5]">
-            <Icon className="w-4 h-4 text-[#6a6a6a] mb-2" />
-            <p className="text-xs text-[#6a6a6a]">{label}</p>
-            <p className="text-sm font-medium text-[#222222] truncate">{value}</p>
+        <div className="p-3 rounded-[14px] border border-[#EAEAEA]">
+            <Icon className="w-4 h-4 text-[#50757A] mb-2" />
+            <p className="text-xs text-[#50757A]">{label}</p>
+            <p className="text-sm font-medium text-[#50757A] truncate">{value}</p>
         </div>
     );
 
     const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-        <h3 className="text-xl font-semibold text-[#222222] mb-4">{children}</h3>
+        <h3 className="text-xl font-semibold text-[#50757A] mb-4">{children}</h3>
     );
 
     return (
@@ -190,32 +190,32 @@ const CommercialPropertyDetails: React.FC = () => {
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
                     <div>
                         <div className="flex items-center gap-2 mb-1">
-                            <h1 className="text-[26px] font-semibold text-[#222222] tracking-[-0.44px]">{property.name}</h1>
+                            <h1 className="text-[26px] font-semibold text-[#50757A] tracking-[-0.44px]">{property.name}</h1>
                             {property.verifiedVenue && (
-                                <span className="flex items-center gap-1 px-2 py-0.5 bg-[#fff1f2] text-[#ff385c] text-xs font-medium rounded-full">
+                                <span className="flex items-center gap-1 px-2 py-0.5 bg-[#E8DAB2] text-[#DD6E42] text-xs font-medium rounded-full">
                                     <BadgeCheck className="w-3.5 h-3.5" />
                                     Verified venue
                                 </span>
                             )}
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 text-sm text-[#222222]">
+                        <div className="flex flex-wrap items-center gap-2 text-sm text-[#50757A]">
                             <div className="flex items-center gap-1">
-                                <MapPin className="w-3.5 h-3.5 text-[#6a6a6a]" />
-                                <span className="underline cursor-pointer text-[#6a6a6a]">{property.cityLocation}</span>
+                                <MapPin className="w-3.5 h-3.5 text-[#50757A]" />
+                                <span className="underline cursor-pointer text-[#50757A]">{property.cityLocation}</span>
                             </div>
-                            <span className="text-[#6a6a6a]">·</span>
+                            <span className="text-[#50757A]">·</span>
                             <div className="flex items-center gap-1">
-                                <Users className="w-3.5 h-3.5 text-[#6a6a6a]" />
-                                <span className="text-[#6a6a6a]">Up to {property.maxCapacity} guests</span>
+                                <Users className="w-3.5 h-3.5 text-[#50757A]" />
+                                <span className="text-[#50757A]">Up to {property.maxCapacity} guests</span>
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#f2f2f2] transition-colors text-sm font-semibold text-[#222222]">
+                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#EAEAEA] transition-colors text-sm font-semibold text-[#50757A]">
                             <Share2 className="w-4 h-4" />
                             Share
                         </button>
-                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#f2f2f2] transition-colors text-sm font-semibold text-[#222222]">
+                        <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[#EAEAEA] transition-colors text-sm font-semibold text-[#50757A]">
                             <Heart className="w-4 h-4" />
                             Save
                         </button>
@@ -262,25 +262,25 @@ const CommercialPropertyDetails: React.FC = () => {
                                     onClick={() => setActiveImageIndex(i => Math.max(0, i - 1))}
                                     className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow hover:bg-white transition"
                                 >
-                                    <ChevronLeft className="w-4 h-4 text-[#222222]" />
+                                    <ChevronLeft className="w-4 h-4 text-[#50757A]" />
                                 </button>
                                 <button
                                     onClick={() => setActiveImageIndex(i => Math.min(property.gallery.length - 1, i + 1))}
                                     className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow hover:bg-white transition"
                                 >
-                                    <ChevronRight className="w-4 h-4 text-[#222222]" />
+                                    <ChevronRight className="w-4 h-4 text-[#50757A]" />
                                 </button>
                             </>
                         )}
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#50757A] rounded-lg text-sm font-semibold shadow transition">
                             <Camera className="w-4 h-4" />
                             Show all photos ({property.gallery.length})
                         </button>
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#50757A] rounded-lg text-sm font-semibold shadow transition">
                             <Video className="w-4 h-4" />
                             Virtual tour
                         </button>
-                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#222222] rounded-lg text-sm font-semibold shadow transition">
+                        <button className="flex items-center gap-2 px-3 py-1.5 bg-white/90 hover:bg-white text-[#50757A] rounded-lg text-sm font-semibold shadow transition">
                             <Grid className="w-4 h-4" />
                             Floor plan
                         </button>
@@ -298,12 +298,12 @@ const CommercialPropertyDetails: React.FC = () => {
                     <div className="space-y-8 min-w-0">
 
                         {/* Host row */}
-                        <div className="flex items-center justify-between pb-6 border-b border-[#e5e5e5]">
+                        <div className="flex items-center justify-between pb-6 border-b border-[#EAEAEA]">
                             <div>
-                                <h2 className="text-xl font-semibold text-[#222222]">
+                                <h2 className="text-xl font-semibold text-[#50757A]">
                                     Hosted by {property.host.name}
                                 </h2>
-                                <p className="text-[#6a6a6a] text-sm mt-0.5">
+                                <p className="text-[#50757A] text-sm mt-0.5">
                                     {property.property_type} · {property.totalArea} sqm · Up to {property.maxCapacity} guests
                                 </p>
                             </div>
@@ -315,32 +315,32 @@ const CommercialPropertyDetails: React.FC = () => {
                         </div>
 
                         {/* Highlights */}
-                        <div className="space-y-4 pb-6 border-b border-[#e5e5e5]">
+                        <div className="space-y-4 pb-6 border-b border-[#EAEAEA]">
                             <div className="flex items-center gap-4">
-                                <BadgeCheck className="w-6 h-6 text-[#222222] shrink-0" />
+                                <BadgeCheck className="w-6 h-6 text-[#50757A] shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">Verified venue</p>
-                                    <p className="text-sm text-[#6a6a6a]">This venue has been inspected and verified by our team.</p>
+                                    <p className="text-sm font-semibold text-[#50757A]">Verified venue</p>
+                                    <p className="text-sm text-[#50757A]">This venue has been inspected and verified by our team.</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <Award className="w-6 h-6 text-[#222222] shrink-0" />
+                                <Award className="w-6 h-6 text-[#50757A] shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">Cancellation policy</p>
-                                    <p className="text-sm text-[#6a6a6a]">{property.socialProof.cancellationPolicy}</p>
+                                    <p className="text-sm font-semibold text-[#50757A]">Cancellation policy</p>
+                                    <p className="text-sm text-[#50757A]">{property.socialProof.cancellationPolicy}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Description */}
                         {property.vibeDescription && (
-                            <div className="pb-6 border-b border-[#e5e5e5]">
-                                <p className="text-[#222222] text-sm leading-relaxed">{property.vibeDescription}</p>
+                            <div className="pb-6 border-b border-[#EAEAEA]">
+                                <p className="text-[#50757A] text-sm leading-relaxed">{property.vibeDescription}</p>
                             </div>
                         )}
 
                         {/* Quick overview grid */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
+                        <div className="pb-6 border-b border-[#EAEAEA]">
                             <SectionTitle>Quick overview</SectionTitle>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <InfoPill icon={Building2} label="Property type" value={property.property_type} />
@@ -355,7 +355,7 @@ const CommercialPropertyDetails: React.FC = () => {
                         </div>
 
                         {/* Atmosphere & features */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
+                        <div className="pb-6 border-b border-[#EAEAEA]">
                             <SectionTitle>Atmosphere & features</SectionTitle>
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 {[
@@ -365,24 +365,24 @@ const CommercialPropertyDetails: React.FC = () => {
                                     { label: 'Ceiling height', value: property.ceilingHeight },
                                 ].map(({ label, value }) => (
                                     <div key={label}>
-                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
-                                        <p className="text-sm font-medium text-[#222222] mt-0.5">{value}</p>
+                                        <p className="text-xs text-[#50757A]">{label}</p>
+                                        <p className="text-sm font-medium text-[#50757A] mt-0.5">{value}</p>
                                     </div>
                                 ))}
                             </div>
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {property.uniqueFeatures.map((f: string, i: number) => (
-                                    <span key={i} className="px-3 py-1 bg-[#f2f2f2] text-[#222222] rounded-full text-xs font-medium">
+                                    <span key={i} className="px-3 py-1 bg-[#EAEAEA] text-[#50757A] rounded-full text-xs font-medium">
                                         {f}
                                     </span>
                                 ))}
                             </div>
                             <div className="flex gap-4">
-                                <button className="flex items-center gap-1.5 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors">
+                                <button className="flex items-center gap-1.5 text-sm font-semibold text-[#50757A] underline hover:text-[#DD6E42] transition-colors">
                                     <Camera className="w-4 h-4" />
                                     Drone photos
                                 </button>
-                                <button className="flex items-center gap-1.5 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors">
+                                <button className="flex items-center gap-1.5 text-sm font-semibold text-[#50757A] underline hover:text-[#DD6E42] transition-colors">
                                     <Moon className="w-4 h-4" />
                                     Night photos
                                 </button>
@@ -390,10 +390,10 @@ const CommercialPropertyDetails: React.FC = () => {
                         </div>
 
                         {/* Technical infrastructure */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
+                        <div className="pb-6 border-b border-[#EAEAEA]">
                             <div className="flex items-center justify-between mb-4">
                                 <SectionTitle>Technical infrastructure</SectionTitle>
-                                <span className="text-xs bg-[#fff1f2] text-[#ff385c] px-2 py-1 rounded-full font-medium">For professionals</span>
+                                <span className="text-xs bg-[#E8DAB2] text-[#DD6E42] px-2 py-1 rounded-full font-medium">For professionals</span>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                                 {[
@@ -405,13 +405,13 @@ const CommercialPropertyDetails: React.FC = () => {
                                     { label: 'AC capacity', value: property.airConditioning },
                                 ].map(({ label, value }) => (
                                     <div key={label}>
-                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
-                                        <p className="text-sm font-medium text-[#222222] mt-0.5">{value}</p>
+                                        <p className="text-xs text-[#50757A]">{label}</p>
+                                        <p className="text-sm font-medium text-[#50757A] mt-0.5">{value}</p>
                                     </div>
                                 ))}
                                 <div className="col-span-2">
-                                    <p className="text-xs text-[#6a6a6a]">Equipment loading</p>
-                                    <p className="text-sm font-medium text-[#222222] mt-0.5">{property.equipmentLoading}</p>
+                                    <p className="text-xs text-[#50757A]">Equipment loading</p>
+                                    <p className="text-sm font-medium text-[#50757A] mt-0.5">{property.equipmentLoading}</p>
                                 </div>
                             </div>
                             <div className="flex gap-2">
@@ -431,7 +431,7 @@ const CommercialPropertyDetails: React.FC = () => {
                         </div>
 
                         {/* Rules */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
+                        <div className="pb-6 border-b border-[#EAEAEA]">
                             <SectionTitle>Rules & restrictions</SectionTitle>
                             <div className="space-y-4">
                                 <div className="flex flex-wrap gap-2">
@@ -449,19 +449,19 @@ const CommercialPropertyDetails: React.FC = () => {
                                         { icon: Key, label: 'Age restriction', value: property.rules.ageRestrictions },
                                     ].map(({ icon: Icon, label, value }) => (
                                         <div key={label} className="flex items-start gap-2">
-                                            <Icon className="w-4 h-4 text-[#6a6a6a] mt-0.5 shrink-0" />
+                                            <Icon className="w-4 h-4 text-[#50757A] mt-0.5 shrink-0" />
                                             <div>
-                                                <p className="text-xs text-[#6a6a6a]">{label}</p>
-                                                <p className="text-sm text-[#222222]">{value}</p>
+                                                <p className="text-xs text-[#50757A]">{label}</p>
+                                                <p className="text-sm text-[#50757A]">{value}</p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                                 <div>
-                                    <p className="text-xs text-[#6a6a6a] mb-1.5">Required permits</p>
+                                    <p className="text-xs text-[#50757A] mb-1.5">Required permits</p>
                                     <div className="flex flex-wrap gap-2">
                                         {property.rules.requiredPermits.map((p: string, i: number) => (
-                                            <span key={i} className="px-2 py-1 bg-[#f2f2f2] text-[#6a6a6a] rounded text-xs">
+                                            <span key={i} className="px-2 py-1 bg-[#EAEAEA] text-[#50757A] rounded text-xs">
                                                 {p}
                                             </span>
                                         ))}
@@ -471,32 +471,32 @@ const CommercialPropertyDetails: React.FC = () => {
                         </div>
 
                         {/* Safety */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
+                        <div className="pb-6 border-b border-[#EAEAEA]">
                             <SectionTitle>Safety & compliance</SectionTitle>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                 <div className="flex items-center gap-2">
-                                    <DoorOpen className="w-4 h-4 text-[#6a6a6a]" />
-                                    <span className="text-sm text-[#222222]">{property.safety.fireExits} fire exits</span>
+                                    <DoorOpen className="w-4 h-4 text-[#50757A]" />
+                                    <span className="text-sm text-[#50757A]">{property.safety.fireExits} fire exits</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Eye className="w-4 h-4 text-[#6a6a6a]" />
-                                    <span className="text-sm text-[#222222]">{property.safety.cctv ? 'CCTV' : 'No CCTV'}</span>
+                                    <Eye className="w-4 h-4 text-[#50757A]" />
+                                    <span className="text-sm text-[#50757A]">{property.safety.cctv ? 'CCTV' : 'No CCTV'}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <User className="w-4 h-4 text-[#6a6a6a]" />
-                                    <span className="text-sm text-[#222222]">On-site manager</span>
+                                    <User className="w-4 h-4 text-[#50757A]" />
+                                    <span className="text-sm text-[#50757A]">On-site manager</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <AlertTriangle className="w-4 h-4 text-[#6a6a6a]" />
-                                    <span className="text-sm text-[#222222]">First aid available</span>
+                                    <AlertTriangle className="w-4 h-4 text-[#50757A]" />
+                                    <span className="text-sm text-[#50757A]">First aid available</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Map */}
-                        <div className="pb-6 border-b border-[#e5e5e5]">
+                        <div className="pb-6 border-b border-[#EAEAEA]">
                             <SectionTitle>Where you'll host</SectionTitle>
-                            <p className="text-sm text-[#6a6a6a] -mt-2 mb-4">{property.exactLocation}</p>
+                            <p className="text-sm text-[#50757A] -mt-2 mb-4">{property.exactLocation}</p>
                             <div className="grid grid-cols-2 gap-3 mb-4">
                                 {[
                                     { label: 'Accessibility', value: property.locationInfo.accessibility },
@@ -504,13 +504,13 @@ const CommercialPropertyDetails: React.FC = () => {
                                     { label: 'Privacy rating', value: property.locationInfo.privacyRating },
                                 ].map(({ label, value }) => (
                                     <div key={label}>
-                                        <p className="text-xs text-[#6a6a6a]">{label}</p>
-                                        <p className="text-sm font-medium text-[#222222]">{value}</p>
+                                        <p className="text-xs text-[#50757A]">{label}</p>
+                                        <p className="text-sm font-medium text-[#50757A]">{value}</p>
                                     </div>
                                 ))}
                                 <div>
-                                    <p className="text-xs text-[#6a6a6a]">Nearby landmarks</p>
-                                    <p className="text-sm font-medium text-[#222222]">{property.locationInfo.nearbyLandmarks.join(', ')}</p>
+                                    <p className="text-xs text-[#50757A]">Nearby landmarks</p>
+                                    <p className="text-sm font-medium text-[#50757A]">{property.locationInfo.nearbyLandmarks.join(', ')}</p>
                                 </div>
                             </div>
                             <MemoizedMapView lat={lat} lng={lng} propertyTitle={property.name} />
@@ -518,7 +518,7 @@ const CommercialPropertyDetails: React.FC = () => {
                                 href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[#222222] underline hover:text-[#ff385c] transition-colors"
+                                className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold text-[#50757A] underline hover:text-[#DD6E42] transition-colors"
                             >
                                 <Navigation2 className="w-4 h-4" />
                                 Get directions
@@ -526,20 +526,20 @@ const CommercialPropertyDetails: React.FC = () => {
                         </div>
 
                         {/* Credibility */}
-                        <div className="pb-6 border-b border-[#e5e5e5] rounded-[14px] border border-[#e5e5e5] p-5">
+                        <div className="pb-6 border-b border-[#EAEAEA] rounded-[14px] border border-[#EAEAEA] p-5">
                             <SectionTitle>Credibility</SectionTitle>
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">
+                                    <p className="text-sm font-semibold text-[#50757A]">
                                         {property.verifiedVenue ? 'Verified venue' : 'Unverified'}
                                     </p>
-                                    <p className="text-xs text-[#6a6a6a]">
+                                    <p className="text-xs text-[#50757A]">
                                         {property.verifiedVenue ? 'Inspected by our team' : 'Pending verification'}
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-semibold text-[#222222]">{property.socialProof.cancellationPolicy}</p>
-                                    <p className="text-xs text-[#6a6a6a]">cancellation policy</p>
+                                    <p className="text-sm font-semibold text-[#50757A]">{property.socialProof.cancellationPolicy}</p>
+                                    <p className="text-xs text-[#50757A]">cancellation policy</p>
                                 </div>
                             </div>
                         </div>
@@ -563,31 +563,31 @@ const CommercialPropertyDetails: React.FC = () => {
                         <div className="sticky top-24">
                             <div
                                 className="
-                                    bg-white border border-[#e5e5e5] rounded-[20px] p-6
+                                    bg-white border border-[#EAEAEA] rounded-[20px] p-6
                                     shadow-[rgba(0,0,0,0.02)_0px_0px_0px_1px,rgba(0,0,0,0.04)_0px_2px_6px,rgba(0,0,0,0.1)_0px_4px_8px]
                                 "
                             >
-                                <h3 className="text-lg font-semibold text-[#222222] mb-4">Book this venue</h3>
+                                <h3 className="text-lg font-semibold text-[#50757A] mb-4">Book this venue</h3>
 
                                 {/* Price */}
                                 <div className="flex items-center justify-between mb-4">
                                     <div>
-                                        <span className="text-2xl font-semibold text-[#222222]">
+                                        <span className="text-2xl font-semibold text-[#50757A]">
                                             {property.currency} {property.startingPrice.toLocaleString()}
                                         </span>
-                                        <span className="text-[#6a6a6a] text-sm"> /{property.priceUnit}</span>
+                                        <span className="text-[#50757A] text-sm"> /{property.priceUnit}</span>
                                     </div>
                                     {property.verifiedVenue && (
                                         <div className="flex items-center gap-1">
-                                            <BadgeCheck className="w-4 h-4 text-[#ff385c]" />
-                                            <span className="text-xs text-[#ff385c] font-medium">Verified</span>
+                                            <BadgeCheck className="w-4 h-4 text-[#DD6E42]" />
+                                            <span className="text-xs text-[#DD6E42] font-medium">Verified</span>
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Rate type selector */}
                                 <div className="mb-4">
-                                    <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-2">Rate type</p>
+                                    <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-2">Rate type</p>
                                     <div className="grid grid-cols-2 gap-2">
                                         {rateOptions.map(({ key, label }) => (
                                             <button
@@ -595,8 +595,8 @@ const CommercialPropertyDetails: React.FC = () => {
                                                 onClick={() => setSelectedRate(key)}
                                                 className={`p-2 text-sm rounded-[8px] border transition font-medium ${
                                                     selectedRate === key
-                                                        ? 'bg-[#222222] text-white border-[#222222]'
-                                                        : 'border-[#c1c1c1] text-[#222222] hover:border-[#222222]'
+                                                        ? 'bg-[#50757A] text-white border-[#50757A]'
+                                                        : 'border-[#EAEAEA] text-[#50757A] hover:border-[#50757A]'
                                                 }`}
                                             >
                                                 {label}
@@ -606,13 +606,13 @@ const CommercialPropertyDetails: React.FC = () => {
                                 </div>
 
                                 {/* Booking form */}
-                                <div className="border border-[#c1c1c1] rounded-[8px] overflow-hidden mb-3 divide-y divide-[#c1c1c1]">
+                                <div className="border border-[#EAEAEA] rounded-[8px] overflow-hidden mb-3 divide-y divide-[#EAEAEA]">
                                     <div className="p-3">
-                                        <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Event type</p>
+                                        <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">Event type</p>
                                         <select
                                             value={eventType}
                                             onChange={e => setEventType(e.target.value)}
-                                            className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                            className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent"
                                         >
                                             <option value="wedding">Wedding</option>
                                             <option value="corporate">Corporate event</option>
@@ -622,28 +622,28 @@ const CommercialPropertyDetails: React.FC = () => {
                                             <option value="conference">Conference</option>
                                         </select>
                                     </div>
-                                    <div className="grid grid-cols-2 divide-x divide-[#c1c1c1]">
+                                    <div className="grid grid-cols-2 divide-x divide-[#EAEAEA]">
                                         <div className="p-3">
-                                            <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Date</p>
+                                            <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">Date</p>
                                             <input
                                                 type="date"
                                                 value={eventDate}
                                                 onChange={e => setEventDate(e.target.value)}
-                                                className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                                className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent"
                                             />
                                         </div>
                                         <div className="p-3">
-                                            <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">Start time</p>
+                                            <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">Start time</p>
                                             <input
                                                 type="time"
                                                 value={eventTime}
                                                 onChange={e => setEventTime(e.target.value)}
-                                                className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                                className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent"
                                             />
                                         </div>
                                     </div>
                                     <div className="p-3">
-                                        <p className="text-[10px] font-bold text-[#222222] uppercase tracking-wide mb-1">
+                                        <p className="text-[10px] font-bold text-[#50757A] uppercase tracking-wide mb-1">
                                             Number of guests (max {property.maxCapacity})
                                         </p>
                                         <input
@@ -652,33 +652,33 @@ const CommercialPropertyDetails: React.FC = () => {
                                             onChange={e => setGuestCount(Number(e.target.value))}
                                             min={1}
                                             max={property.maxCapacity}
-                                            className="w-full text-sm font-medium text-[#222222] focus:outline-none bg-transparent"
+                                            className="w-full text-sm font-medium text-[#50757A] focus:outline-none bg-transparent"
                                         />
                                     </div>
                                 </div>
 
                                 {/* CTA */}
-                                <button className="w-full py-3 bg-[#ff385c] hover:bg-[#e00b41] text-white font-semibold rounded-[8px] transition-colors mb-3 flex items-center justify-center gap-2">
+                                <button className="w-full py-3 bg-[#DD6E42] hover:bg-[#C4623B] text-white font-semibold rounded-[8px] transition-colors mb-3 flex items-center justify-center gap-2">
                                     <MessageCircle className="w-4 h-4" />
                                     Check availability
                                 </button>
-                                <p className="text-xs text-[#6a6a6a] text-center mb-4">You'll receive a detailed quote within 2 hours</p>
+                                <p className="text-xs text-[#50757A] text-center mb-4">You'll receive a detailed quote within 2 hours</p>
 
                                 {/* Price breakdown */}
-                                <div className="space-y-2 border-t border-[#e5e5e5] pt-4">
-                                    <div className="flex justify-between text-sm text-[#222222]">
+                                <div className="space-y-2 border-t border-[#EAEAEA] pt-4">
+                                    <div className="flex justify-between text-sm text-[#50757A]">
                                         <span className="underline">Venue rental ({selectedRate})</span>
                                         <span>{property.currency} {getPriceForSelectedRate().toLocaleString()}</span>
                                     </div>
-                                    <div className="flex justify-between text-sm text-[#222222]">
+                                    <div className="flex justify-between text-sm text-[#50757A]">
                                         <span className="underline">Cleaning fee</span>
                                         <span>{property.currency} {property.pricing.cleaningFee.toLocaleString()}</span>
                                     </div>
-                                    <div className="flex justify-between text-sm text-[#6a6a6a]">
+                                    <div className="flex justify-between text-sm text-[#50757A]">
                                         <span>Security deposit (refundable)</span>
                                         <span>{property.currency} {property.pricing.securityDeposit.toLocaleString()}</span>
                                     </div>
-                                    <div className="flex justify-between font-semibold text-[#222222] pt-2 border-t border-[#e5e5e5]">
+                                    <div className="flex justify-between font-semibold text-[#50757A] pt-2 border-t border-[#EAEAEA]">
                                         <span>Subtotal</span>
                                         <span>
                                             {property.currency}{' '}
@@ -694,37 +694,37 @@ const CommercialPropertyDetails: React.FC = () => {
                                         value={fullName}
                                         onChange={e => setFullName(e.target.value)}
                                         placeholder="Your full name"
-                                        className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]"
+                                        className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]"
                                     />
                                     <input
                                         type="tel"
                                         value={phoneNumber}
                                         onChange={e => setPhoneNumber(e.target.value)}
                                         placeholder="Phone number"
-                                        className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]"
+                                        className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]"
                                     />
                                     <input
                                         type="text"
                                         value={companyName}
                                         onChange={e => setCompanyName(e.target.value)}
                                         placeholder="Company / Organization (optional)"
-                                        className="w-full px-3 py-2 border border-[#c1c1c1] rounded-[8px] text-sm text-[#222222] placeholder-[#6a6a6a] focus:outline-none focus:border-[#222222]"
+                                        className="w-full px-3 py-2 border border-[#EAEAEA] rounded-[8px] text-sm text-[#50757A] placeholder-[#50757A] focus:outline-none focus:border-[#50757A]"
                                     />
                                 </div>
 
                                 {/* Trust badges */}
-                                <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-[#f2f2f2]">
+                                <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-[#EAEAEA]">
                                     <div className="flex items-center gap-1">
-                                        <Shield className="w-4 h-4 text-[#6a6a6a]" />
-                                        <span className="text-xs text-[#6a6a6a]">Secure booking</span>
+                                        <Shield className="w-4 h-4 text-[#50757A]" />
+                                        <span className="text-xs text-[#50757A]">Secure booking</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <Award className="w-4 h-4 text-[#6a6a6a]" />
-                                        <span className="text-xs text-[#6a6a6a]">Verified venue</span>
+                                        <Award className="w-4 h-4 text-[#50757A]" />
+                                        <span className="text-xs text-[#50757A]">Verified venue</span>
                                     </div>
                                 </div>
 
-                                <p className="text-xs text-[#6a6a6a] text-center mt-3">
+                                <p className="text-xs text-[#50757A] text-center mt-3">
                                     {property.socialProof.cancellationPolicy}
                                 </p>
                             </div>

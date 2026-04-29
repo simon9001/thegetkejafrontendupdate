@@ -19,11 +19,11 @@ import { useSubmitVerificationMutation, useGetMyVerificationQuery } from '../fea
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const Label: React.FC<{ children: React.ReactNode; required?: boolean }> = ({ children, required }) => (
-  <label className="block text-[11px] font-bold text-[#6a6a6a] uppercase tracking-wider mb-1.5">
-    {children}{required && <span className="text-[#ff385c] ml-0.5">*</span>}
+  <label className="block text-[11px] font-bold text-[#50757A] uppercase tracking-wider mb-1.5">
+    {children}{required && <span className="text-[#DD6E42] ml-0.5">*</span>}
   </label>
 );
-const inputCls = "w-full px-3.5 py-2.5 bg-white border border-[#c1c1c1] rounded-lg text-sm text-[#222222] placeholder:text-[#c1c1c1] focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] transition";
+const inputCls = "w-full px-3.5 py-2.5 bg-white border border-[#EAEAEA] rounded-lg text-sm text-[#50757A] placeholder:text-[#EAEAEA] focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 focus:border-[#DD6E42] transition";
 
 const STEPS = ['Your Role', 'Identity', 'Business Details', 'Review & Submit'];
 
@@ -49,7 +49,7 @@ const ImageUploader: React.FC<{
   return (
     <div>
       <Label>{label}</Label>
-      <p className="text-[11px] text-[#6a6a6a] mb-2">{hint}</p>
+      <p className="text-[11px] text-[#50757A] mb-2">{hint}</p>
       {value ? (
         <div className="relative w-full h-40 rounded-xl overflow-hidden border border-gray-200 group">
           <img src={value} className="w-full h-full object-cover" alt={label} />
@@ -61,7 +61,7 @@ const ImageUploader: React.FC<{
         </div>
       ) : (
         <button type="button" onClick={() => ref.current?.click()}
-          className="w-full h-36 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-[#c1c1c1] rounded-xl text-[#6a6a6a] hover:border-[#ff385c] hover:text-[#ff385c] transition-colors bg-[#f7f7f7]">
+          className="w-full h-36 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-[#EAEAEA] rounded-xl text-[#50757A] hover:border-[#DD6E42] hover:text-[#DD6E42] transition-colors bg-[#EAEAEA]">
           <Icon className="w-6 h-6" />
           <span className="text-xs font-semibold">Click to upload</span>
           <span className="text-[10px]">JPEG, PNG, WebP · max 5 MB</span>
@@ -102,14 +102,14 @@ const BecomeHost: React.FC = () => {
 
   if (!isAuth) {
     return (
-      <div className="min-h-screen bg-[#f7f7f7] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#EAEAEA] flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-10 max-w-sm w-full text-center">
-          <div className="w-14 h-14 bg-[#fff1f3] rounded-full flex items-center justify-center mx-auto mb-4">
-            <Shield className="w-7 h-7 text-[#ff385c]" />
+          <div className="w-14 h-14 bg-[#E8DAB2] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-7 h-7 text-[#DD6E42]" />
           </div>
-          <h2 className="text-xl font-bold text-[#222222] mb-2">Sign in first</h2>
-          <p className="text-sm text-[#6a6a6a] mb-6">You need an account to apply to become a host.</p>
-          <Link to="/login" className="block w-full py-3 bg-[#ff385c] text-white rounded-xl font-bold text-sm hover:bg-[#e00b41] transition-all">
+          <h2 className="text-xl font-bold text-[#50757A] mb-2">Sign in first</h2>
+          <p className="text-sm text-[#50757A] mb-6">You need an account to apply to become a host.</p>
+          <Link to="/login" className="block w-full py-3 bg-[#DD6E42] text-white rounded-xl font-bold text-sm hover:bg-[#C4623B] transition-all">
             Sign In
           </Link>
         </div>
@@ -123,19 +123,19 @@ const BecomeHost: React.FC = () => {
 
   if (pendingVerif?.status === 'pending') {
     return (
-      <div className="min-h-screen bg-[#f7f7f7] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#EAEAEA] flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-10 max-w-sm w-full text-center">
           <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-7 h-7 text-amber-500" />
           </div>
-          <h2 className="text-xl font-bold text-[#222222] mb-2">Application under review</h2>
-          <p className="text-sm text-[#6a6a6a] mb-1">
+          <h2 className="text-xl font-bold text-[#50757A] mb-2">Application under review</h2>
+          <p className="text-sm text-[#50757A] mb-1">
             Your application (<strong className="capitalize">{pendingVerif.doc_type.replace(/_/g, ' ')}</strong>) was submitted on{' '}
             {new Date(pendingVerif.submitted_at).toLocaleDateString()}.
           </p>
-          <p className="text-sm text-[#6a6a6a] mb-6">Our staff will review it within 1–2 business days. You'll get an email when it's done.</p>
+          <p className="text-sm text-[#50757A] mb-6">Our staff will review it within 1–2 business days. You'll get an email when it's done.</p>
           <button onClick={() => navigate('/')}
-            className="block w-full py-3 bg-[#222222] text-white rounded-xl font-bold text-sm hover:bg-[#ff385c] transition-all">
+            className="block w-full py-3 bg-[#50757A] text-white rounded-xl font-bold text-sm hover:bg-[#DD6E42] transition-all">
             Back to Home
           </button>
         </div>
@@ -145,15 +145,15 @@ const BecomeHost: React.FC = () => {
 
   if (existingRoles.includes('landlord') || existingRoles.includes('developer')) {
     return (
-      <div className="min-h-screen bg-[#f7f7f7] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#EAEAEA] flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-10 max-w-sm w-full text-center">
           <div className="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-7 h-7 text-emerald-500" />
           </div>
-          <h2 className="text-xl font-bold text-[#222222] mb-2">You're already a host!</h2>
-          <p className="text-sm text-[#6a6a6a] mb-6">Your account already has listing privileges.</p>
+          <h2 className="text-xl font-bold text-[#50757A] mb-2">You're already a host!</h2>
+          <p className="text-sm text-[#50757A] mb-6">Your account already has listing privileges.</p>
           <button onClick={() => navigate('/dashboard')}
-            className="block w-full py-3 bg-[#222222] text-white rounded-xl font-bold text-sm hover:bg-[#ff385c] transition-all">
+            className="block w-full py-3 bg-[#50757A] text-white rounded-xl font-bold text-sm hover:bg-[#DD6E42] transition-all">
             Go to Dashboard
           </button>
         </div>
@@ -215,22 +215,22 @@ const BecomeHost: React.FC = () => {
 
   if (done) {
     return (
-      <div className="min-h-screen bg-[#f7f7f7] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#EAEAEA] flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
           className="bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] p-10 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
             <CheckCircle2 className="w-8 h-8 text-emerald-500" />
           </div>
-          <h2 className="text-2xl font-bold text-[#222222] mb-2">Application submitted!</h2>
-          <p className="text-sm text-[#6a6a6a] mb-1">Our staff will review your documents within <strong>1–2 business days</strong>.</p>
-          <p className="text-sm text-[#6a6a6a] mb-8">You'll receive an email once your account is upgraded to <strong className="capitalize">{role}</strong>.</p>
+          <h2 className="text-2xl font-bold text-[#50757A] mb-2">Application submitted!</h2>
+          <p className="text-sm text-[#50757A] mb-1">Our staff will review your documents within <strong>1–2 business days</strong>.</p>
+          <p className="text-sm text-[#50757A] mb-8">You'll receive an email once your account is upgraded to <strong className="capitalize">{role}</strong>.</p>
           <div className="flex gap-3">
             <button onClick={() => navigate('/')}
-              className="flex-1 py-3 border border-gray-200 rounded-xl font-bold text-sm text-[#222222] hover:bg-gray-50 transition-all">
+              className="flex-1 py-3 border border-gray-200 rounded-xl font-bold text-sm text-[#50757A] hover:bg-gray-50 transition-all">
               Back to Home
             </button>
             <button onClick={() => navigate('/profile')}
-              className="flex-1 py-3 bg-[#ff385c] text-white rounded-xl font-bold text-sm hover:bg-[#e00b41] transition-all">
+              className="flex-1 py-3 bg-[#DD6E42] text-white rounded-xl font-bold text-sm hover:bg-[#C4623B] transition-all">
               View Profile
             </button>
           </div>
@@ -242,21 +242,21 @@ const BecomeHost: React.FC = () => {
   const visibleSteps = (role === 'developer' || role === 'agent') ? STEPS : STEPS.filter(s => s !== 'Business Details');
 
   return (
-    <div className="min-h-screen bg-[#f7f7f7]">
+    <div className="min-h-screen bg-[#EAEAEA]">
       {/* Topbar */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-4">
           <button onClick={() => step > 1 ? setStep(s => s - 1) : navigate('/')}
-            className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 text-[#6a6a6a] hover:text-[#222222] transition-colors">
+            className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 text-[#50757A] hover:text-[#50757A] transition-colors">
             <ArrowLeft className="w-4 h-4" />
           </button>
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-[#ff385c] rounded-lg flex items-center justify-center">
+            <div className="w-7 h-7 bg-[#DD6E42] rounded-lg flex items-center justify-center">
               <Home className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-[#222222] text-sm hidden sm:block">GetKeja</span>
+            <span className="font-bold text-[#50757A] text-sm hidden sm:block">GetKeja</span>
           </Link>
-          <div className="ml-auto text-xs text-[#6a6a6a] font-medium">
+          <div className="ml-auto text-xs text-[#50757A] font-medium">
             Step {step} of {maxStep}
           </div>
         </div>
@@ -279,8 +279,8 @@ const BecomeHost: React.FC = () => {
 
         {/* Hero */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#222222] tracking-tight">Share Your Home</h1>
-          <p className="text-sm text-[#6a6a6a] mt-2">Apply to list your property on GetKeja. Our staff will verify your identity and approve your account within 1–2 business days.</p>
+          <h1 className="text-3xl font-bold text-[#50757A] tracking-tight">Share Your Home</h1>
+          <p className="text-sm text-[#50757A] mt-2">Apply to list your property on GetKeja. Our staff will verify your identity and approve your account within 1–2 business days.</p>
         </div>
 
         {/* Step indicator */}
@@ -294,17 +294,17 @@ const BecomeHost: React.FC = () => {
               <React.Fragment key={label}>
                 <div className="flex flex-col items-center shrink-0">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all
-                    ${done2   ? 'bg-[#ff385c] text-white' :
-                      active ? 'bg-[#222222] text-white' :
-                               'bg-[#f2f2f2] text-[#6a6a6a]'}`}>
+                    ${done2   ? 'bg-[#DD6E42] text-white' :
+                      active ? 'bg-[#50757A] text-white' :
+                               'bg-[#EAEAEA] text-[#50757A]'}`}>
                     {done2 ? <CheckCircle2 className="w-4 h-4" /> : n}
                   </div>
-                  <span className={`text-[10px] mt-1 font-semibold whitespace-nowrap ${active ? 'text-[#222222]' : 'text-[#6a6a6a]'}`}>
+                  <span className={`text-[10px] mt-1 font-semibold whitespace-nowrap ${active ? 'text-[#50757A]' : 'text-[#50757A]'}`}>
                     {label}
                   </span>
                 </div>
                 {i < visibleSteps.length - 1 && (
-                  <div className={`flex-1 h-0.5 mx-2 min-w-[20px] ${step > realN ? 'bg-[#ff385c]' : 'bg-[#f2f2f2]'}`} />
+                  <div className={`flex-1 h-0.5 mx-2 min-w-[20px] ${step > realN ? 'bg-[#DD6E42]' : 'bg-[#EAEAEA]'}`} />
                 )}
               </React.Fragment>
             );
@@ -321,8 +321,8 @@ const BecomeHost: React.FC = () => {
             {step === 1 && (
               <>
                 <div>
-                  <h2 className="text-xl font-bold text-[#222222] mb-1">What type of host are you?</h2>
-                  <p className="text-sm text-[#6a6a6a]">Choose the role that best describes how you'll use GetKeja.</p>
+                  <h2 className="text-xl font-bold text-[#50757A] mb-1">What type of host are you?</h2>
+                  <p className="text-sm text-[#50757A]">Choose the role that best describes how you'll use GetKeja.</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
@@ -352,14 +352,14 @@ const BecomeHost: React.FC = () => {
                     const selected = role === opt.key;
                     return (
                       <button key={opt.key} type="button" onClick={() => setRole(opt.key)}
-                        className={`text-left p-5 rounded-2xl border-2 transition-all hover:border-[#ff385c] ${selected ? 'border-[#ff385c] bg-[#fff1f3]' : 'border-gray-200'}`}>
-                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-3 ${selected ? 'bg-[#ff385c] text-white' : 'bg-gray-100 text-[#6a6a6a]'}`}>
+                        className={`text-left p-5 rounded-2xl border-2 transition-all hover:border-[#DD6E42] ${selected ? 'border-[#DD6E42] bg-[#E8DAB2]' : 'border-gray-200'}`}>
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-3 ${selected ? 'bg-[#DD6E42] text-white' : 'bg-gray-100 text-[#50757A]'}`}>
                           <Icon className="w-5 h-5" />
                         </div>
-                        <p className="font-bold text-[#222222] text-sm mb-1">{opt.title}</p>
-                        <p className="text-xs text-[#6a6a6a] leading-relaxed mb-2">{opt.desc}</p>
-                        <p className="text-[10px] font-bold text-[#ff385c] uppercase tracking-wide">{opt.docs}</p>
-                        {selected && <div className="absolute top-3 right-3"><CheckCircle2 className="w-4 h-4 text-[#ff385c]" /></div>}
+                        <p className="font-bold text-[#50757A] text-sm mb-1">{opt.title}</p>
+                        <p className="text-xs text-[#50757A] leading-relaxed mb-2">{opt.desc}</p>
+                        <p className="text-[10px] font-bold text-[#DD6E42] uppercase tracking-wide">{opt.docs}</p>
+                        {selected && <div className="absolute top-3 right-3"><CheckCircle2 className="w-4 h-4 text-[#DD6E42]" /></div>}
                       </button>
                     );
                   })}
@@ -367,8 +367,8 @@ const BecomeHost: React.FC = () => {
 
                 {/* What happens next */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <p className="text-xs font-bold text-[#222222] mb-2 flex items-center gap-1.5">
-                    <Shield className="w-3.5 h-3.5 text-[#ff385c]" /> How verification works
+                  <p className="text-xs font-bold text-[#50757A] mb-2 flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5 text-[#DD6E42]" /> How verification works
                   </p>
                   <ol className="space-y-1.5">
                     {[
@@ -376,8 +376,8 @@ const BecomeHost: React.FC = () => {
                       'Our staff reviews your documents (1–2 business days)',
                       'On approval, your account is upgraded and you can list properties',
                     ].map((s, i) => (
-                      <li key={i} className="text-xs text-[#6a6a6a] flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-[#ff385c] text-white text-[9px] font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                      <li key={i} className="text-xs text-[#50757A] flex items-start gap-2">
+                        <span className="w-4 h-4 rounded-full bg-[#DD6E42] text-white text-[9px] font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
                         {s}
                       </li>
                     ))}
@@ -390,8 +390,8 @@ const BecomeHost: React.FC = () => {
             {step === 2 && (
               <>
                 <div>
-                  <h2 className="text-xl font-bold text-[#222222] mb-1">Identity Verification</h2>
-                  <p className="text-sm text-[#6a6a6a]">Upload a clear photo of your identity document and a selfie.</p>
+                  <h2 className="text-xl font-bold text-[#50757A] mb-1">Identity Verification</h2>
+                  <p className="text-sm text-[#50757A]">Upload a clear photo of your identity document and a selfie.</p>
                 </div>
 
                 <div>
@@ -399,7 +399,7 @@ const BecomeHost: React.FC = () => {
                   <div className="flex gap-3">
                     {([['national_id', 'National ID'], ['passport', 'Passport']] as const).map(([val, label]) => (
                       <button key={val} type="button" onClick={() => setDocType(val)}
-                        className={`flex-1 py-2.5 rounded-xl border text-sm font-bold transition-all ${docType === val ? 'border-[#ff385c] bg-[#fff1f3] text-[#ff385c]' : 'border-gray-200 text-[#6a6a6a] hover:border-gray-400'}`}>
+                        className={`flex-1 py-2.5 rounded-xl border text-sm font-bold transition-all ${docType === val ? 'border-[#DD6E42] bg-[#E8DAB2] text-[#DD6E42]' : 'border-gray-200 text-[#50757A] hover:border-gray-400'}`}>
                         {label}
                       </button>
                     ))}
@@ -436,10 +436,10 @@ const BecomeHost: React.FC = () => {
             {step === 3 && (role === 'developer' || role === 'agent') && (
               <>
                 <div>
-                  <h2 className="text-xl font-bold text-[#222222] mb-1">
+                  <h2 className="text-xl font-bold text-[#50757A] mb-1">
                     {role === 'developer' ? 'Business Details' : 'Professional Credentials'}
                   </h2>
-                  <p className="text-sm text-[#6a6a6a]">
+                  <p className="text-sm text-[#50757A]">
                     {role === 'developer' 
                       ? 'As a developer, we need your company or professional registration details.'
                       : 'As an agent, we need your licensing and professional details.'}
@@ -484,7 +484,7 @@ const BecomeHost: React.FC = () => {
                       ? [['company_cert', 'Company Certificate'], ['nca_cert', 'NCA Certificate']] as const
                       : [['earb_license', 'EAARB License'], ['other', 'Other License']] as const).map(([val, label]) => (
                       <button key={val} type="button" onClick={() => setBizDocType(val as any)}
-                        className={`flex-1 py-2.5 rounded-xl border text-sm font-bold transition-all ${bizDocType === val ? 'border-[#ff385c] bg-[#fff1f3] text-[#ff385c]' : 'border-gray-200 text-[#6a6a6a] hover:border-gray-400'}`}>
+                        className={`flex-1 py-2.5 rounded-xl border text-sm font-bold transition-all ${bizDocType === val ? 'border-[#DD6E42] bg-[#E8DAB2] text-[#DD6E42]' : 'border-gray-200 text-[#50757A] hover:border-gray-400'}`}>
                         {label}
                       </button>
                     ))}
@@ -503,8 +503,8 @@ const BecomeHost: React.FC = () => {
             {((step === 3 && role === 'landlord') || (step === 4 && role === 'developer')) && (
               <>
                 <div>
-                  <h2 className="text-xl font-bold text-[#222222] mb-1">Review your application</h2>
-                  <p className="text-sm text-[#6a6a6a]">Check everything looks correct before submitting.</p>
+                  <h2 className="text-xl font-bold text-[#50757A] mb-1">Review your application</h2>
+                  <p className="text-sm text-[#50757A]">Check everything looks correct before submitting.</p>
                 </div>
 
                 <div className="space-y-3">
@@ -526,15 +526,15 @@ const BecomeHost: React.FC = () => {
                     ] : []),
                   ].map(row => (
                     <div key={row.label} className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
-                      <span className="text-xs font-semibold text-[#6a6a6a]">{row.label}</span>
-                      <span className={`text-xs font-bold ${row.value.startsWith('✗') ? 'text-red-500' : row.value.startsWith('✓') ? 'text-emerald-600' : 'text-[#222222]'}`}>
+                      <span className="text-xs font-semibold text-[#50757A]">{row.label}</span>
+                      <span className={`text-xs font-bold ${row.value.startsWith('✗') ? 'text-red-500' : row.value.startsWith('✓') ? 'text-emerald-600' : 'text-[#50757A]'}`}>
                         {row.value}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs text-[#6a6a6a] leading-relaxed">
+                <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-xs text-[#50757A] leading-relaxed">
                   By submitting, you confirm that all information provided is accurate and that you agree to GetKeja's host terms and conditions.
                 </div>
               </>
@@ -546,18 +546,18 @@ const BecomeHost: React.FC = () => {
         <div className="flex gap-3 mt-6">
           {step > 1 && (
             <button type="button" onClick={() => setStep(s => s - 1)}
-              className="flex items-center gap-2 px-5 py-3 border border-gray-200 rounded-xl text-sm font-bold text-[#222222] hover:bg-gray-50 transition-all">
+              className="flex items-center gap-2 px-5 py-3 border border-gray-200 rounded-xl text-sm font-bold text-[#50757A] hover:bg-gray-50 transition-all">
               <ChevronLeft className="w-4 h-4" /> Back
             </button>
           )}
           {step < maxStep ? (
             <button type="button" onClick={next}
-              className="ml-auto flex items-center gap-2 px-6 py-3 bg-[#222222] text-white rounded-xl text-sm font-bold hover:bg-[#ff385c] transition-all">
+              className="ml-auto flex items-center gap-2 px-6 py-3 bg-[#50757A] text-white rounded-xl text-sm font-bold hover:bg-[#DD6E42] transition-all">
               Continue <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
             <button type="button" onClick={handleSubmit} disabled={isLoading}
-              className="ml-auto flex items-center gap-2 px-6 py-3 bg-[#ff385c] text-white rounded-xl text-sm font-bold hover:bg-[#e00b41] transition-all disabled:opacity-60">
+              className="ml-auto flex items-center gap-2 px-6 py-3 bg-[#DD6E42] text-white rounded-xl text-sm font-bold hover:bg-[#C4623B] transition-all disabled:opacity-60">
               {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting…</> : <><CheckCircle2 className="w-4 h-4" /> Submit Application</>}
             </button>
           )}

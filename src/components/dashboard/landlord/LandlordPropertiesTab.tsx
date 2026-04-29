@@ -52,7 +52,7 @@ const LandlordPropertiesTab: React.FC = () => {
         action={
           <Link
             to="/dashboard/add-property"
-            className="inline-flex items-center gap-2 bg-[#ff385c] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#e00b41] transition-all"
+            className="inline-flex items-center gap-2 bg-[#DD6E42] text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-[#C4623B] transition-all"
           >
             <Plus className="w-4 h-4" /> Add New
           </Link>
@@ -79,13 +79,13 @@ const LandlordPropertiesTab: React.FC = () => {
       <div className="flex flex-wrap gap-3">
         {/* Search */}
         <div className="flex-1 min-w-[200px] relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6a6a6a] pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#50757A] pointer-events-none" />
           <input
             type="text"
             placeholder="Search properties…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#ff385c]/30"
+            className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#DD6E42]/30"
           />
         </div>
         {/* Status pills */}
@@ -97,8 +97,8 @@ const LandlordPropertiesTab: React.FC = () => {
               onClick={() => { setStatusFilter(f.value); setPage(1); }}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 statusFilter === f.value
-                  ? 'bg-white text-[#222222] shadow-sm'
-                  : 'text-[#6a6a6a] hover:text-[#222222]'
+                  ? 'bg-white text-[#50757A] shadow-sm'
+                  : 'text-[#50757A] hover:text-[#50757A]'
               }`}
             >
               {f.label}
@@ -147,8 +147,8 @@ const LandlordPropertiesTab: React.FC = () => {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-bold text-[#222222] truncate mb-1">{p.title}</h3>
-                  <p className="text-xs text-[#6a6a6a] flex items-center gap-1 mb-3">
+                  <h3 className="font-bold text-[#50757A] truncate mb-1">{p.title}</h3>
+                  <p className="text-xs text-[#50757A] flex items-center gap-1 mb-3">
                     <MapPin className="w-3 h-3" />
                     {[p.location?.area, p.location?.county].filter(Boolean).join(', ') || 'Location not set'}
                   </p>
@@ -162,19 +162,19 @@ const LandlordPropertiesTab: React.FC = () => {
                     </div>
                   ) : (
                     <div className="flex items-center justify-between pt-3 border-t border-gray-50">
-                      <span className="text-sm font-bold text-[#ff385c]">
+                      <span className="text-sm font-bold text-[#DD6E42]">
                         KES {(p.pricing?.monthly_rent ?? p.pricing?.asking_price ?? 0).toLocaleString()}
-                        <span className="text-[10px] text-[#6a6a6a] font-normal">/mo</span>
+                        <span className="text-[10px] text-[#50757A] font-normal">/mo</span>
                       </span>
                       <div className="flex gap-1">
                         <button
                           onClick={() => window.open(`/property/${p.id}`, '_blank')}
-                          className="p-1.5 text-[#6a6a6a] hover:bg-gray-50 rounded-lg"
+                          className="p-1.5 text-[#50757A] hover:bg-gray-50 rounded-lg"
                           title="View Listing"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="p-1.5 text-[#6a6a6a] hover:bg-gray-50 rounded-lg" title="Edit">
+                        <button className="p-1.5 text-[#50757A] hover:bg-gray-50 rounded-lg" title="Edit">
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button

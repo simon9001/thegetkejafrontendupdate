@@ -111,34 +111,34 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
   // ── Free tier: show locked overlay ────────────────────────────────────────
   if (isFreeTier) {
     return (
-      <div className="relative border border-[#e5e5e5] rounded-2xl overflow-hidden shadow-sm select-none">
+      <div className="relative border border-[#EAEAEA] rounded-2xl overflow-hidden shadow-sm select-none">
         {/* Blurred preview of the chat widget */}
         <div className="pointer-events-none blur-[3px] opacity-40">
           <div className="w-full flex items-center justify-between px-4 py-3.5 bg-white">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#ff385c]/10 flex items-center justify-center shrink-0">
-                <MessageCircle className="w-4 h-4 text-[#ff385c]" />
+              <div className="w-9 h-9 rounded-xl bg-[#DD6E42]/10 flex items-center justify-center shrink-0">
+                <MessageCircle className="w-4 h-4 text-[#DD6E42]" />
               </div>
               <div>
-                <p className="text-sm font-bold text-[#222222]">Chat with owner</p>
-                <p className="text-[11px] text-[#6a6a6a]">{host.name}</p>
+                <p className="text-sm font-bold text-[#50757A]">Chat with owner</p>
+                <p className="text-[11px] text-[#50757A]">{host.name}</p>
               </div>
             </div>
           </div>
-          <div className="border-t border-[#e5e5e5] h-20 bg-[#fafafa]" />
+          <div className="border-t border-[#EAEAEA] h-20 bg-[#EAEAEA]" />
         </div>
         {/* Lock overlay */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/80 backdrop-blur-[1px]">
           <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
             <Lock className="w-5 h-5 text-gray-400" />
           </div>
-          <p className="text-sm font-bold text-[#222222]">Contact locked</p>
+          <p className="text-sm font-bold text-[#50757A]">Contact locked</p>
           <p className="text-xs text-gray-400 text-center px-6">
             Upgrade your plan to chat with {host.name}
           </p>
           <Link
             to="/"
-            className="mt-1 flex items-center gap-1.5 px-4 py-2 bg-[#ff385c] text-white text-xs font-bold rounded-full hover:bg-[#e00b41] transition-colors"
+            className="mt-1 flex items-center gap-1.5 px-4 py-2 bg-[#DD6E42] text-white text-xs font-bold rounded-full hover:bg-[#C4623B] transition-colors"
           >
             <Sparkles className="w-3 h-3" />
             Upgrade Plan
@@ -149,46 +149,46 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
   }
 
   return (
-    <div className="border border-[#e5e5e5] rounded-2xl overflow-hidden shadow-sm">
+    <div className="border border-[#EAEAEA] rounded-2xl overflow-hidden shadow-sm">
       {/* Header toggle */}
       <button
         type="button"
         onClick={isOpen ? () => setIsOpen(false) : handleOpen}
-        className="w-full flex items-center justify-between px-4 py-3.5 bg-white hover:bg-[#fafafa] transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3.5 bg-white hover:bg-[#EAEAEA] transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#ff385c]/10 flex items-center justify-center shrink-0">
-            <MessageCircle className="w-4.5 h-4.5 text-[#ff385c]" />
+          <div className="w-9 h-9 rounded-xl bg-[#DD6E42]/10 flex items-center justify-center shrink-0">
+            <MessageCircle className="w-4.5 h-4.5 text-[#DD6E42]" />
           </div>
           <div className="text-left">
-            <p className="text-sm font-bold text-[#222222]">Chat with owner</p>
-            <p className="text-[11px] text-[#6a6a6a]">{host.name}</p>
+            <p className="text-sm font-bold text-[#50757A]">Chat with owner</p>
+            <p className="text-[11px] text-[#50757A]">{host.name}</p>
           </div>
         </div>
-        <ChevronDown className={`w-4 h-4 text-[#6a6a6a] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-[#50757A] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="border-t border-[#e5e5e5]">
+        <div className="border-t border-[#EAEAEA]">
           {/* Messages area */}
-          <div className="h-72 overflow-y-auto flex flex-col gap-3 p-4 bg-[#fafafa]">
+          <div className="h-72 overflow-y-auto flex flex-col gap-3 p-4 bg-[#EAEAEA]">
             {msgsLoading && messages.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <Loader2 className="w-5 h-5 text-[#ff385c] animate-spin" />
+                <Loader2 className="w-5 h-5 text-[#DD6E42] animate-spin" />
               </div>
             ) : messages.length === 0 && conversationId ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
-                <MessageCircle className="w-8 h-8 text-[#e5e5e5] mb-2" />
-                <p className="text-xs text-[#6a6a6a]">No messages yet. Start the conversation!</p>
+                <MessageCircle className="w-8 h-8 text-[#EAEAEA] mb-2" />
+                <p className="text-xs text-[#50757A]">No messages yet. Start the conversation!</p>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center px-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#ff385c]/10 flex items-center justify-center mb-3">
-                  <MessageCircle className="w-6 h-6 text-[#ff385c]" />
+                <div className="w-12 h-12 rounded-2xl bg-[#DD6E42]/10 flex items-center justify-center mb-3">
+                  <MessageCircle className="w-6 h-6 text-[#DD6E42]" />
                 </div>
-                <p className="text-sm font-semibold text-[#222222] mb-1">Ask {host.name} anything</p>
-                <p className="text-xs text-[#6a6a6a]">Type your first message below to get started</p>
+                <p className="text-sm font-semibold text-[#50757A] mb-1">Ask {host.name} anything</p>
+                <p className="text-xs text-[#50757A]">Type your first message below to get started</p>
               </div>
             ) : (
               // Messages — backend returns newest first, reverse to show oldest at top
@@ -198,7 +198,7 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
                   <div key={msg.id} className={`flex items-end gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                     {/* Avatar */}
                     {!isMe && (
-                      <div className="w-7 h-7 rounded-full bg-[#222222] flex items-center justify-center shrink-0 text-white text-[10px] font-bold overflow-hidden">
+                      <div className="w-7 h-7 rounded-full bg-[#50757A] flex items-center justify-center shrink-0 text-white text-[10px] font-bold overflow-hidden">
                         {host.avatar
                           ? <img src={host.avatar} alt={host.name} className="w-full h-full object-cover" />
                           : avatarFallback}
@@ -208,8 +208,8 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
                     <div
                       className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
                         isMe
-                          ? 'bg-[#ff385c] text-white rounded-br-sm'
-                          : 'bg-white text-[#222222] border border-[#e5e5e5] rounded-bl-sm'
+                          ? 'bg-[#DD6E42] text-white rounded-br-sm'
+                          : 'bg-white text-[#50757A] border border-[#EAEAEA] rounded-bl-sm'
                       }`}
                     >
                       {msg.is_deleted ? (
@@ -226,7 +226,7 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
           </div>
 
           {/* Input area */}
-          <div className="bg-white border-t border-[#e5e5e5] p-3">
+          <div className="bg-white border-t border-[#EAEAEA] p-3">
             {!conversationId ? (
               /* First message — starts the conversation */
               <div className="flex gap-2">
@@ -236,13 +236,13 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
                   onChange={(e) => setInitialMsg(e.target.value)}
                   onKeyDown={handleInitialKeyDown}
                   placeholder={`Ask ${host.name} about this property…`}
-                  className="flex-1 px-3 py-2 text-sm border border-[#e5e5e5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] bg-[#fafafa]"
+                  className="flex-1 px-3 py-2 text-sm border border-[#EAEAEA] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 focus:border-[#DD6E42] bg-[#EAEAEA]"
                 />
                 <button
                   type="button"
                   onClick={handleStartConversation}
                   disabled={!initialMsg.trim() || startingUp}
-                  className="px-4 py-2 bg-[#ff385c] text-white text-sm font-bold rounded-xl hover:bg-[#e00b41] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#DD6E42] text-white text-sm font-bold rounded-xl hover:bg-[#C4623B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
                 >
                   {startingUp ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   Send
@@ -257,13 +257,13 @@ const PropertyChat: React.FC<PropertyChatProps> = ({
                   onChange={(e) => setInputText(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Type a message…"
-                  className="flex-1 px-3 py-2 text-sm border border-[#e5e5e5] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff385c]/20 focus:border-[#ff385c] bg-[#fafafa]"
+                  className="flex-1 px-3 py-2 text-sm border border-[#EAEAEA] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#DD6E42]/20 focus:border-[#DD6E42] bg-[#EAEAEA]"
                 />
                 <button
                   type="button"
                   onClick={handleSend}
                   disabled={!inputText.trim() || sending}
-                  className="p-2.5 bg-[#ff385c] text-white rounded-xl hover:bg-[#e00b41] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2.5 bg-[#DD6E42] text-white rounded-xl hover:bg-[#C4623B] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>

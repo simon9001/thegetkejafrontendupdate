@@ -55,7 +55,7 @@ const SavedProperties: React.FC = () => {
     };
 
     return (
-        <Layout showSearch={true}>
+        <Layout showSearch={false}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
@@ -67,7 +67,7 @@ const SavedProperties: React.FC = () => {
                             <ArrowLeft className="w-5 h-5" />
                         </button>
                         <div>
-                            <h1 className="text-2xl lg:text-3xl font-bold text-[#1B2430]">
+                            <h1 className="text-2xl lg:text-3xl font-bold text-[#50757A]">
                                 Saved Properties
                             </h1>
                             <p className="text-gray-500 text-sm mt-1">
@@ -93,7 +93,7 @@ const SavedProperties: React.FC = () => {
                         <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
                             <Heart className="w-12 h-12 text-gray-400" />
                         </div>
-                        <h2 className="text-xl font-semibold text-[#1B2430] mb-2">
+                        <h2 className="text-xl font-semibold text-[#50757A] mb-2">
                             No saved properties yet
                         </h2>
                         <p className="text-gray-500 mb-6">
@@ -101,7 +101,7 @@ const SavedProperties: React.FC = () => {
                         </p>
                         <button
                             onClick={() => navigate('/')}
-                            className="px-6 py-3 bg-[#D4A373] text-white rounded-lg hover:bg-[#E6B17E] transition"
+                            className="px-6 py-3 bg-[#DD6E42] text-white rounded-lg hover:bg-[#E8DAB2] transition"
                         >
                             Explore properties
                         </button>
@@ -121,12 +121,20 @@ const SavedProperties: React.FC = () => {
                                         onClick={() => handlePropertyClick(property.id, property.type)}
                                     >
                                         {/* Image Container */}
-                                        <div className="relative aspect-square rounded-lg lg:rounded-xl overflow-hidden">
-                                            <img
-                                                src={property.image}
-                                                alt={property.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                                            />
+                                        <div className="relative aspect-square rounded-lg lg:rounded-xl overflow-hidden bg-[#EAEAEA]">
+                                            {property.image ? (
+                                                <img
+                                                    src={property.image}
+                                                    alt={property.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                                                    {React.createElement(getPropertyIcon(property.type), { className: 'w-10 h-10 text-[#C0D6DF]' })}
+                                                    <span className="text-xs text-[#C0D6DF] font-medium">No image</span>
+                                                </div>
+                                            )}
                                             
                                             {/* Remove button */}
                                             <button 
@@ -146,7 +154,7 @@ const SavedProperties: React.FC = () => {
                                             </div>
 
                                             {/* Price Tag */}
-                                            <div className="absolute bottom-2 left-2 bg-[#1B2430]/90 text-white px-2 py-1 rounded-lg text-sm font-semibold">
+                                            <div className="absolute bottom-2 left-2 bg-[#50757A]/90 text-white px-2 py-1 rounded-lg text-sm font-semibold">
                                                 ${property.price}
                                                 <span className="text-xs text-gray-300 ml-1">
                                                     {property.type === 'commercial' ? '/day' : '/night'}
@@ -157,11 +165,11 @@ const SavedProperties: React.FC = () => {
                                         {/* Property Details */}
                                         <div className="mt-2">
                                             <div className="flex items-start justify-between">
-                                                <h3 className="text-sm font-semibold text-[#1B2430] truncate max-w-[150px]">
+                                                <h3 className="text-sm font-semibold text-[#50757A] truncate max-w-[150px]">
                                                     {property.title}
                                                 </h3>
                                                 <div className="flex items-center gap-1">
-                                                    <Star className="w-3 h-3 fill-current text-[#D4A373]" />
+                                                    <Star className="w-3 h-3 fill-current text-[#DD6E42]" />
                                                     <span className="text-xs font-medium">{property.rating}</span>
                                                 </div>
                                             </div>
@@ -205,7 +213,7 @@ const SavedProperties: React.FC = () => {
                         </p>
                         <button
                             onClick={() => navigate('/login')}
-                            className="px-4 py-2 bg-[#D4A373] text-white rounded-lg text-sm hover:bg-[#E6B17E] transition"
+                            className="px-4 py-2 bg-[#DD6E42] text-white rounded-lg text-sm hover:bg-[#E8DAB2] transition"
                         >
                             Sign in
                         </button>

@@ -82,8 +82,8 @@ const MapView: React.FC<MapViewProps> = ({
                         center={position}
                         radius={radius}
                         pathOptions={{
-                            fillColor: '#D4A373',
-                            color: '#D4A373',
+                            fillColor: '#DD6E42',
+                            color: '#DD6E42',
                             fillOpacity: 0.1
                         }}
                     />
@@ -94,7 +94,7 @@ const MapView: React.FC<MapViewProps> = ({
                         <Popup>
                             <div className="p-1">
                                 <h3 className="font-semibold text-sm m-0">{marker.title}</h3>
-                                {marker.price && <p className="text-[#D4A373] font-bold text-xs mt-1">{marker.price}</p>}
+                                {marker.price && <p className="text-[#DD6E42] font-bold text-xs mt-1">{marker.price}</p>}
                             </div>
                         </Popup>
                     </Marker>

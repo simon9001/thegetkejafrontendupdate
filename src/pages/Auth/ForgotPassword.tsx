@@ -32,8 +32,8 @@ const ForgotPassword: React.FC = () => {
 
     if (isSubmitted) {
         return (
-            <div className="min-h-screen bg-[#FCFAF2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C5A373]/30 antialiased">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C5A373]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
+            <div className="min-h-screen bg-[#E8DAB2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C0D6DF]/30 antialiased">
+                <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C0D6DF]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
 
                 <div className="w-full max-w-5xl h-[90vh] sm:h-[85vh] bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_20px_50px_rgba(197,163,115,0.15)] overflow-hidden flex flex-col lg:flex-row relative">
                     
@@ -44,7 +44,7 @@ const ForgotPassword: React.FC = () => {
                                     {/* Back Button */}
                                     <Link 
                                         to="/login" 
-                                        className="absolute left-4 top-4 text-[#1B2430]/50 hover:text-[#1B2430] transition-colors inline-flex items-center gap-1"
+                                        className="absolute left-4 top-4 text-[#50757A]/50 hover:text-[#50757A] transition-colors inline-flex items-center gap-1"
                                     >
                                         <ArrowLeft className="w-4 h-4" />
                                         <span className="text-[10px] font-bold uppercase tracking-wider">Back</span>
@@ -55,11 +55,11 @@ const ForgotPassword: React.FC = () => {
                                             <CheckCircle className="w-7 h-7 text-green-500" />
                                         </div>
 
-                                        <h2 className="text-lg font-bold text-[#1B2430] mb-2">Reset Link Sent</h2>
+                                        <h2 className="text-lg font-bold text-[#50757A] mb-2">Reset Link Sent</h2>
                                         <p className="text-xs text-gray-500 mb-2">
                                             We've sent a password reset link to
                                         </p>
-                                        <p className="text-xs font-bold text-[#C5A373] mb-3 bg-[#C5A373]/10 px-3 py-1.5 rounded-lg inline-block">
+                                        <p className="text-xs font-bold text-[#C0D6DF] mb-3 bg-[#C0D6DF]/10 px-3 py-1.5 rounded-lg inline-block">
                                             {email}
                                         </p>
                                         <p className="text-[10px] text-gray-400 mb-4">
@@ -68,7 +68,7 @@ const ForgotPassword: React.FC = () => {
 
                                         <Link
                                             to="/login"
-                                            className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all text-xs uppercase tracking-wider block text-center"
+                                            className="w-full py-2.5 bg-[#C0D6DF] text-white font-bold rounded-lg hover:bg-[#50757A] transition-all text-xs uppercase tracking-wider block text-center"
                                         >
                                             Back to Login
                                         </Link>
@@ -77,7 +77,7 @@ const ForgotPassword: React.FC = () => {
                                             Didn't receive it?{' '}
                                             <button
                                                 onClick={() => setIsSubmitted(false)}
-                                                className="font-bold text-[#C5A373] hover:text-[#8B6E4E] transition-colors underline"
+                                                className="font-bold text-[#C0D6DF] hover:text-[#50757A] transition-colors underline"
                                             >
                                                 Try again
                                             </button>
@@ -87,7 +87,7 @@ const ForgotPassword: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#1B2430]">
+                        <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#50757A]">
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -97,11 +97,11 @@ const ForgotPassword: React.FC = () => {
                                     backgroundImage: `url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop')`,
                                 }}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-tr from-[#1B2430]/90 via-[#1B2430]/40 to-transparent"></div>
+                                <div className="absolute inset-0 bg-gradient-to-tr from-[#50757A]/90 via-[#50757A]/40 to-transparent"></div>
                                 <div className="absolute bottom-12 left-10 right-10 text-white z-20">
-                                    <div className="w-10 h-1 bg-[#C5A373] mb-4 rounded-full"></div>
+                                    <div className="w-10 h-1 bg-[#C0D6DF] mb-4 rounded-full"></div>
                                     <h2 className="text-3xl font-black mb-3 leading-tight">
-                                        Reset Your <span className="text-[#C5A373]">Password</span>
+                                        Reset Your <span className="text-[#C0D6DF]">Password</span>
                                     </h2>
                                     <p className="text-white/90 text-sm font-medium leading-relaxed">
                                         We've sent a reset link to your email. Follow the instructions to create a new password.
@@ -116,8 +116,8 @@ const ForgotPassword: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#FCFAF2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C5A373]/30 antialiased">
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C5A373]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
+        <div className="min-h-screen bg-[#E8DAB2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C0D6DF]/30 antialiased">
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C0D6DF]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
 
             <div className="w-full max-w-5xl h-[90vh] sm:h-[85vh] bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_20px_50px_rgba(197,163,115,0.15)] overflow-hidden flex flex-col lg:flex-row relative">
                 
@@ -128,7 +128,7 @@ const ForgotPassword: React.FC = () => {
                                 {/* Back Button */}
                                 <Link 
                                     to="/login" 
-                                    className="absolute left-4 top-4 text-[#1B2430]/50 hover:text-[#1B2430] transition-colors inline-flex items-center gap-1"
+                                    className="absolute left-4 top-4 text-[#50757A]/50 hover:text-[#50757A] transition-colors inline-flex items-center gap-1"
                                 >
                                     <ArrowLeft className="w-4 h-4" />
                                     <span className="text-[10px] font-bold uppercase tracking-wider">Back</span>
@@ -136,14 +136,14 @@ const ForgotPassword: React.FC = () => {
 
                                 {/* Header */}
                                 <div className="text-center mb-5">
-                                    <h1 className="text-2xl font-bold text-[#1B2430] mb-0.5">Forgot Password</h1>
-                                    <p className="text-[#C5A373] text-xs font-medium">Enter your email for reset link</p>
+                                    <h1 className="text-2xl font-bold text-[#50757A] mb-0.5">Forgot Password</h1>
+                                    <p className="text-[#C0D6DF] text-xs font-medium">Enter your email for reset link</p>
                                 </div>
 
                                 {/* Icon */}
                                 <div className="flex justify-center mb-4">
-                                    <div className="w-14 h-14 bg-[#C5A373]/10 rounded-full flex items-center justify-center">
-                                        <Mail className="w-7 h-7 text-[#C5A373]" />
+                                    <div className="w-14 h-14 bg-[#C0D6DF]/10 rounded-full flex items-center justify-center">
+                                        <Mail className="w-7 h-7 text-[#C0D6DF]" />
                                     </div>
                                 </div>
 
@@ -163,7 +163,7 @@ const ForgotPassword: React.FC = () => {
 
                                 <form onSubmit={handleSubmit} className="space-y-3">
                                     <div>
-                                        <label className="text-[10px] font-bold text-[#8B6E4E] uppercase tracking-wider block mb-1">
+                                        <label className="text-[10px] font-bold text-[#50757A] uppercase tracking-wider block mb-1">
                                             Email Address
                                         </label>
                                         <input
@@ -171,7 +171,7 @@ const ForgotPassword: React.FC = () => {
                                             placeholder="name@getkeja.com"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C5A373] focus:border-[#C5A373] text-xs"
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#C0D6DF] focus:border-[#C0D6DF] text-xs"
                                             required
                                             disabled={isLoading}
                                         />
@@ -180,7 +180,7 @@ const ForgotPassword: React.FC = () => {
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full py-2.5 bg-[#C5A373] text-white font-bold rounded-lg hover:bg-[#8B6E4E] transition-all disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2 mt-2"
+                                        className="w-full py-2.5 bg-[#C0D6DF] text-white font-bold rounded-lg hover:bg-[#50757A] transition-all disabled:opacity-50 text-xs uppercase tracking-wider flex items-center justify-center gap-2 mt-2"
                                     >
                                         {isLoading && (
                                             <div className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent"></div>
@@ -191,7 +191,7 @@ const ForgotPassword: React.FC = () => {
 
                                 <p className="text-[10px] text-gray-500 text-center mt-4">
                                     Remember your password?{' '}
-                                    <Link to="/login" className="font-bold text-[#C5A373] hover:text-[#8B6E4E] transition-colors underline">
+                                    <Link to="/login" className="font-bold text-[#C0D6DF] hover:text-[#50757A] transition-colors underline">
                                         Back to Login
                                     </Link>
                                 </p>
@@ -199,7 +199,7 @@ const ForgotPassword: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#1B2430]">
+                    <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#50757A]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -209,11 +209,11 @@ const ForgotPassword: React.FC = () => {
                                 backgroundImage: `url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop')`,
                             }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#1B2430]/90 via-[#1B2430]/40 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#50757A]/90 via-[#50757A]/40 to-transparent"></div>
                             <div className="absolute bottom-12 left-10 right-10 text-white z-20">
-                                <div className="w-10 h-1 bg-[#C5A373] mb-4 rounded-full"></div>
+                                <div className="w-10 h-1 bg-[#C0D6DF] mb-4 rounded-full"></div>
                                 <h2 className="text-3xl font-black mb-3 leading-tight">
-                                    Forgot Your <span className="text-[#C5A373]">Password?</span>
+                                    Forgot Your <span className="text-[#C0D6DF]">Password?</span>
                                 </h2>
                                 <p className="text-white/90 text-sm font-medium leading-relaxed">
                                     No worries! Enter your email and we'll send you instructions to reset your password.
@@ -223,7 +223,7 @@ const ForgotPassword: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="absolute inset-0 pointer-events-none border border-[#C5A373]/10 rounded-3xl sm:rounded-[2.5rem] hidden sm:block"></div>
+                <div className="absolute inset-0 pointer-events-none border border-[#C0D6DF]/10 rounded-3xl sm:rounded-[2.5rem] hidden sm:block"></div>
             </div>
         </div>
     );

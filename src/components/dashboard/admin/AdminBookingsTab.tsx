@@ -43,11 +43,11 @@ const AdminBookingsTab: React.FC = () => {
       {/* View Toggle */}
       <div className="flex gap-2">
         <button onClick={() => { setView('short'); setPage(1); setStatusFilter(''); }}
-          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${view === 'short' ? 'bg-[#222222] text-white' : 'bg-white border border-gray-200 text-[#6a6a6a] hover:text-[#222222]'}`}>
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${view === 'short' ? 'bg-[#50757A] text-white' : 'bg-white border border-gray-200 text-[#50757A] hover:text-[#50757A]'}`}>
           Short-Stay ({fmt(stats?.short_stay?.total)})
         </button>
         <button onClick={() => { setView('long'); setPage(1); setStatusFilter(''); }}
-          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${view === 'long' ? 'bg-[#222222] text-white' : 'bg-white border border-gray-200 text-[#6a6a6a] hover:text-[#222222]'}`}>
+          className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${view === 'long' ? 'bg-[#50757A] text-white' : 'bg-white border border-gray-200 text-[#50757A] hover:text-[#50757A]'}`}>
           Long-Term ({fmt(stats?.long_term?.total)})
         </button>
       </div>
@@ -65,23 +65,23 @@ const AdminBookingsTab: React.FC = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/50">
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Booking Ref</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Property</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Guest</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Status</th>
-                  <th className="text-right px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Amount</th>
-                  <th className="text-left px-4 py-3 font-semibold text-[#6a6a6a] text-xs">Dates</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Booking Ref</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Property</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Guest</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Status</th>
+                  <th className="text-right px-4 py-3 font-semibold text-[#50757A] text-xs">Amount</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#50757A] text-xs">Dates</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {bookings.map((b: any) => (
                   <tr key={b.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-4 py-3"><span className="font-mono text-xs text-[#222222]">{(b.id ?? '').slice(0, 8)}</span></td>
-                    <td className="px-4 py-3"><span className="text-sm font-medium text-[#222222]">{b.property_title ?? '—'}</span></td>
-                    <td className="px-4 py-3"><span className="text-xs text-[#6a6a6a]">{b.guest_email ?? b.tenant_email ?? '—'}</span></td>
+                    <td className="px-4 py-3"><span className="font-mono text-xs text-[#50757A]">{(b.id ?? '').slice(0, 8)}</span></td>
+                    <td className="px-4 py-3"><span className="text-sm font-medium text-[#50757A]">{b.property_title ?? '—'}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs text-[#50757A]">{b.guest_email ?? b.tenant_email ?? '—'}</span></td>
                     <td className="px-4 py-3"><Badge status={b.status ?? 'pending'} /></td>
-                    <td className="px-4 py-3 text-right"><span className="font-bold text-[#222222]">KES {(b.total_charged_kes ?? b.monthly_rent ?? 0).toLocaleString()}</span></td>
-                    <td className="px-4 py-3"><span className="text-xs text-[#6a6a6a]">{b.check_in ? new Date(b.check_in).toLocaleDateString() : '—'}</span></td>
+                    <td className="px-4 py-3 text-right"><span className="font-bold text-[#50757A]">KES {(b.total_charged_kes ?? b.monthly_rent ?? 0).toLocaleString()}</span></td>
+                    <td className="px-4 py-3"><span className="text-xs text-[#50757A]">{b.check_in ? new Date(b.check_in).toLocaleDateString() : '—'}</span></td>
                   </tr>
                 ))}
               </tbody>

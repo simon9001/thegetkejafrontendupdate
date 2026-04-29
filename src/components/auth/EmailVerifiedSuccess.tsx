@@ -24,9 +24,9 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
     }, [navigate, onRedirect]);
 
     return (
-        <div className="min-h-[100dvh] bg-[#FCFAF2] flex items-center justify-center p-0 sm:p-6 lg:p-12 overflow-hidden selection:bg-[#C5A373]/30 antialiased">
+        <div className="min-h-[100dvh] bg-[#E8DAB2] flex items-center justify-center p-0 sm:p-6 lg:p-12 overflow-hidden selection:bg-[#C0D6DF]/30 antialiased">
             {/* Background Decorative Element */}
-            <div className="absolute top-0 right-0 w-1/2 h-full bg-[#C5A373]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-[#C0D6DF]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
 
             <div className="w-full max-w-[1240px] h-[100dvh] sm:h-[min(880px,94vh)] bg-white sm:rounded-[3.5rem] shadow-[0_25px_60px_rgba(197,163,115,0.15)] overflow-hidden flex flex-col lg:flex-row relative">
                 
@@ -35,16 +35,16 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
                     <div className="w-full lg:w-[45%] h-full relative bg-white z-10 flex flex-col shrink-0">
                         <div className="flex flex-col h-full bg-white">
                             {/* Navy Header Section */}
-                            <div className="bg-[#1B2430] px-6 lg:px-8 pt-4 lg:pt-6 pb-6 lg:pb-8 flex flex-col relative overflow-hidden shrink-0">
+                            <div className="bg-[#50757A] px-6 lg:px-8 pt-4 lg:pt-6 pb-6 lg:pb-8 flex flex-col relative overflow-hidden shrink-0">
                                 <Link 
                                     to="/login" 
                                     className="text-white/80 hover:text-white transition-colors mb-2 lg:mb-4 inline-flex items-center gap-2 w-fit cursor-pointer group"
                                 >
-                                    <ArrowLeft className="w-4 h-4 lg:w-5 lg:h-5 group-hover:-translate-x-1 transition-transform text-[#C5A373]" />
+                                    <ArrowLeft className="w-4 h-4 lg:w-5 lg:h-5 group-hover:-translate-x-1 transition-transform text-[#C0D6DF]" />
                                     <span className="text-[10px] lg:text-xs font-bold uppercase tracking-widest group-hover:opacity-100 opacity-60 transition-opacity">Back to Login</span>
                                 </Link>
                                 <h1 className="text-xl lg:text-2xl xl:text-3xl font-bold text-white text-center tracking-tight">
-                                    Email <span className="text-[#C5A373]">Verified</span>
+                                    Email <span className="text-[#C0D6DF]">Verified</span>
                                 </h1>
                                 <div className="absolute bottom-0 left-0 right-0 h-5 lg:h-6 bg-white rounded-t-[2rem] lg:rounded-t-[3rem]"></div>
                             </div>
@@ -56,13 +56,13 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
                                         <CheckCircle className="w-10 h-10 lg:w-12 lg:h-12 text-green-500" />
                                     </div>
 
-                                    <h2 className="text-xl lg:text-2xl xl:text-3xl font-black text-[#1B2430] mb-3">Success!</h2>
+                                    <h2 className="text-xl lg:text-2xl xl:text-3xl font-black text-[#50757A] mb-3">Success!</h2>
                                     <p className="text-sm lg:text-base text-gray-500 mb-4">
                                         Your email has been verified successfully.
                                     </p>
                                     
-                                    <div className="w-full bg-[#C5A373]/10 rounded-xl lg:rounded-2xl p-4 mb-6">
-                                        <p className="text-sm lg:text-base text-[#8B6E4E] font-semibold">
+                                    <div className="w-full bg-[#C0D6DF]/10 rounded-xl lg:rounded-2xl p-4 mb-6">
+                                        <p className="text-sm lg:text-base text-[#50757A] font-semibold">
                                             Redirecting you to login page in 3 seconds...
                                         </p>
                                     </div>
@@ -78,7 +78,7 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
 
                                     <p className="text-xs lg:text-sm text-gray-500">
                                         Not redirected?{' '}
-                                        <Link to="/login" className="font-black text-[#C5A373] hover:text-[#8B6E4E] transition-colors underline decoration-2 underline-offset-4">
+                                        <Link to="/login" className="font-black text-[#C0D6DF] hover:text-[#50757A] transition-colors underline decoration-2 underline-offset-4">
                                             Click here to login
                                         </Link>
                                     </p>
@@ -88,7 +88,7 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
                     </div>
 
                     {/* Desktop Sidebar Image */}
-                    <div className="hidden lg:block lg:w-[55%] h-full relative overflow-hidden bg-[#1B2430]">
+                    <div className="hidden lg:block lg:w-[55%] h-full relative overflow-hidden bg-[#50757A]">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -99,7 +99,7 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
                                 backfaceVisibility: "hidden"
                             }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#1B2430]/90 via-[#1B2430]/40 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[#50757A]/90 via-[#50757A]/40 to-transparent"></div>
 
                             <div className="absolute bottom-16 left-16 right-16 text-white max-w-md z-20">
                                 <motion.div
@@ -107,9 +107,9 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.3, duration: 0.6 }}
                                 >
-                                    <div className="w-12 h-1 bg-[#C5A373] mb-6 rounded-full shadow-lg"></div>
+                                    <div className="w-12 h-1 bg-[#C0D6DF] mb-6 rounded-full shadow-lg"></div>
                                     <h2 className="text-4xl lg:text-5xl font-black mb-6 leading-[1.15] tracking-tight drop-shadow-2xl">
-                                        Welcome to <span className="text-[#C5A373]">Getkeja</span>
+                                        Welcome to <span className="text-[#C0D6DF]">Getkeja</span>
                                     </h2>
                                     <p className="text-white text-lg lg:text-xl font-extrabold leading-relaxed opacity-100 drop-shadow-md">
                                         Your email has been verified. You can now log in and start exploring luxury properties.
@@ -120,7 +120,7 @@ const EmailVerifiedSuccess: React.FC<EmailVerifiedSuccessProps> = ({ onRedirect 
                     </div>
                 </div>
 
-                <div className="absolute inset-0 pointer-events-none border-[1px] border-[#C5A373]/10 rounded-[3.5rem] hidden sm:block"></div>
+                <div className="absolute inset-0 pointer-events-none border-[1px] border-[#C0D6DF]/10 rounded-[3.5rem] hidden sm:block"></div>
             </div>
         </div>
     );

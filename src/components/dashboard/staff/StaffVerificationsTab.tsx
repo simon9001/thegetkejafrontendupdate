@@ -161,12 +161,12 @@ const VerificationDrawer: React.FC<DrawerProps> = ({ v, onClose, onApprove, onRe
             {v.user_avatar_url ? (
               <img src={v.user_avatar_url} alt={name} className="w-10 h-10 rounded-full object-cover" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-[#111827] flex items-center justify-center text-[#ff385c] font-bold text-lg">
+              <div className="w-10 h-10 rounded-full bg-[#50757A] flex items-center justify-center text-[#DD6E42] font-bold text-lg">
                 {(name[0] ?? '?').toUpperCase()}
               </div>
             )}
             <div>
-              <p className="font-bold text-[#222222] text-sm leading-tight">{name}</p>
+              <p className="font-bold text-[#50757A] text-sm leading-tight">{name}</p>
               <StatusPill status={v.status} />
             </div>
           </div>
@@ -199,12 +199,12 @@ const VerificationDrawer: React.FC<DrawerProps> = ({ v, onClose, onApprove, onRe
               <InfoRow icon={FileText} label="Document Type"   value={DocLabel(v.doc_type)} />
               <InfoRow icon={FileText} label="Document No."    value={v.doc_number ?? '—'} />
               <div className="flex items-center gap-3 pt-1 border-t border-gray-200">
-                <div className="w-7 h-7 rounded-lg bg-[#ff385c]/10 border border-[#ff385c]/20 flex items-center justify-center shrink-0">
-                  <UserCheck className="w-3.5 h-3.5 text-[#ff385c]" />
+                <div className="w-7 h-7 rounded-lg bg-[#DD6E42]/10 border border-[#DD6E42]/20 flex items-center justify-center shrink-0">
+                  <UserCheck className="w-3.5 h-3.5 text-[#DD6E42]" />
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Role if Approved</p>
-                  <p className="text-sm font-bold text-[#ff385c]">{inferredRole(v.doc_type)}</p>
+                  <p className="text-sm font-bold text-[#DD6E42]">{inferredRole(v.doc_type)}</p>
                 </div>
               </div>
             </div>
@@ -280,7 +280,7 @@ const InfoRow: React.FC<{ icon: React.ElementType; label: string; value: string 
     </div>
     <div className="flex-1 min-w-0">
       <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">{label}</p>
-      <p className="text-sm font-medium text-[#222222] truncate">{value}</p>
+      <p className="text-sm font-medium text-[#50757A] truncate">{value}</p>
     </div>
   </div>
 );
@@ -336,8 +336,8 @@ const StaffVerificationsTab: React.FC = () => {
               onClick={() => { setFilter(f); setPage(1); }}
               className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-all capitalize ${
                 filter === f
-                  ? 'bg-[#111827] text-white border-[#111827]'
-                  : 'bg-white text-[#6a6a6a] border-gray-200 hover:border-gray-400'
+                  ? 'bg-[#50757A] text-white border-[#50757A]'
+                  : 'bg-white text-[#50757A] border-gray-200 hover:border-gray-400'
               }`}
             >
               {f}
@@ -353,7 +353,7 @@ const StaffVerificationsTab: React.FC = () => {
             ))}
           </div>
         ) : verifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-40 text-[#6a6a6a] gap-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+          <div className="flex flex-col items-center justify-center h-40 text-[#50757A] gap-2 bg-gray-50 rounded-xl border border-dashed border-gray-200">
             <UserCheck className="w-8 h-8 opacity-20" />
             <p className="text-xs font-medium">No {filter} verifications</p>
           </div>
@@ -371,25 +371,25 @@ const StaffVerificationsTab: React.FC = () => {
                   <div className="flex items-center justify-between gap-4">
                     {/* Left: avatar + info */}
                     <div className="flex items-center gap-4 min-w-0">
-                      <div className="w-11 h-11 rounded-xl bg-[#111827] flex items-center justify-center shrink-0">
+                      <div className="w-11 h-11 rounded-xl bg-[#50757A] flex items-center justify-center shrink-0">
                         {v.user_avatar_url ? (
                           <img src={v.user_avatar_url} alt={name} className="w-full h-full rounded-xl object-cover" />
                         ) : (
-                          <span className="text-[#ff385c] font-bold text-lg">
+                          <span className="text-[#DD6E42] font-bold text-lg">
                             {(name[0] ?? '?').toUpperCase()}
                           </span>
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="font-semibold text-[#222222] truncate">{name}</p>
+                        <p className="font-semibold text-[#50757A] truncate">{name}</p>
                         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                          <span className="text-[10px] px-2 py-0.5 bg-[#ff385c]/10 text-[#ff385c] rounded-md font-bold capitalize">
+                          <span className="text-[10px] px-2 py-0.5 bg-[#DD6E42]/10 text-[#DD6E42] rounded-md font-bold capitalize">
                             → {inferredRole(v.doc_type)}
                           </span>
-                          <span className="text-[10px] px-2 py-0.5 bg-[#f3f4f6] text-[#6a6a6a] rounded-md font-semibold">
+                          <span className="text-[10px] px-2 py-0.5 bg-[#EAEAEA] text-[#50757A] rounded-md font-semibold">
                             {DocLabel(v.doc_type)}
                           </span>
-                          <span className="text-xs text-[#6a6a6a]">
+                          <span className="text-xs text-[#50757A]">
                             {new Date(v.submitted_at).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' })}
                           </span>
                         </div>
@@ -401,7 +401,7 @@ const StaffVerificationsTab: React.FC = () => {
                       <StatusPill status={v.status} />
                       <button
                         onClick={() => setSelected(v)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111827] text-white text-xs font-bold hover:bg-[#ff385c] transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#50757A] text-white text-xs font-bold hover:bg-[#DD6E42] transition-colors"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         Review

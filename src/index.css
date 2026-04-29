@@ -9,27 +9,27 @@
 
 :root {
   /* ── Brand ─────────────────────────────────── */
-  --color-rausch:       #f5f5f5;   /* primary CTA / brand accent               */
-  --color-rausch-dark:  #f51168;   /* pressed / hover state                    */
-  --color-luxe:         #460479;   /* premium tier                             */
+  --color-rausch:       #DD6E42;   /* primary CTA / brand accent — coral       */
+  --color-rausch-dark:  #C4623B;   /* pressed / hover state                    */
+  --color-luxe:         #50757A;   /* premium tier — teal                      */
   --color-plus:         #000000;   /* plus tier                                */
 
   /* ── Text scale ────────────────────────────── */
-  --color-text-primary:    #06684c; /* near-black — warm, not cold              */
+  --color-text-primary:    #50757A; /* near-black — warm, not cold              */
   --color-text-secondary:  #000000; /* descriptions, meta                      */
   --color-text-disabled:   rgba(0, 0, 0, 0.24);
-  --color-text-link:       #428bff; /* legal / informational links              */
+  --color-text-link:       #C0D6DF; /* legal / informational links              */
 
   /* ── Surface ───────────────────────────────── */
   --color-surface:         #ffffff;
-  --color-surface-raised:  #f2f2f2; /* nav buttons, secondary surfaces          */
-  --color-border:          #c1c1c1;
+  --color-surface-raised:  #EAEAEA; /* nav buttons, secondary surfaces          */
+  --color-border:          #EAEAEA;
 
   /* ── Status ────────────────────────────────── */
-  --color-success:  #008a05;
-  --color-error:    #c13515;
-  --color-warning:  #f59e0b;
-  --color-info:     #428bff;
+  --color-success:  #50757A;
+  --color-error:    #DD6E42;
+  --color-warning:  #DD6E42;
+  --color-info:     #C0D6DF;
 
   /* ── Shadows (Airbnb three-layer system) ───── */
   --shadow-card:
@@ -144,7 +144,7 @@ h4, h5, h6 {
 
 /* ─── Buttons ────────────────────────────────────────────────────────────── */
 
-/* Primary dark button  (#222222 bg, white text) */
+/* Primary dark button  (#50757A bg, white text) */
 .btn-primary {
   display:         inline-flex;
   align-items:     center;
@@ -321,9 +321,9 @@ h4, h5, h6 {
 }
 .badge--brand  { background: var(--color-rausch);    color: #fff; }
 .badge--muted  { background: var(--color-surface-raised); color: var(--color-text-secondary); }
-.badge--success { background: #d1fae5; color: #065f46; }
-.badge--warning { background: #fef3c7; color: #92400e; }
-.badge--error   { background: #fee2e2; color: #991b1b; }
+.badge--success { background: #E8DAB2; color: #50757A; }
+.badge--warning { background: #E8DAB2; color: #DD6E42; }
+.badge--error   { background: #E8DAB2; color: #DD6E42; }
 
 /* ─── Heart / wishlist overlay ───────────────────────────────────────────── */
 .heart-btn {
@@ -449,9 +449,93 @@ a, button, input, select, textarea,
 .category-icon:hover { transform: translateY(-2px); }
 
 /* ─── Tailwind layer overrides for DaisyUI ───────────────────────────────── */
-/* Keep DaisyUI working but normalise primary colour to Rausch Red */
+/* Keep DaisyUI working but normalise primary colour to GetKeja teal */
 :root {
-  --p: #1E4A3D;
-  --pf: #e00b41;
-  --pc: #ffffff;
+  --p: #DD6E42;
+  --pf: #C4623B;
+  --pc: #0c1e20;
+}
+
+/* ─── THEME SYSTEM — applied via data-theme on <html> ─────────────────────
+   Light is the default (matches :root above).
+   Dark and warm override only the values that change.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Light alias — keeps ThemeContext logic clean */
+[data-theme="light"] {
+  --color-rausch:      #DD6E42;
+  --color-rausch-dark: #C4623B;
+  --color-luxe:        #50757A;
+  --color-text-primary:   #50757A;
+  --color-text-secondary: #000000;
+  --color-text-link:      #C0D6DF;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #EAEAEA;
+  --color-border:         #EAEAEA;
+  --placeholder-color:    #AAAAAA;
+}
+
+/* Dark theme — deep teal night palette */
+[data-theme="dark"] {
+  --color-rausch:      #E87D52;
+  --color-rausch-dark: #DD6E42;
+  --color-luxe:        #7AAAB0;
+  --color-text-primary:   #C0D6DF;
+  --color-text-secondary: #8AADB3;
+  --color-text-link:      #7AAAB0;
+  --color-surface:        #0D1E20;
+  --color-surface-raised: #1A2E30;
+  --color-border:         #2A4547;
+  --placeholder-color:    #5A8A90;
+
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--color-surface);
+  color:            var(--color-text-primary);
+}
+
+[data-theme="dark"] .bg-white    { background-color: #1A2E30 !important; }
+[data-theme="dark"] .bg-gray-50  { background-color: #162628 !important; }
+[data-theme="dark"] .bg-gray-100 { background-color: #1F3336 !important; }
+[data-theme="dark"] .border-gray-100,
+[data-theme="dark"] .border-gray-200 { border-color: #2A4547 !important; }
+[data-theme="dark"] .text-gray-500,
+[data-theme="dark"] .text-gray-600 { color: #8AADB3 !important; }
+
+/* Warm theme — cosy cream palette */
+[data-theme="warm"] {
+  --color-rausch:      #DD6E42;
+  --color-rausch-dark: #C4623B;
+  --color-luxe:        #50757A;
+  --color-text-primary:   #3D2B1A;
+  --color-text-secondary: #7A5C45;
+  --color-text-link:      #50757A;
+  --color-surface:        #FFFAF6;
+  --color-surface-raised: #FFF3E8;
+  --color-border:         #E8D5C4;
+  --placeholder-color:    #C4A882;
+}
+
+[data-theme="warm"] body {
+  background-color: var(--color-surface);
+  color:            var(--color-text-primary);
+}
+
+[data-theme="warm"] .bg-white   { background-color: #FFFAF6 !important; }
+[data-theme="warm"] .bg-gray-50 { background-color: #FFF3E8 !important; }
+
+/* ─── Global placeholder fix ────────────────────────────────────────────────
+   Overrides Tailwind's inline placeholder:text-[...] classes that cause
+   invisible placeholders (e.g. placeholder:text-[#EAEAEA] on white).
+   ─────────────────────────────────────────────────────────────────────────── */
+::placeholder {
+  color:   var(--placeholder-color, #AAAAAA) !important;
+  opacity: 1 !important;
+}
+
+/* ─── Smooth theme transitions ──────────────────────────────────────────── */
+html {
+  transition: background-color 200ms ease;
 }

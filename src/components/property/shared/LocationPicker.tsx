@@ -105,7 +105,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange }) => {
   return (
     <div className="bg-white rounded-xl border p-6">
       <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-        <MapPin className="w-5 h-5 text-[#ff385c]" />
+        <MapPin className="w-5 h-5 text-[#DD6E42]" />
         Location
       </h3>
       
@@ -152,7 +152,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange }) => {
           <button
             type="button"
             onClick={handleUseCurrentLocation}
-            className="flex items-center gap-2 text-sm text-[#ff385c] hover:underline"
+            className="flex items-center gap-2 text-sm text-[#DD6E42] hover:underline"
           >
             <LocateFixed className="w-4 h-4" />
             Use my current location
@@ -208,7 +208,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange }) => {
                     // Add as nearby place to property
                     console.log('Add nearby place:', place);
                   }}
-                  className="text-xs text-[#ff385c]"
+                  className="text-xs text-[#DD6E42]"
                 >
                   Add
                 </button>

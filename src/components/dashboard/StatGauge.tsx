@@ -15,7 +15,7 @@ const StatGauge: React.FC<StatGaugeProps> = ({ label, value, percentage, color }
     ];
 
     return (
-        <div className="bg-[#1B2430] p-4 md:p-6 rounded-[24px] border border-[#2C3A4E] flex flex-col items-center relative overflow-hidden group hover:border-[#D4A373]/30 transition-all duration-300">
+        <div className="bg-[#50757A] p-4 md:p-6 rounded-[24px] border border-[#50757A] flex flex-col items-center relative overflow-hidden group hover:border-[#DD6E42]/30 transition-all duration-300">
             <div className="w-full text-left mb-1 md:mb-2">
                 <p className="text-gray-400 text-[10px] md:text-xs font-bold tracking-tight uppercase opacity-60">{label}</p>
             </div>
@@ -37,8 +37,8 @@ const StatGauge: React.FC<StatGaugeProps> = ({ label, value, percentage, color }
                                 stroke="none"
                                 cornerRadius={10}
                             >
-                                <Cell fill={color === '#FF6B35' ? '#D4A373' : color} />
-                                <Cell fill="#2C3A4E" />
+                                <Cell fill={color === '#DD6E42' ? '#DD6E42' : color} />
+                                <Cell fill="#50757A" />
                             </Pie>
                         </PieChart>
                     </ResponsiveContainer>

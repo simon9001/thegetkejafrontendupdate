@@ -11,17 +11,17 @@ const AgentListingsTab: React.FC<{ properties: any[] }> = ({ properties }) => (
       action={
         <Link
           to="/dashboard/add-property"
-          className="flex items-center gap-2 bg-[#ff385c] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#e00b41] transition-all"
+          className="flex items-center gap-2 bg-[#DD6E42] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#C4623B] transition-all"
         >
           <PlusCircle className="w-4 h-4" /> New Listing
         </Link>
       }
     />
     {properties.length === 0 ? (
-      <div className="flex flex-col items-center justify-center h-48 text-[#6a6a6a] gap-3 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+      <div className="flex flex-col items-center justify-center h-48 text-[#50757A] gap-3 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
         <Building2 className="w-12 h-12 opacity-20" />
         <p className="text-sm font-medium">No listings yet</p>
-        <Link to="/dashboard/add-property" className="text-xs text-[#ff385c] font-semibold hover:underline">
+        <Link to="/dashboard/add-property" className="text-xs text-[#DD6E42] font-semibold hover:underline">
           Add your first listing
         </Link>
       </div>
@@ -36,18 +36,18 @@ const AgentListingsTab: React.FC<{ properties: any[] }> = ({ properties }) => (
               }
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-[#222222] truncate">{p.title}</p>
-              <p className="text-xs text-[#6a6a6a] flex items-center gap-1 mt-0.5">
+              <p className="font-semibold text-[#50757A] truncate">{p.title}</p>
+              <p className="text-xs text-[#50757A] flex items-center gap-1 mt-0.5">
                 <MapPin className="w-3 h-3" />
                 {p.location?.town || p.location?.county || 'Nairobi'}
               </p>
-              <p className="text-sm font-bold text-[#ff385c] mt-1">
+              <p className="text-sm font-bold text-[#DD6E42] mt-1">
                 KES {(p.price_per_month || p.price || 0).toLocaleString()}/mo
               </p>
             </div>
             <div className="flex flex-col items-end gap-2 shrink-0">
               <Badge status={p.status ?? 'active'} />
-              <div className="flex items-center gap-1 text-[11px] text-[#6a6a6a]">
+              <div className="flex items-center gap-1 text-[11px] text-[#50757A]">
                 <Eye className="w-3 h-3" /> {p.views_count ?? 0} views
               </div>
             </div>

@@ -24,10 +24,10 @@ const FilterButton: React.FC<FilterButtonProps> = ({
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:shadow-md transition"
             >
-                <SlidersHorizontal className="w-4 h-4 text-[#1B2430]" />
+                <SlidersHorizontal className="w-4 h-4 text-[#50757A]" />
                 <span className="text-sm font-medium">Filter</span>
                 {selectedCategories.length > 0 && (
-                    <span className="ml-1 px-1.5 py-0.5 bg-[#D4A373] text-white text-xs rounded-full">
+                    <span className="ml-1 px-1.5 py-0.5 bg-[#DD6E42] text-white text-xs rounded-full">
                         {selectedCategories.length}
                     </span>
                 )}
@@ -43,7 +43,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({
                     >
                         <div className="p-4">
                             <div className="flex items-center justify-between mb-3">
-                                <h3 className="font-semibold text-[#1B2430]">
+                                <h3 className="font-semibold text-[#50757A]">
                                     Filter by category
                                 </h3>
                                 <button
@@ -60,12 +60,12 @@ const FilterButton: React.FC<FilterButtonProps> = ({
                                         key={category}
                                         className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
                                     >
-                                        <span className="text-sm text-[#1B2430]">{category}</span>
+                                        <span className="text-sm text-[#50757A]">{category}</span>
                                         <input
                                             type="checkbox"
                                             checked={selectedCategories.includes(category)}
                                             onChange={() => onCategoryChange(category)}
-                                            className="w-4 h-4 text-[#D4A373] rounded focus:ring-[#D4A373]"
+                                            className="w-4 h-4 text-[#DD6E42] rounded focus:ring-[#DD6E42]"
                                         />
                                     </label>
                                 ))}

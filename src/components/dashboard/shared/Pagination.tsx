@@ -15,17 +15,17 @@ const Pagination: React.FC<PaginationProps> = ({ page, totalPages, onPageChange 
       <button
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page === 1}
-        className="flex items-center gap-1 text-xs font-bold text-[#6a6a6a] hover:text-[#222222] disabled:opacity-40 transition-colors"
+        className="flex items-center gap-1 text-xs font-bold text-[#50757A] hover:text-[#50757A] disabled:opacity-40 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" /> Prev
       </button>
-      <span className="text-xs text-[#6a6a6a]">
+      <span className="text-xs text-[#50757A]">
         Page {page} of {totalPages}
       </span>
       <button
         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
-        className="flex items-center gap-1 text-xs font-bold text-[#6a6a6a] hover:text-[#222222] disabled:opacity-40 transition-colors"
+        className="flex items-center gap-1 text-xs font-bold text-[#50757A] hover:text-[#50757A] disabled:opacity-40 transition-colors"
       >
         Next <ChevronRight className="w-4 h-4" />
       </button>

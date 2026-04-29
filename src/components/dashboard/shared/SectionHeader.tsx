@@ -10,8 +10,8 @@ interface SectionHeaderProps {
 const SectionHeader: React.FC<SectionHeaderProps> = ({ title, sub, action }) => (
   <div className="flex items-center justify-between mb-5">
     <div>
-      <h2 className="text-base font-bold text-[#222222] tracking-tight">{title}</h2>
-      {sub && <p className="text-xs text-[#6a6a6a] mt-0.5">{sub}</p>}
+      <h2 className="text-base font-bold text-[#50757A] tracking-tight">{title}</h2>
+      {sub && <p className="text-xs text-[#50757A] mt-0.5">{sub}</p>}
     </div>
     {action}
   </div>
