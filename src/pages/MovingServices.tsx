@@ -417,7 +417,7 @@ const MovingServices: React.FC = () => {
         </Link>
 
         {/* Hero */}
-        <div className="bg-gradient-to-r from-[#50757A] to-[#3D5A5E] rounded-3xl p-8 mb-8">
+        <div className="bg-gradient-to-r from-[#50757A] to-[#3D5A5E] rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div>
               <h1 className="text-2xl font-black text-white mb-2 flex items-center gap-2">
@@ -470,7 +470,7 @@ const MovingServices: React.FC = () => {
                     className="w-full pl-9 pr-4 py-2.5 bg-[#EAEAEA] border border-[#EAEAEA] rounded-xl text-sm text-[#50757A] placeholder:text-[#C0D6DF] focus:outline-none focus:border-[#DD6E42] transition" />
                 </div>
                 <button onClick={() => setShowFilters(f => !f)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
+                  className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
                     showFilters ? 'bg-[#50757A] text-white border-[#50757A]' : 'border-[#EAEAEA] text-[#50757A]'
                   }`}>
                   <Filter className="w-4 h-4" /> Filters
@@ -527,7 +527,7 @@ const MovingServices: React.FC = () => {
         )}
 
         {/* Register CTA */}
-        <div className="mt-12 bg-gradient-to-r from-[#DD6E42]/10 to-[#50757A]/5 border border-[#DD6E42]/20 rounded-2xl p-8 text-center">
+        <div className="mt-12 bg-gradient-to-r from-[#DD6E42]/10 to-[#50757A]/5 border border-[#DD6E42]/20 rounded-2xl p-5 sm:p-8 text-center">
           <Truck className="w-10 h-10 text-[#DD6E42] mx-auto mb-4" />
           <h3 className="text-lg font-bold text-[#50757A] mb-2">Are you a moving company?</h3>
           <p className="text-sm text-[#50757A] mb-5 max-w-sm mx-auto">

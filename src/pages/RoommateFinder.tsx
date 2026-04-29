@@ -395,7 +395,7 @@ const RoommateFinder: React.FC = () => {
         </Link>
 
         {/* Hero */}
-        <div className="bg-gradient-to-r from-[#50757A] to-[#3D5A5E] rounded-3xl p-8 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="bg-gradient-to-r from-[#50757A] to-[#3D5A5E] rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
           <div>
             <h1 className="text-2xl font-black text-white mb-2 flex items-center gap-2">
               <Users className="w-6 h-6 text-[#DD6E42]" /> Roommate Finder
@@ -432,7 +432,7 @@ const RoommateFinder: React.FC = () => {
               />
             </div>
             <button onClick={() => setShowFilters(f => !f)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
+              className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition ${
                 showFilters ? 'bg-[#50757A] text-white border-[#50757A]' : 'border-[#EAEAEA] text-[#50757A]'
               }`}>
               <Filter className="w-4 h-4" /> Filters

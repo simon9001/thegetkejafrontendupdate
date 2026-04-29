@@ -47,7 +47,7 @@ const Layout: React.FC<LayoutProps> = ({
                 showSearch={showSearch}
                 onSearchToggle={() => setIsSearchOpen(true)}
             />
-            <main className="pt-20 flex-1">
+            <main className="pt-[72px] sm:pt-20 flex-1">
                 {children}
             </main>
             <Footer />
