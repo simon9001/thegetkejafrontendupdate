@@ -1,6 +1,6 @@
 // components/Search/PropertyMapView.tsx
 // Live map — Uber-style animated dot markers with price pills.
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import L from 'leaflet';

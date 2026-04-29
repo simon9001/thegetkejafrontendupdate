@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, HardHat, Building2, MapPin, CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { Layers, HardHat, Building2, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SectionHeader } from '../shared';
 import { useGetDeveloperUnitsQuery } from '../../../features/Api/DeveloperApi';

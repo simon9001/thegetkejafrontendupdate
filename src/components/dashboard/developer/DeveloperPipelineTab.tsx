@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Users, DollarSign, Clock, MessageSquare, Building2, MapPin } from 'lucide-react';
+import { TrendingUp, Users, DollarSign, Clock, MessageSquare, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SectionHeader } from '../shared';
 import { useGetDeveloperPipelineQuery } from '../../../features/Api/DeveloperApi';

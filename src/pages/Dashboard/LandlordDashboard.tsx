@@ -41,7 +41,7 @@ const LandlordDashboard: React.FC = () => {
 
   const isLandlord = !!user?.roles.includes('landlord');
 
-  const { data: dashboardData, isLoading: isDashboardLoading } =
+  const { data: dashboardData } =
     useGetLandlordDashboardQuery(undefined, { skip: !isLandlord });
 
   if (!user) return <div className="p-20 text-center">Please login to view your dashboard.</div>;
@@ -69,7 +69,7 @@ const LandlordDashboard: React.FC = () => {
       {activeNav === 'bookings' && <LandlordBookingsTab />}
       {activeNav === 'team' && <LandlordTeamTab />}
       {activeNav === 'tenants' && <LandlordTenantsTab />}
-      {activeNav === 'payments' && <LandlordPaymentsTab stats={undefined} />}
+      {activeNav === 'payments' && <LandlordPaymentsTab />}
       {activeNav === 'reports' && <LandlordReportsTab />}
       {activeNav === 'messages' && <LandlordMessagesTab />}
       {activeNav === 'settings' && <LandlordSettingsTab />}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { DollarSign, TrendingUp, Clock, CalendarDays, ExternalLink } from 'lucide-react';
+import { DollarSign, TrendingUp, Clock, CalendarDays } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { SectionHeader, Badge } from '../shared';
+import { SectionHeader } from '../shared';
 import { useGetLandlordShortStayPaymentsQuery } from '../../../features/Api/DashboardApi';
 
 const LandlordPaymentsTab: React.FC = () => {

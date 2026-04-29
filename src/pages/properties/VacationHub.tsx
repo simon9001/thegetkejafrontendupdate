@@ -212,7 +212,7 @@ const VacationHub: React.FC = () => {
         {/* Decorative grid lines */}
         <div className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: 'linear-gradient( #50757A 1px, transparent 1px), linear-gradient(90deg, #50757A 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient( #50757A 1px, transparent 1px), linear-gradient(90deg, #50757A 1px, transparent 90px)',
             backgroundSize: '48px 48px',
           }}
         />

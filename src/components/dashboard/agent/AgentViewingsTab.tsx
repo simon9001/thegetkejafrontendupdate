@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar, Phone, MapPin, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Calendar, Phone, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SectionHeader, Badge } from '../shared';
 import { useGetAgentViewingsQuery } from '../../../features/Api/AgentApi';
 
 type FilterStatus = 'all' | 'requested' | 'confirmed' | 'rescheduled';
-
-const STATUS_ICON: Record<string, React.ElementType> = {
-  confirmed:   CheckCircle2,
-  requested:   Clock,
-  rescheduled: AlertCircle,
-};
 
 const AgentViewingsTab: React.FC = () => {
   const [filter, setFilter] = useState<FilterStatus>('all');
@@ -73,7 +67,6 @@ const AgentViewingsTab: React.FC = () => {
       ) : (
         <div className="grid gap-3">
           {viewings.map((v, i) => {
-            const StatusIcon = STATUS_ICON[v.status] ?? Clock;
             const visitDate = v.visit_date
               ? new Date(v.visit_date).toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short' })
               : '—';

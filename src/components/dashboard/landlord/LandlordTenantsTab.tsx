@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Home, Calendar, Phone, Mail, Bed, Clock } from 'lucide-react';
+import { Users, Home, Calendar, Phone, Bed } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SectionHeader, Badge } from '../shared';
 import { useGetLandlordTenantsQuery } from '../../../features/Api/DashboardApi';

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   LayoutDashboard, Building2, Wrench, Droplets, Shield,
-  Users, ArrowUpRight, AlertTriangle, CheckCircle2, Clock, Package
+  Users, ArrowUpRight, AlertTriangle, CheckCircle2, Clock
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { selectCurrentUser } from '../../features/Slice/AuthSlice';

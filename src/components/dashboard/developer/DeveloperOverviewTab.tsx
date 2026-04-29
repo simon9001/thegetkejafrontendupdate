@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Building2, Layers, TrendingUp, DollarSign,
-  ArrowUpRight, MapPin, Plus, Calendar
+  MapPin, Plus, Calendar
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useGetMyPropertiesQuery } from '../../../features/Api/PropertiesApi';
