@@ -45,10 +45,29 @@ export interface UnitProperty {
   location:            { area: string; county: string; town: string } | null;
 }
 
+export interface PublicDeveloperProfile {
+  developer: {
+    id:             string;
+    full_name:      string;
+    bio:            string | null;
+    avatar_url:     string | null;
+    phone:          string | null;
+    county:         string | null;
+    member_since:   string | null;
+    total_listings: number;
+  };
+  listings:    any[];
+  total:       number;
+  page:        number;
+  pages:       number;
+  recommended: any[];
+  code:        string;
+}
+
 export const DeveloperApi = createApi({
   reducerPath: 'developerApi',
   baseQuery:   baseQueryWithReauth,
-  tagTypes:    ['DeveloperPipeline', 'DeveloperUnits'],
+  tagTypes:    ['DeveloperPipeline', 'DeveloperUnits', 'PublicDeveloperProfile'],
   endpoints:   (builder) => ({
 
     getDeveloperPipeline: builder.query<PipelineStats, void>({
@@ -61,10 +80,17 @@ export const DeveloperApi = createApi({
       providesTags: ['DeveloperUnits'],
     }),
 
+    // Public developer profile — no auth required
+    getPublicDeveloperProfile: builder.query<PublicDeveloperProfile, { devId: string; page?: number }>({
+      query: ({ devId, page = 1 }) => `developers/${devId}?page=${page}`,
+      providesTags: (_r, _e, { devId }) => [{ type: 'PublicDeveloperProfile', id: devId }],
+    }),
+
   }),
 });
 
 export const {
   useGetDeveloperPipelineQuery,
   useGetDeveloperUnitsQuery,
+  useGetPublicDeveloperProfileQuery,
 } = DeveloperApi;

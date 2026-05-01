@@ -216,7 +216,7 @@ export const AdminApi = createApi({
   tagTypes: [
     'Admin','AdminKpi','AdminRevenue','AdminUsers','AdminProperties',
     'AdminBookings','AdminModeration','AdminSubscriptions',
-    'AdminReviews','AdminFees','AdminAudit','AdminAds',
+    'AdminReviews','AdminFees','AdminAudit','AdminAds','AdminAllProperties',
   ],
   endpoints: (builder) => ({
 
@@ -283,11 +283,42 @@ export const AdminApi = createApi({
     }),
     approveListing: builder.mutation<{ code: string }, string>({
       query: (propertyId) => ({ url: `admin/properties/${propertyId}/approve`, method: 'PATCH' }),
-      invalidatesTags: ['AdminProperties', 'AdminModeration'],
+      invalidatesTags: ['AdminProperties', 'AdminModeration', 'AdminAllProperties'],
     }),
     rejectListing: builder.mutation<{ code: string }, { propertyId: string; reason: string }>({
       query: ({ propertyId, reason }) => ({ url: `admin/properties/${propertyId}/reject`, method: 'PATCH', body: { reason } }),
-      invalidatesTags: ['AdminProperties', 'AdminModeration'],
+      invalidatesTags: ['AdminProperties', 'AdminModeration', 'AdminAllProperties'],
+    }),
+
+    // All properties list (admin/staff can view all with status filter)
+    getAllPropertiesAdmin: builder.query<{ properties: any[]; total: number; page: number; pages: number }, { page?: number; limit?: number; status?: string } | void>({
+      query: (params) => {
+        const q = new URLSearchParams();
+        if (params?.page)   q.set('page',   String(params.page));
+        if (params?.limit)  q.set('limit',  String(params.limit));
+        if (params?.status) q.set('status', params.status);
+        const qs = q.toString();
+        return qs ? `admin/properties/all?${qs}` : 'admin/properties/all';
+      },
+      providesTags: ['AdminAllProperties'],
+    }),
+
+    // Deactivate a property (suspend from public, landlord still sees it)
+    deactivateProperty: builder.mutation<{ code: string }, { propertyId: string; reason?: string }>({
+      query: ({ propertyId, reason }) => ({ url: `admin/properties/${propertyId}/deactivate`, method: 'PATCH', body: { reason } }),
+      invalidatesTags: ['AdminProperties', 'AdminAllProperties'],
+    }),
+
+    // Reactivate a suspended property
+    activateProperty: builder.mutation<{ code: string }, string>({
+      query: (propertyId) => ({ url: `admin/properties/${propertyId}/activate`, method: 'PATCH' }),
+      invalidatesTags: ['AdminProperties', 'AdminAllProperties'],
+    }),
+
+    // Strike a landlord — suspends account + ALL their properties
+    strikeLandlord: builder.mutation<{ code: string }, { userId: string; reason: string }>({
+      query: ({ userId, reason }) => ({ url: `admin/users/${userId}/strike`, method: 'POST', body: { reason } }),
+      invalidatesTags: ['AdminUsers', 'AdminProperties', 'AdminAllProperties'],
     }),
 
     // Bookings
@@ -472,6 +503,10 @@ export const {
   useGetTopListingsQuery,
   useApproveListingMutation,
   useRejectListingMutation,
+  useGetAllPropertiesAdminQuery,
+  useDeactivatePropertyMutation,
+  useActivatePropertyMutation,
+  useStrikeLandlordMutation,
   useGetBookingStatsQuery,
   useListShortStayBookingsQuery,
   useListLongTermBookingsQuery,

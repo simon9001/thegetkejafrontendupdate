@@ -68,10 +68,29 @@ export interface AgentReports {
   generated_at:         string;
 }
 
+export interface PublicAgentProfile {
+  agent: {
+    id:             string;
+    full_name:      string;
+    bio:            string | null;
+    avatar_url:     string | null;
+    phone:          string | null;
+    county:         string | null;
+    member_since:   string | null;
+    total_listings: number;
+  };
+  listings:    any[];
+  total:       number;
+  page:        number;
+  pages:       number;
+  recommended: any[];
+  code:        string;
+}
+
 export const AgentApi = createApi({
   reducerPath: 'agentApi',
   baseQuery:   baseQueryWithReauth,
-  tagTypes:    ['AgentDashboard', 'AgentViewings', 'AgentLeads', 'AgentCommissions', 'AgentReports'],
+  tagTypes:    ['AgentDashboard', 'AgentViewings', 'AgentLeads', 'AgentCommissions', 'AgentReports', 'PublicAgentProfile'],
   endpoints:   (builder) => ({
 
     getAgentDashboard: builder.query<AgentKpi, void>({
@@ -102,6 +121,12 @@ export const AgentApi = createApi({
       providesTags: ['AgentReports'],
     }),
 
+    // Public agent profile — no auth required
+    getPublicAgentProfile: builder.query<PublicAgentProfile, { agentId: string; page?: number }>({
+      query: ({ agentId, page = 1 }) => `agents/${agentId}?page=${page}`,
+      providesTags: (_r, _e, { agentId }) => [{ type: 'PublicAgentProfile', id: agentId }],
+    }),
+
   }),
 });
 
@@ -111,4 +136,5 @@ export const {
   useGetAgentLeadsQuery,
   useGetAgentCommissionsQuery,
   useGetAgentReportsQuery,
+  useGetPublicAgentProfileQuery,
 } = AgentApi;

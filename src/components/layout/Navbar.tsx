@@ -191,7 +191,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <span className={`text-lg sm:text-xl font-bold tracking-tight ${
               elevated || !transparent ? 'text-[#DD6E42]' : 'text-white'
             }`}>
-              Getkeja
+              GetQeja
             </span>
           </Link>
 

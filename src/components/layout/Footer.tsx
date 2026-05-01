@@ -146,7 +146,7 @@ const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-1.5 mb-4">
               <img src={logo} alt="GetKeja logo" className="w-8 h-8 object-contain" />
-              <span className="text-xl font-black text-[#DD6E42]">Getkeja</span>
+              <span className="text-xl font-black text-[#DD6E42]">GetQeja</span>
             </Link>
             <p className="text-white/55 text-sm leading-relaxed mb-5 max-w-xs">
               Kenya's trusted platform for finding verified rentals, homes for sale, and commercial spaces  from Nairobi to the coast.
@@ -175,7 +175,7 @@ const Footer: React.FC = () => {
             {/* Socials */}
             <div className="flex items-center gap-2">
               <Social href="https://facebook.com/getkeja"  icon={<Facebook  className="w-4 h-4" />} label="Facebook"  />
-              <Social href="https://twitter.com/getkeja"   icon={<Twitter   className="w-4 h-4" />} label="Twitter"   />
+              <Social href="https://x.com/Musyoxxxxs"   icon={<Twitter   className="w-4 h-4" />} label="X"   />
               <Social href="https://instagram.com/getkeja" icon={<Instagram className="w-4 h-4" />} label="Instagram" />
               <Social href="https://linkedin.com/company/getkeja" icon={<Linkedin className="w-4 h-4" />} label="LinkedIn" />
               <Social href="https://youtube.com/@getkeja"  icon={<Youtube   className="w-4 h-4" />} label="YouTube"   />

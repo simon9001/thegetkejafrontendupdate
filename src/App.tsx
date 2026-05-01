@@ -25,6 +25,8 @@ import DashboardRedirect from './components/auth/DashboardRedirect';
 import BecomeHost from './pages/BecomeHost';
 import RoommateFinder from './pages/RoommateFinder';
 import MovingServices from './pages/MovingServices';
+import AgentProfile from './pages/AgentProfile';
+import DeveloperProfile from './pages/DeveloperProfile';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import Blog from './pages/Blog';
@@ -180,6 +182,10 @@ function App() {
         {/* Community features — public pages */}
         <Route path="/roommates"       element={<RoommateFinder />} />
         <Route path="/moving-services" element={<MovingServices />} />
+
+        {/* Public profile pages */}
+        <Route path="/agents/:id"     element={<AgentProfile />} />
+        <Route path="/developers/:id" element={<DeveloperProfile />} />
 
         {/* Public informational pages */}
         <Route path="/about"     element={<AboutUs />} />

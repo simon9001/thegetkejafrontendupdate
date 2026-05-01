@@ -1,6 +1,6 @@
 // frontend/src/pages/Auth/Login.tsx
 import React, { useState } from 'react';
-import { Twitter, Facebook, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoginMutation } from '../../features/Api/AuthApi';
 import { useDispatch } from 'react-redux';
@@ -194,7 +194,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
         </p>
 
         {/* Social */}
-        <div className="pt-3">
+        {/* <div className="pt-3">
           <div className="flex items-center justify-center gap-2.5">
             <a
               href="/api/auth/google"
@@ -223,7 +223,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
               <Facebook className="w-3.5 h-3.5 fill-current" />
             </button>
           </div>
-        </div>
+        </div> */}
       </form>
     </div>
   );
