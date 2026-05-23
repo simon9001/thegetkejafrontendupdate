@@ -187,7 +187,7 @@ const Login: React.FC<LoginProps> = ({ onToggle }) => {
           <button
             type="button"
             onClick={onToggle}
-            className="text-[#C0D6DF] font-bold hover:text-[#50757A] transition-colors text-xs uppercase tracking-wider"
+            className="text-[ #020202] font-bold cursor-pointer hover:text-[ #000000] transition-colors text-xs uppercase tracking-wider"
           >
             SIGN UP
           </button>

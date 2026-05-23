@@ -8,7 +8,6 @@ const AuthContainer: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Start on the register form when the URL is /register
     const [isLogin, setIsLogin] = useState(location.pathname !== '/register');
 
     const toggleAuth = () => {
@@ -17,73 +16,144 @@ const AuthContainer: React.FC = () => {
         navigate(next ? '/login' : '/register', { replace: true });
     };
 
+    const backgroundImage = isLogin
+        ? "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=2070&auto=format&fit=crop"
+        : "https://images.unsplash.com/photo-1501183638710-841dd1904471?q=80&w=2070&auto=format&fit=crop";
+
     return (
-        <div className="min-h-screen bg-[#E8DAB2] flex items-center justify-center p-4 sm:p-6 overflow-hidden selection:bg-[#C0D6DF]/30 antialiased">
-            {/* Background Decorative Element */}
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-[#C0D6DF]/5 -skew-x-12 transform origin-top-right -z-10 hidden lg:block"></div>
+        <div className="min-h-screen bg-gradient-to-br from-[#E8DAB2] via-[#f5efe0] to-[#E8DAB2] flex items-center justify-center px-3 sm:px-6 lg:px-8 py-6 overflow-hidden">
 
-            <div className="w-full max-w-5xl h-[90vh] sm:h-[85vh] bg-white rounded-3xl sm:rounded-[2.5rem] shadow-[0_20px_50px_rgba(197,163,115,0.15)] overflow-hidden flex flex-col lg:flex-row relative">
+            {/* background glow */}
+            <div className="absolute top-0 right-0 w-1/2 lg:w-1/3 h-full bg-[#C0D6DF]/10 -skew-x-12 origin-top-right -z-10 hidden lg:block" />
+            <div className="absolute bottom-0 left-0 w-1/2 lg:w-1/3 h-1/2 bg-[#50757A]/5 rounded-tr-full -z-10 hidden lg:block" />
 
-                {/* Layout for Animated Form & Static Image */}
-                <div className="flex-1 flex flex-col lg:flex-row w-full h-full">
+            {/* MAIN CARD */}
+            <div className="
+                w-full 
+                max-w-7xl 
+                h-[92vh] 
+                lg:h-[88vh]
+                bg-white 
+                rounded-2xl 
+                sm:rounded-[2rem] 
+                lg:rounded-[2.5rem] 
+                shadow-2xl 
+                overflow-hidden 
+                flex 
+                flex-col 
+                lg:flex-row
+                relative
+            ">
 
-                    {/* Animated Form Container */}
-                    <div className="w-full lg:w-1/2 h-full relative bg-white z-10 flex flex-col">
-                        <AnimatePresence mode="wait" initial={false}>
-                            <motion.div
-                                key={isLogin ? 'login' : 'register'}
-                                initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: isLogin ? 20 : -20 }}
-                                transition={{ type: 'spring', stiffness: 300, damping: 30, duration: 0.3 }}
-                                className="h-full flex items-center justify-center"
-                            >
-                                {isLogin ? (
-                                    <Login onToggle={toggleAuth} isEmbedded={true} />
-                                ) : (
-                                    <Register onToggle={toggleAuth} isEmbedded={true} />
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+                {/* ================= FORM ================= */}
+                <div className="w-full lg:w-[52%] h-full flex items-center justify-center px-4 sm:px-6 lg:px-0">
 
-                    {/* Desktop Sidebar Image */}
-                    <div className="hidden lg:block lg:w-1/2 h-full relative overflow-hidden bg-[#50757A]">
+                    <AnimatePresence mode="wait" initial={false}>
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.8 }}
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] ease-out hover:scale-105"
-                            style={{
-                                backgroundImage: `url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop')`,
-                                backgroundPosition: 'center 30%',
-                            }}
+                            key={isLogin ? 'login' : 'register'}
+                            initial={{ opacity: 0, x: isLogin ? -30 : 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: isLogin ? 30 : -30 }}
+                            transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+                            className="w-full h-full flex items-center justify-center"
                         >
-                            {/* Overlay Gradient */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-[#50757A]/90 via-[#50757A]/40 to-transparent"></div>
-
-                            {/* Content */}
-                            <div className="absolute bottom-12 left-10 right-10 text-white z-20">
-                                <motion.div
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.2, duration: 0.5 }}
-                                >
-                                    <div className="w-10 h-1 bg-[#C0D6DF] mb-4 rounded-full"></div>
-                                    <h2 className="text-3xl font-black mb-3 leading-tight">
-                                        Luxury Living, <span className="text-[#C0D6DF]">Redefined</span>.
-                                    </h2>
-                                    <p className="text-white/90 text-sm font-medium leading-relaxed max-w-sm">
-                                        Experience the pinnacle of real estate with our curated collection of extraordinary properties.
-                                    </p>
-                                </motion.div>
-                            </div>
+                            {isLogin ? (
+                                <Login onToggle={toggleAuth} isEmbedded={true} />
+                            ) : (
+                                <Register onToggle={toggleAuth} isEmbedded={true} />
+                            )}
                         </motion.div>
+                    </AnimatePresence>
+                </div>
+
+                {/* ================= IMAGE ================= */}
+                <div className="hidden lg:block lg:w-[48%] h-full relative overflow-hidden">
+
+                    <motion.div
+                        key={backgroundImage}
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{
+                            backgroundImage: `url('${backgroundImage}')`,
+                            backgroundPosition: 'center 30%',
+                        }}
+                        initial={{ scale: 1.15, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.8 }}
+                    />
+
+                    {/* overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#50757A]/95 via-[#50757A]/60 to-transparent" />
+
+                    {/* content */}
+                    <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 lg:p-12 text-white">
+
+                        {/* top accent */}
+                        <motion.div
+                            className="w-12 sm:w-14 lg:w-16 h-1 bg-[#DD6E42] rounded-full"
+                            animate={{ width: isLogin ? 64 : 88 }}
+                            transition={{ duration: 0.3 }}
+                        />
+
+                        {/* middle text */}
+                        <AnimatePresence mode="wait">
+                            {isLogin ? (
+                                <motion.div
+                                    key="login"
+                                    initial={{ opacity: 0, y: 15 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -15 }}
+                                    className="space-y-3 lg:space-y-4 max-w-sm"
+                                >
+                                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight">
+                                        Welcome Back
+                                    </h2>
+
+                                    <p className="text-white/90 text-sm sm:text-base">
+                                        Continue exploring verified rental listings on GetKeja.
+                                    </p>
+
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 lg:w-10 h-0.5 bg-[#DD6E42]" />
+                                        <span className="text-white/70 text-xs sm:text-sm">
+                                            Your next home awaits
+                                        </span>
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="register"
+                                    initial={{ opacity: 0, y: 15 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -15 }}
+                                    className="space-y-3 lg:space-y-4 max-w-sm"
+                                >
+                                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight">
+                                        Find Your <span className="text-[#DD6E42]">Home</span>
+                                    </h2>
+
+                                    <p className="text-white/90 text-sm sm:text-base">
+                                        Join GetKeja and discover affordable verified rentals near you.
+                                    </p>
+
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 lg:w-10 h-0.5 bg-[#DD6E42]" />
+                                        <span className="text-white/70 text-xs sm:text-sm">
+                                            Start your journey today
+                                        </span>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* bottom quote (hidden on small screens for cleanliness) */}
+                        <p className="hidden sm:block text-white/50 text-xs italic">
+                            “Homes made simple, renting made smart”
+                        </p>
                     </div>
                 </div>
 
-                {/* Decorative Border */}
-                <div className="absolute inset-0 pointer-events-none border border-[#C0D6DF]/10 rounded-3xl sm:rounded-[2.5rem] hidden sm:block"></div>
+                {/* border */}
+                <div className="absolute inset-0 pointer-events-none border border-[#C0D6DF]/20 rounded-2xl sm:rounded-[2rem] lg:rounded-[2.5rem]" />
             </div>
         </div>
     );

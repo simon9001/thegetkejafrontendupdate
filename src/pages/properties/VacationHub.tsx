@@ -14,6 +14,8 @@ import HeartButton from '../../components/ui/HeartButton.js';
 import { useSearchParams } from 'react-router-dom';
 import { useGetPlatformStatsQuery } from '../../features/Api/StatsApi.js';
 import { useLanguage } from '../../context/LanguageContext.js';
+import heroBackgroundImage from '../../assets/cb4a073a-cee7-457e-ad1a-0a7f852c2a63.png';
+import luxuryPropertyImage from '../../assets/OIP (1).webp';
 
 // ── Count-up hook ─────────────────────────────────────────────────────────────
 function useCountUp(target: number, duration = 1600, enabled = true) {
@@ -201,12 +203,18 @@ const VacationHub: React.FC = () => {
     <Layout showSearch={true}>
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
-      {/* pt-11 on mobile gives ~44px clearance for the floating navbar search pill */}
-      
-      <div className="relative bg-gradient-to-br from-[#50757A] to-[#50757A] text-white overflow-hidden pt-11 md:pt-0">
-        <div className="absolute inset-0 opacity-10">
+      {/* Hero section with background image */}
+      <div 
+        className="relative text-white overflow-hidden pt-11 md:pt-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${heroBackgroundImage})` }}
+      >
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        
+        {/* Decorative elements */}
+        <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-64 h-64 bg-[#C0D6DF] rounded-full filter blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[ #50757A] rounded-full filter blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#50757A] rounded-full filter blur-3xl" />
         </div>
 
         {/* Decorative grid lines */}
@@ -217,7 +225,7 @@ const VacationHub: React.FC = () => {
           }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -234,7 +242,7 @@ const VacationHub: React.FC = () => {
                 {t('heroTitle1')} <span className="text-[#C0D6DF]">{t('heroTitle2')}</span><br />{t('heroTitle3')}
               </h1>
 
-              <p className="text-lg lg:text-xl text-white/80 mb-8 max-w-2xl lg:mx-0 mx-auto">
+              <p className="text-lg lg:text-xl text-white/90 mb-8 max-w-2xl lg:mx-0 mx-auto">
                 {t('heroSub')}
               </p>
 
@@ -246,9 +254,9 @@ const VacationHub: React.FC = () => {
                   onClick={() => setShowSubscribe(true)}
                   className="
                     group flex items-center gap-3
-                    bg-[#50757A] hover:bg-[#C0D6DF]
+                    bg-[#DD6E42] hover:bg-[#C4623B]
                     text-white font-bold px-7 py-3.5 rounded-full
-                    shadow-lg shadow-[#50757A]/40
+                    shadow-lg shadow-black/30
                     transition-colors duration-200
                     text-sm
                   "
@@ -258,7 +266,7 @@ const VacationHub: React.FC = () => {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
 
-                <p className="text-white/50 text-xs text-center lg:text-left leading-relaxed max-w-xs">
+                <p className="text-white/80 text-xs text-center lg:text-left leading-relaxed max-w-xs backdrop-blur-sm bg-black/20 px-3 py-1.5 rounded-lg">
                   {t('subscribeSub')}
                 </p>
               </div>
@@ -291,9 +299,9 @@ const VacationHub: React.FC = () => {
               <div className="relative">
                 <div className="absolute -inset-4 bg-[#50757A]/20 rounded-full filter blur-0xl" />
                 <img
-                  src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
+                  src={luxuryPropertyImage}
                   alt="Luxury property"
-                  className="relative rounded-2xl shadow-2xl"
+                  className="relative rounded-2xl shadow-2xl w-full h-auto object-cover"
                 />
               </div>
             </div>
