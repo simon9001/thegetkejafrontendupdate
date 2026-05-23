@@ -1,5 +1,6 @@
 // context/LanguageContext.tsx
-// English / Swahili language switching for Getkeja
+// English / Swahili language switching for GetKeja
+
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 export type Lang = 'en' | 'sw';
@@ -8,8 +9,8 @@ export type Lang = 'en' | 'sw';
 export const translations = {
   en: {
     // Navbar
-    shareYourHome:   'Share your home',
-    findYourKeja:    'Find your keja',
+    shareYourHome:   'List your property',
+    findYourKeja:    'Find your next keja',
     anyBudget:       'Any budget',
     anywhere:        'Anywhere',
     login:           'Log in',
@@ -23,27 +24,38 @@ export const translations = {
     settings:        'Settings',
     help:            'Help',
     savedProperties: 'Saved properties',
+
     // Language
     language:        'Language',
     english:         'English',
     swahili:         'Kiswahili',
+
     // Hero
-    welcomeBadge:    'Welcome to GetKeja',
-    heroTitle1:      'Find Your',
-    heroTitle2:      'Perfect',
-    heroTitle3:      'Home in Kenya',
-    heroSub:         'Browse thousands of verified rentals, homes for sale, and commercial spaces across Kenya.',
-    subscribeBtn:    'Subscribe,We’ll help you find it',
-    subscribeSub:    'Unlock property viewings, AI picks & priority support from KES 0/mo',
+    welcomeBadge:    'Your home search starts here',
+
+    heroTitle1:      'Finding a Qeja',
+    heroTitle2:      'shouldn’t',
+    heroTitle3:      'Stress You.',
+
+    heroSub:
+      'Tell us your budget, preferred location and lifestyle  we’ll help you find verified houses, apartments and commercial spaces across Kenya without the endless searching.',
+
+    subscribeBtn:    'We’ll Help You Find It',
+
+    subscribeSub:
+      'Get personalized property matches, verified listings, viewing support and smarter recommendations.',
+
     verifiedProps:   'Verified Properties',
-    happyTenants:    'Happy Tenants',
-    counties:        'Counties',
+    happyTenants:    'People Helped',
+    counties:        'Counties Covered',
+
     // Category filters
     all:        'All',
-    longRent:   'Long Rent',
+    longRent:   'Long Term',
     forSale:    'For Sale',
     shortStay:  'Short Stay',
     commercial: 'Commercial',
+
     // Filter panel
     filters:    'Filters',
     clear:      'Clear',
@@ -53,30 +65,40 @@ export const translations = {
     maxPrice:   'Max Price (KES)',
     any:        'Any',
     bedsitter:  'Bedsitter',
+
     // Property sections
-    seeAll:     'See all',
-    listings:   'listing',
-    listingsPlural: 'listings',
-    noProperties: 'No properties available yet.',
-    checkBack:    'Check back soon — new listings are added daily.',
-    loading:      'Loading properties...',
+    seeAll:          'See all',
+    listings:        'listing',
+    listingsPlural:  'listings',
+
+    noProperties:    'No listings available yet.',
+    checkBack:       'Check back soon — new properties are added regularly.',
+    loading:         'Loading properties...',
     propertiesAvailable: 'properties available',
+
     // Property card
     priceOnRequest: 'Price on request',
     viewProperty:   'View Property',
+
     // Footer newsletter
-    newsletterTitle: 'Get the latest listings straight to your inbox',
-    newsletterSub:   'New properties, market insights, tips — weekly.',
-    subscribe:       'Subscribe',
+    newsletterTitle:
+      'Get new listings and housing updates directly to your inbox',
+
+    newsletterSub:
+      'Verified properties, market insights and smart house-hunting tips — every week.',
+
+    subscribe: 'Subscribe',
+
     // Contact
-    sendMessage:   'Send Message',
-    sending:       'Sending…',
+    sendMessage: 'Send Message',
+    sending:     'Sending…',
   },
+
   sw: {
     // Navbar
-    shareYourHome:   'Shiriki nyumba yako',
+    shareYourHome:   'Weka nyumba yako',
     findYourKeja:    'Tafuta keja yako',
-    anyBudget:       'Bei yoyote',
+    anyBudget:       'Bajeti yoyote',
     anywhere:        'Popote',
     login:           'Ingia',
     signup:          'Jisajili',
@@ -88,28 +110,39 @@ export const translations = {
     saved:           'Zilizohifadhiwa',
     settings:        'Mipangilio',
     help:            'Msaada',
-    savedProperties: 'Mali zilizohifadhiwa',
+    savedProperties: 'Nyumba ulizohifadhi',
+
     // Language
     language:        'Lugha',
     english:         'English',
     swahili:         'Kiswahili',
+
     // Hero
-    welcomeBadge:    'Karibu GetKeja',
-    heroTitle1:      'Pata',
-    heroTitle2:      'Keja Bora',
-    heroTitle3:      'Kenya',
-    heroSub:         'Vinjari maelfu ya nyumba za kukodisha zilizohakikishwa, nyumba za kuuza, na maeneo ya biashara kote Kenya.',
-    subscribeBtn:    'Jiandikishe kwa Uzoefu Mzuri',
-    subscribeSub:    'Fungua uangalifu wa mali, mapendekezo ya AI na msaada wa kipaumbele kutoka KES 0/mwezi',
-    verifiedProps:   'Mali Zilizohakikishwa',
-    happyTenants:    'Wakodi Wenye Furaha',
-    counties:        'Kaunti',
+    welcomeBadge:    'Safari yako ya kupata nyumba inaanzia hapa',
+
+    heroTitle1:      'Kutafuta Qeja',
+    heroTitle2:      'haipaswi',
+    heroTitle3:      'Kukustress.',
+
+    heroSub:
+      'Tuambie bajeti yako, eneo unalotaka na aina ya nyumba unayotafuta  tutakusaidia kupata nyumba, apartments na spaces zilizohakikishwa bila usumbufu.',
+
+    subscribeBtn:    'Tutakusaidia Kuipata',
+
+    subscribeSub:
+      'Pata mapendekezo ya nyumba, listings zilizohakikishwa, msaada wa kupanga viewing na huduma bora zaidi.',
+
+    verifiedProps:   'Nyumba Zilizohakikishwa',
+    happyTenants:    'Watu Tuliowasaidia',
+    counties:        'Kaunti Tulizofikia',
+
     // Category filters
     all:        'Zote',
-    longRent:   'Kukodisha',
-    forSale:    'Kuuza',
+    longRent:   'Kodi ya Muda Mrefu',
+    forSale:    'Zinazouzwa',
     shortStay:  'Muda Mfupi',
     commercial: 'Biashara',
+
     // Filter panel
     filters:    'Vichujio',
     clear:      'Futa',
@@ -119,24 +152,37 @@ export const translations = {
     maxPrice:   'Bei ya Juu (KES)',
     any:        'Yoyote',
     bedsitter:  'Bedsitter',
+
     // Property sections
-    seeAll:     'Ona zote',
-    listings:   'orodha',
-    listingsPlural: 'orodha',
-    noProperties: 'Hakuna mali zinazopatikana bado.',
-    checkBack:    'Angalia hivi karibuni — orodha mpya zinaongezwa kila siku.',
-    loading:      'Inapakia mali...',
-    propertiesAvailable: 'mali zinazopatikana',
+    seeAll:         'Ona zote',
+    listings:       'listing',
+    listingsPlural: 'listings',
+
+    noProperties:
+      'Hakuna listings zinazopatikana kwa sasa.',
+
+    checkBack:
+      'Rudi tena hivi karibuni — nyumba mpya zinaongezwa mara kwa mara.',
+
+    loading: 'Inapakia nyumba...',
+    propertiesAvailable: 'nyumba zinazopatikana',
+
     // Property card
     priceOnRequest: 'Bei kwa ombi',
-    viewProperty:   'Ona Mali',
+    viewProperty:   'Ona Nyumba',
+
     // Footer newsletter
-    newsletterTitle: 'Pata orodha mpya moja kwa moja kwenye barua pepe yako',
-    newsletterSub:   'Mali mpya, maarifa ya soko, vidokezo — kila wiki.',
-    subscribe:       'Jiandikishe',
+    newsletterTitle:
+      'Pata listings mpya na taarifa za nyumba moja kwa moja kwenye email yako',
+
+    newsletterSub:
+      'Nyumba zilizohakikishwa, taarifa za soko na tips za kutafuta nyumba — kila wiki.',
+
+    subscribe: 'Jiandikishe',
+
     // Contact
-    sendMessage:   'Tuma Ujumbe',
-    sending:       'Inatuma…',
+    sendMessage: 'Tuma Ujumbe',
+    sending:     'Inatuma…',
   },
 } as const;
 
@@ -144,17 +190,17 @@ export type TranslationKey = keyof typeof translations.en;
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 interface LanguageContextValue {
-  lang:      Lang;
-  t:         (key: TranslationKey) => string;
-  setLang:   (l: Lang) => void;
-  toggle:    () => void;
+  lang: Lang;
+  t: (key: TranslationKey) => string;
+  setLang: (l: Lang) => void;
+  toggle: () => void;
 }
 
 const LanguageContext = createContext<LanguageContextValue>({
-  lang:    'en',
-  t:       (k) => translations.en[k],
+  lang: 'en',
+  t: (k) => translations.en[k],
   setLang: () => {},
-  toggle:  () => {},
+  toggle: () => {},
 });
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
@@ -168,10 +214,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.lang = l;
   }, []);
 
-  const toggle = useCallback(() => setLang(lang === 'en' ? 'sw' : 'en'), [lang, setLang]);
+  const toggle = useCallback(
+    () => setLang(lang === 'en' ? 'sw' : 'en'),
+    [lang, setLang]
+  );
 
   const t = useCallback(
-    (key: TranslationKey): string => translations[lang][key] ?? translations.en[key],
+    (key: TranslationKey): string =>
+      translations[lang][key] ?? translations.en[key],
     [lang],
   );
 
